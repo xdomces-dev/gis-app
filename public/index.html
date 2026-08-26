@@ -4489,7 +4489,11 @@ window.delTarea=async function(id){
 // ===== LISTAS (checklist persistente por alumno) =====
 function rosterLista(l){
   const base=l.grupo?ALUMNOS_CICLO.filter(a=>a.grado===l.grupo):ALUMNOS_CICLO;
-  return base.slice().sort((a,b)=>(a.n||'').localeCompare(b.n||''));
+  const go={'1°':1,'2°':2,'3°':3};
+  return base.slice().sort((a,b)=>{
+    const gd=(go[a.grado]||9)-(go[b.grado]||9);
+    return gd!==0?gd:(a.n||'').localeCompare(b.n||'','es');
+  });
 }
 
 function renderListaListas(){
@@ -4547,17 +4551,34 @@ function renderDetalleLista(){
   const estados=l.estados||{};
   const marcados=roster.filter(a=>estados[a.id]==='si').length;
   document.getElementById('ld-header').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0;flex-wrap:wrap;gap:8px">
       <div>
         <p class="sec-title" style="margin:0">${esc(l.nombre)}</p>
         <div class="lista-card-meta">${l.grupo?esc(l.grupo):'Todos los grupos'} · <span style="font-family:var(--font-mono)">${marcados}/${roster.length} marcados</span></div>
       </div>
-      <button class="btn btn-sm" onclick="eliminarLista('${l.id}')" style="color:var(--red);border-color:var(--red)">🗑️ Eliminar lista</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="imprimirLista()">🖨️ Imprimir</button>
+        <button class="btn btn-sm" onclick="eliminarLista('${l.id}')" style="color:var(--red);border-color:var(--red)">🗑️ Eliminar</button>
+      </div>
     </div>`;
-  document.getElementById('ld-grid').innerHTML=!roster.length?'<div class="empty">Sin alumnos en este grupo</div>':'<div class="alumno-grid">'+roster.map(a=>{
+  if(!roster.length){document.getElementById('ld-grid').innerHTML='<div class="empty">Sin alumnos en este grupo</div>';return;}
+  // Agrupar por grado con encabezados si es "Todos los grupos"
+  const mostrarGrado=!l.grupo;
+  let html='';
+  let gradoActual='';
+  let num=0;
+  roster.forEach(a=>{
     const est=estados[a.id]||'';
-    return `<div class="ac">
-      <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
+    if(mostrarGrado&&a.grado!==gradoActual){
+      if(gradoActual) html+='</div>';
+      gradoActual=a.grado;
+      html+=`<div style="margin:16px 0 6px;font-weight:700;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.05em">${esc(a.grado)}</div><div class="alumno-grid">`;
+    }else if(!mostrarGrado&&gradoActual===''){
+      gradoActual='x';html+='<div class="alumno-grid">';
+    }
+    num++;
+    html+=`<div class="ac">
+      <div class="av ${a.av||'av1'}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab ${est==='si'?'sA':''}" onclick="setEstadoListaAlumno('${a.id}','si')">✓</span>
@@ -4565,7 +4586,9 @@ function renderDetalleLista(){
         <span class="ab ${est==='na'?'sJ':''}" onclick="setEstadoListaAlumno('${a.id}','na')">N/A</span>
       </div>
     </div>`;
-  }).join('')+'</div>';
+  });
+  html+='</div>';
+  document.getElementById('ld-grid').innerHTML=html;
 }
 
 window.setEstadoListaAlumno=async function(alumnoId,val){
@@ -4589,6 +4612,59 @@ window.eliminarLista=async function(id){
     volverListas();
     toast('Lista eliminada');
   }catch(err){toast('Error eliminando');console.error(err);}
+};
+
+window.imprimirLista=function(){
+  const l=_todasListas.find(x=>x.id===listaActivaId);
+  if(!l)return;
+  const roster=rosterLista(l);
+  const estados=l.estados||{};
+  const fecha=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  const go={'1°':1,'2°':2,'3°':3};
+  let filas='';let gradoActual='';let num=0;
+  roster.forEach(a=>{
+    const est=estados[a.id]||'';
+    const estLabel=est==='si'?'✓':est==='no'?'✗':est==='na'?'N/A':'';
+    const estColor=est==='si'?'#1a7a4a':est==='no'?'#c0392b':'#555';
+    if(!l.grupo&&a.grado!==gradoActual){
+      gradoActual=a.grado;
+      filas+=`<tr><td colspan="4" style="background:#204b3a;color:#fff;font-weight:700;padding:6px 10px;font-size:12px">${a.grado}</td></tr>`;
+    }
+    num++;
+    filas+=`<tr>
+      <td style="text-align:center;color:#888;font-size:12px">${num}</td>
+      <td style="padding:7px 10px;font-size:13px">${a.n}</td>
+      <td style="text-align:center;font-size:15px;font-weight:700;color:${estColor}">${estLabel}</td>
+      <td style="border-left:1px solid #eee"></td>
+    </tr>`;
+  });
+  const marcados=roster.filter(a=>estados[a.id]==='si').length;
+  const w=window.open('','_blank','width=800,height=900');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${l.nombre}</title>
+  <style>
+    body{font-family:'DM Sans',Arial,sans-serif;margin:0;padding:24px;color:#111}
+    h1{font-size:18px;margin:0 0 2px;color:#204b3a}
+    .meta{font-size:12px;color:#555;margin-bottom:16px}
+    table{width:100%;border-collapse:collapse}
+    th{background:#204b3a;color:#fff;padding:8px 10px;font-size:12px;text-align:left}
+    td{border-bottom:1px solid #eee;vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    .footer{margin-top:16px;font-size:11px;color:#888;display:flex;justify-content:space-between}
+    @media print{button{display:none}}
+  </style></head><body>
+  <h1>${l.nombre}</h1>
+  <div class="meta">${escuelaData?.escuela||''} · ${l.grupo||'Todos los grupos'} · ${escuelaData?.cicloActivo||''} · ${fecha}</div>
+  <button onclick="window.print()" style="margin-bottom:12px;padding:6px 16px;background:#204b3a;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px">🖨️ Imprimir</button>
+  <table>
+    <thead><tr><th style="width:36px">N°</th><th>Nombre del alumno</th><th style="width:60px;text-align:center">Estado</th><th style="width:120px">Observaciones</th></tr></thead>
+    <tbody>${filas}</tbody>
+  </table>
+  <div class="footer">
+    <span>Total marcados: ${marcados}/${roster.length}</span>
+    <span>Firma: ___________________</span>
+  </div>
+  </body></html>`);
+  w.document.close();
 };
 
 // ===== EVALUACIÓN =====
