@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f3520"/>
+      <stop offset="100%" stop-color="#2a4728"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo pizarrón -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Líneas textura pizarrón -->
+  <line x1="0" y1="0" x2="512" y2="512" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+  <line x1="0" y1="100" x2="512" y2="612" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+  <line x1="0" y1="200" x2="512" y2="712" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+  <!-- GIS en tiza amarilla -->
+  <text x="256" y="295" font-family="'Syne', Georgia, 'Arial Black', sans-serif" font-weight="800" font-size="230" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-8">GIS</text>
+  <!-- Línea decorativa -->
+  <rect x="148" y="348" width="216" height="6" rx="3" fill="#f0c435" opacity="0.45"/>
+</svg>

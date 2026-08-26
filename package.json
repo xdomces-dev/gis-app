@@ -1,0 +1,10 @@
+{
+  "name": "docenteapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "firebase emulators:start --only hosting",
+    "preview": "npx serve public -l 5000",
+    "deploy": "firebase deploy --only hosting"
+  }
+}

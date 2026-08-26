@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+*.env
+
+# Firebase build cache
+.firebase/
+
+# gstack internal files (logs, reports, audit data)
+.gstack/
+
+# Claude Code local settings (machine-specific paths)
+.claude/
+
+# Screenshots / binary artifacts (no código)
+design-audit-screenshots/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
+*.swo

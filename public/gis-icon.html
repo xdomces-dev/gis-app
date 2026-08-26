@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>GIS — Iconos para Home Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body{background:#1a1a1a;display:flex;flex-direction:column;align-items:center;padding:40px 20px;font-family:'DM Sans',sans-serif;color:#e8e4d4;gap:40px;margin:0}
+  h1{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:3px;color:#f0c435;margin:0;text-align:center}
+  .subtitle{font-size:12px;color:rgba(240,196,53,.5);letter-spacing:1px;margin-top:4px;text-align:center}
+  .row{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+  .variant{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .label{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase}
+  .hint{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.5px;text-align:center}
+  .instructions{background:rgba(240,196,53,.07);border:1px solid rgba(240,196,53,.2);border-radius:12px;padding:20px 28px;max-width:560px;text-align:center}
+  .instructions h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#f0c435;margin:0 0 10px;letter-spacing:1px}
+  .instructions p{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.7;margin:0}
+  .instructions strong{color:rgba(255,255,255,.85)}
+  .divider{width:1px;height:40px;background:rgba(255,255,255,.08)}
+</style>
+</head>
+<body>
+
+<h1>G I S</h1>
+<div class="subtitle">Gestión Integral Escolar · Emblemas para Home Screen</div>
+
+<div class="row">
+
+  <!-- VARIANTE 1: Pizarrón Puro -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1f3520"/>
+          <stop offset="100%" stop-color="#2a4728"/>
+        </linearGradient>
+        <filter id="chalk1">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+          <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+          <feBlend in="SourceGraphic" in2="grayNoise" mode="screen" result="blended"/>
+          <feComposite in="blended" in2="SourceGraphic" operator="in"/>
+        </filter>
+      </defs>
+      <!-- Fondo -->
+      <rect width="512" height="512" rx="112" fill="url(#bg1)"/>
+      <!-- Textura sutil (líneas pizarrón) -->
+      <line x1="0" y1="0" x2="512" y2="512" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+      <line x1="0" y1="100" x2="512" y2="612" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+      <line x1="0" y1="200" x2="512" y2="712" stroke="rgba(255,255,255,0.018)" stroke-width="1.5"/>
+      <!-- Letras GIS - tiza amarilla -->
+      <text x="256" y="310" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="232" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-8">GIS</text>
+      <!-- Línea decorativa bajo el texto -->
+      <rect x="148" y="340" width="216" height="6" rx="3" fill="#f0c435" opacity="0.45"/>
+    </svg>
+    <div class="label">Pizarrón</div>
+    <div class="hint">Clásico · Legible</div>
+  </div>
+
+  <!-- VARIANTE 2: Emblema con marco -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#204b3a"/>
+          <stop offset="100%" stop-color="#163028"/>
+        </linearGradient>
+      </defs>
+      <!-- Fondo -->
+      <rect width="512" height="512" rx="112" fill="url(#bg2)"/>
+      <!-- Marco geométrico -->
+      <rect x="52" y="52" width="408" height="408" rx="72" fill="none" stroke="#f0c435" stroke-width="8" opacity="0.35"/>
+      <rect x="76" y="76" width="360" height="360" rx="54" fill="none" stroke="#f0c435" stroke-width="2.5" opacity="0.18"/>
+      <!-- Letras G y IS en dos tamaños -->
+      <text x="256" y="248" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="188" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-6">GIS</text>
+      <!-- Subtítulo G.I.E -->
+      <text x="256" y="360" font-family="'Syne', Georgia, sans-serif" font-weight="700" font-size="34" fill="#f0c435" text-anchor="middle" opacity="0.5" letter-spacing="10">DOCENTE</text>
+    </svg>
+    <div class="label">Emblema</div>
+    <div class="hint">Con marco · Institucional</div>
+  </div>
+
+  <!-- VARIANTE 3: Monograma G grande -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg3" x1="20%" y1="0%" x2="80%" y2="100%">
+          <stop offset="0%" stop-color="#2a4728"/>
+          <stop offset="100%" stop-color="#1a3020"/>
+        </linearGradient>
+        <linearGradient id="chalk3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f7d84a"/>
+          <stop offset="100%" stop-color="#e8b820"/>
+        </linearGradient>
+      </defs>
+      <!-- Fondo -->
+      <rect width="512" height="512" rx="112" fill="url(#bg3)"/>
+      <!-- G enorme como base visual -->
+      <text x="256" y="300" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="360" fill="url(#chalk3)" text-anchor="middle" dominant-baseline="middle" opacity="0.12">G</text>
+      <!-- GIS encima, centrado -->
+      <text x="256" y="290" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="210" fill="url(#chalk3)" text-anchor="middle" dominant-baseline="middle" letter-spacing="-8">GIS</text>
+      <!-- Punto decorativo -->
+      <circle cx="256" cy="382" r="10" fill="#f0c435" opacity="0.55"/>
+    </svg>
+    <div class="label">Monograma</div>
+    <div class="hint">G dominante · Moderno</div>
+  </div>
+
+</div>
+
+<div class="row">
+
+  <!-- VARIANTE 4: Escudo/Badge -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2e5230"/>
+          <stop offset="100%" stop-color="#1a3020"/>
+        </linearGradient>
+      </defs>
+      <!-- Fondo -->
+      <rect width="512" height="512" rx="112" fill="url(#bg4)"/>
+      <!-- Banda superior amarilla -->
+      <rect x="0" y="0" width="512" height="120" rx="0" fill="#f0c435" opacity="0.12"/>
+      <rect x="0" y="0" width="512" height="8" rx="0" fill="#f0c435" opacity="0.6"/>
+      <!-- Banda inferior amarilla -->
+      <rect x="0" y="504" width="512" height="8" rx="0" fill="#f0c435" opacity="0.6"/>
+      <!-- Nombre app pequeño arriba -->
+      <text x="256" y="70" font-family="'Syne', Georgia, sans-serif" font-weight="700" font-size="28" fill="#f0c435" text-anchor="middle" opacity="0.7" letter-spacing="8">GESTIÓN ESCOLAR</text>
+      <!-- GIS central grande -->
+      <text x="256" y="310" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="240" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-10">GIS</text>
+      <!-- Líneas decorativas a los lados -->
+      <line x1="60" y1="348" x2="164" y2="348" stroke="#f0c435" stroke-width="3" opacity="0.35"/>
+      <line x1="348" y1="348" x2="452" y2="348" stroke="#f0c435" stroke-width="3" opacity="0.35"/>
+    </svg>
+    <div class="label">Badge</div>
+    <div class="hint">Con banda · Formal</div>
+  </div>
+
+  <!-- VARIANTE 5: Minimal chalk dot -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg5" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#304f2e"/>
+          <stop offset="100%" stop-color="#1a2e1a"/>
+        </radialGradient>
+      </defs>
+      <!-- Fondo -->
+      <rect width="512" height="512" rx="112" fill="url(#bg5)"/>
+      <!-- Círculo de fondo sutil -->
+      <circle cx="256" cy="240" r="185" fill="rgba(240,196,53,0.06)"/>
+      <circle cx="256" cy="240" r="168" fill="none" stroke="rgba(240,196,53,0.14)" stroke-width="2"/>
+      <!-- GIS limpio -->
+      <text x="256" y="274" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="200" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-6">GIS</text>
+      <!-- Tres puntos decorativos -->
+      <circle cx="210" cy="370" r="7" fill="#f0c435" opacity="0.4"/>
+      <circle cx="256" cy="378" r="7" fill="#f0c435" opacity="0.6"/>
+      <circle cx="302" cy="370" r="7" fill="#f0c435" opacity="0.4"/>
+    </svg>
+    <div class="label">Minimal</div>
+    <div class="hint">Círculo sutil · Elegante</div>
+  </div>
+
+  <!-- VARIANTE 6: Split color -->
+  <div class="variant">
+    <svg width="180" height="180" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="top-clip">
+          <rect x="0" y="0" width="512" height="256"/>
+        </clipPath>
+        <clipPath id="bot-clip">
+          <rect x="0" y="256" width="512" height="256"/>
+        </clipPath>
+      </defs>
+      <!-- Fondo split -->
+      <rect width="512" height="512" rx="112" fill="#f0c435"/>
+      <rect y="256" width="512" height="256" rx="0" fill="#2a4728"/>
+      <!-- Máscara para el radio inferior -->
+      <rect width="512" height="512" rx="112" fill="none" stroke="#2a4728" stroke-width="0"/>
+      <!-- GIS en verde sobre amarillo (arriba) -->
+      <text x="256" y="256" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="220" fill="#204b3a" text-anchor="middle" dominant-baseline="middle" letter-spacing="-8" clip-path="url(#top-clip)">GIS</text>
+      <!-- GIS en amarillo sobre verde (abajo) -->
+      <text x="256" y="256" font-family="'Syne', Georgia, sans-serif" font-weight="800" font-size="220" fill="#f0c435" text-anchor="middle" dominant-baseline="middle" letter-spacing="-8" clip-path="url(#bot-clip)">GIS</text>
+      <!-- Línea divisoria -->
+      <line x1="80" y1="256" x2="432" y2="256" stroke="#2a4728" stroke-width="3" opacity="0.3"/>
+    </svg>
+    <div class="label">Split</div>
+    <div class="hint">Bicolor · Llamativo</div>
+  </div>
+
+</div>
+
+<div class="instructions">
+  <h3>📱 Cómo guardar en el inicio del celular</h3>
+  <p>
+    <strong>Clic derecho → "Guardar imagen como..."</strong> en el ícono que más te guste.<br><br>
+    <strong>iOS:</strong> Abre la imagen en Safari → Compartir → "Añadir a pantalla de inicio"<br>
+    <strong>Android:</strong> Abre la imagen en Chrome → Menú ⋮ → "Añadir a pantalla de inicio"<br><br>
+    O bien, la app GIS en <strong>docenteappd.web.app</strong> se puede instalar directamente:<br>
+    Chrome/Safari → Menú → "Instalar app" o "Añadir a inicio"
+  </p>
+</div>
+
+</body>
+</html>

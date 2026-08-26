@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZonaApp — Supervisor Escolar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ee;--surface:#ffffff;--surface2:#f0ebe2;--border:rgba(0,0,0,0.08);
+  --text:#1c1410;--muted:#8a7a6a;--accent:#f97316;--green:#16a34a;--red:#dc2626;--amber:#d97706;--blue:#2563eb;
+  --accent-light:#fff4ed;--accent-hover:#ea6c0a;
+  --r:14px;--rs:10px;
+  --shadow:0 2px 8px rgba(0,0,0,0.09),0 6px 20px rgba(0,0,0,0.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;min-height:100vh;overflow-x:hidden}
+h1,h2,h3{font-family:'Syne',sans-serif}
+input,select,textarea{font-family:'DM Sans',sans-serif;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)!important}
+button{cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* LOADING */
+#loading-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#fdf6ee 0%,#fdecd8 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#loading-screen.hidden{display:none}
+.spinner{width:36px;height:36px;border:3px solid #f0e8dc;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-label{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.loading-label span{color:var(--accent)}
+
+/* AUTH */
+#auth-screen{position:fixed;inset:0;z-index:9500;background:linear-gradient(135deg,#fdf6ee 0%,#fdecd8 100%);display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:2rem}
+#auth-screen.hidden{display:none}
+.auth-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:var(--shadow)}
+.auth-logo{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;text-align:center}
+.auth-logo span{color:var(--accent)}
+.auth-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:.3rem}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.auth-field{margin-bottom:12px}
+.auth-field label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block;font-weight:600}
+.auth-field input,.auth-field select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--surface2);color:var(--text);font-size:14px}
+.auth-btn{width:100%;padding:13px;border-radius:var(--r);background:var(--accent);color:#fff;border:none;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;margin-top:6px;transition:all .22s;box-shadow:0 2px 8px rgba(249,115,22,.3)}
+.auth-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-tabs{display:flex;margin-bottom:1.5rem;border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden;background:var(--surface2)}
+.auth-tab{flex:1;padding:10px;font-size:13px;font-family:'Syne',sans-serif;font-weight:600;border:none;background:transparent;color:var(--muted);transition:all .22s}
+.auth-tab.active{background:var(--accent);color:#fff}
+.auth-link{font-size:13px;color:var(--accent);text-align:center;margin-top:12px;cursor:pointer;font-weight:500}
+.auth-err{background:#fef2f2;border:1.5px solid var(--red);border-radius:var(--rs);padding:9px 12px;font-size:13px;color:var(--red);margin-bottom:10px}
+.auth-ok{background:#f0fdf4;border:1.5px solid #6ee7b7;border-radius:var(--rs);padding:9px 12px;font-size:13px;color:#166534;margin-bottom:10px}
+
+/* ONBOARDING */
+#onboarding{position:fixed;inset:0;z-index:9000;background:linear-gradient(135deg,#fdf6ee 0%,#fdecd8 100%);display:flex;flex-direction:column;overflow-y:auto}
+#onboarding.hidden{display:none}
+.ob-step{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center}
+.ob-step.active{display:flex}
+.ob-logo{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem}
+.ob-logo span{color:var(--accent)}
+.ob-icon{font-size:68px;margin-bottom:1.25rem}
+.ob-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);margin-bottom:.5rem;line-height:1.2;max-width:400px}
+.ob-sub{font-size:14px;color:var(--muted);margin-bottom:2rem;max-width:360px;line-height:1.6}
+.ob-form{width:100%;max-width:460px;text-align:left}
+.ob-field{margin-bottom:12px}
+.ob-field label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block;font-weight:600}
+.ob-field input,.ob-field select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--rs);background:#fff;color:var(--text);font-size:14px}
+.ob-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ob-btn{width:100%;padding:13px;border-radius:var(--r);background:var(--accent);color:#fff;border:none;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;margin-top:8px;transition:all .22s;box-shadow:0 2px 8px rgba(249,115,22,.3)}
+.ob-btn:hover{background:var(--accent-hover)}
+.ob-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* APP */
+#app{display:none}
+.nav{display:flex;align-items:center;border-bottom:2px solid var(--border);background:#fff;position:sticky;top:0;z-index:100;padding:0 1rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);gap:10px}
+.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:var(--text);padding:1rem 1rem 1rem 0;border-right:1.5px solid var(--border);margin-right:.5rem;white-space:nowrap;min-width:120px}
+.nav-brand span{color:var(--accent)}
+.nav-zona{font-size:13px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-zona small{color:var(--muted);font-weight:400;font-size:11px;display:block}
+.badge-trial{font-size:11px;font-weight:700;background:var(--accent-light);color:var(--accent);border:1.5px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
+.badge-trial.expirado{background:#fef2f2;color:var(--red);border-color:var(--red)}
+.btn-nav{padding:8px 13px;border-radius:var(--rs);background:transparent;color:var(--muted);border:1.5px solid var(--border);font-size:12px;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:all .22s;font-weight:500}
+.btn-nav:hover{border-color:var(--accent);color:var(--accent)}
+
+/* MAIN CONTENT */
+main{padding:1.25rem;max-width:900px;margin:0 auto}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800}
+.stat-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.filter-btn{padding:5px 12px;border-radius:999px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;color:var(--muted);transition:all .18s}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search-input{flex:1;min-width:160px;max-width:260px;padding:6px 12px;border:1.5px solid var(--border);border-radius:999px;font-size:13px;background:#fff}
+
+/* SCHOOL GRID */
+.escuelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.escuela-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .22s;position:relative}
+.escuela-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(249,115,22,.12);transform:translateY(-1px)}
+.escuela-card.verde{border-left:4px solid var(--green)}
+.escuela-card.amarillo{border-left:4px solid var(--amber)}
+.escuela-card.rojo{border-left:4px solid var(--red)}
+.escuela-card.gris{border-left:4px solid #d1d5db}
+.semaforo{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.semaforo.verde{background:var(--green)}
+.semaforo.amarillo{background:var(--amber)}
+.semaforo.rojo{background:var(--red)}
+.semaforo.gris{background:#d1d5db}
+.pct-badge{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px}
+.pct-verde{background:#d1fae5;color:#065f46}
+.pct-amarillo{background:#fef9c3;color:#854d0e}
+.pct-rojo{background:#fee2e2;color:#991b1b}
+.pct-gris{background:var(--surface2);color:var(--muted)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.45);display:flex;align-items:flex-end;justify-content:center}
+.modal-overlay.hidden{display:none}
+.modal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.4,0,.2,1)}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 1.2rem}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:.25rem}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:1.25rem}
+
+/* CHECKLIST */
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.check-item:last-child{border-bottom:none}
+.check-doc{flex:1}
+.check-doc-name{font-size:13px;font-weight:700;color:var(--text)}
+.check-doc-desc{font-size:11px;color:var(--muted);margin-top:1px}
+.check-btns{display:flex;gap:6px;flex-shrink:0}
+.check-btn{padding:4px 10px;border-radius:6px;border:1.5px solid var(--border);font-size:11px;font-weight:700;background:#fff;transition:all .15s}
+.check-btn.verificado{background:#d1fae5;border-color:#6ee7b7;color:#065f46}
+.check-btn.pendiente{background:#fef9c3;border-color:#fcd34d;color:#854d0e}
+.check-btn.faltante{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+
+/* VISITA CARD */
+.visita-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.visita-item:last-child{border-bottom:none}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1c1410;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-state .icon{font-size:48px;margin-bottom:.75rem}
+.empty-state h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.empty-state p{font-size:13px;line-height:1.6;max-width:300px;margin:0 auto}
+
+/* SECTION TITLE */
+.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+
+/* PRINT */
+#print-zona{display:none}
+@media print{#print-zona{display:block}body>*:not(#print-zona){display:none}}
+
+@media(max-width:480px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .escuelas-grid{grid-template-columns:1fr}
+  .ob-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div class="loading-label">Zona<span>App</span></div>
+</div>
+
+<!-- AUTH -->
+<div id="auth-screen" class="hidden">
+  <div class="auth-card">
+    <div class="auth-logo">Zona<span>App</span> · Supervisor Escolar</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Iniciar sesión</button>
+      <button class="auth-tab" id="tab-reg" onclick="switchAuthTab('reg')">Registrarse</button>
+    </div>
+    <div id="auth-err" style="display:none" class="auth-err"></div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <div class="auth-field">
+        <label>Correo</label>
+        <input type="email" id="login-email" placeholder="supervisor@correo.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="auth-btn" id="btn-login" onclick="doLogin()">Entrar</button>
+      <div class="auth-link" onclick="doReset()">¿Olvidaste tu contraseña?</div>
+    </div>
+
+    <!-- Register -->
+    <div id="form-reg" style="display:none">
+      <div class="auth-field">
+        <label>Nombre completo</label>
+        <input type="text" id="reg-nombre" placeholder="Lic. María García">
+      </div>
+      <div class="auth-field">
+        <label>Correo institucional</label>
+        <input type="email" id="reg-email" placeholder="supervisor@sep.gob.mx" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label>Contraseña</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <button class="auth-btn" id="btn-reg" onclick="doRegister()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboarding" class="hidden">
+  <!-- Paso 1: Datos de zona -->
+  <div class="ob-step active" id="ob-1">
+    <div class="ob-logo">Zona<span>App</span></div>
+    <div class="ob-icon">🗂️</div>
+    <h1 class="ob-title">Configura tu Zona Escolar</h1>
+    <p class="ob-sub">Esta información identifica tu zona ante el sistema. Solo se configura una vez.</p>
+    <div class="ob-form">
+      <div class="ob-row">
+        <div class="ob-field">
+          <label>Número de zona</label>
+          <input type="text" id="ob-zona-num" placeholder="20" maxlength="4">
+        </div>
+        <div class="ob-field">
+          <label>Sector (opcional)</label>
+          <input type="text" id="ob-sector" placeholder="3" maxlength="4">
+        </div>
+      </div>
+      <div class="ob-field">
+        <label>Modalidad</label>
+        <select id="ob-modalidad">
+          <option value="Telesecundaria">Telesecundaria</option>
+          <option value="Secundaria General">Secundaria General</option>
+          <option value="Secundaria Técnica">Secundaria Técnica</option>
+          <option value="Primaria General">Primaria General</option>
+          <option value="Preescolar">Preescolar</option>
+          <option value="Otra">Otra</option>
+        </select>
+      </div>
+      <div class="ob-field">
+        <label>Estado</label>
+        <select id="ob-estado">
+          <option value="">Selecciona tu estado</option>
+          <option>Aguascalientes</option><option>Baja California</option><option>Baja California Sur</option>
+          <option>Campeche</option><option>Chiapas</option><option>Chihuahua</option>
+          <option>Ciudad de México</option><option>Coahuila</option><option>Colima</option>
+          <option>Durango</option><option>Estado de México</option><option>Guanajuato</option>
+          <option>Guerrero</option><option>Hidalgo</option><option>Jalisco</option>
+          <option>Michoacán</option><option>Morelos</option><option>Nayarit</option>
+          <option>Nuevo León</option><option>Oaxaca</option><option>Puebla</option>
+          <option>Querétaro</option><option>Quintana Roo</option><option>San Luis Potosí</option>
+          <option>Sinaloa</option><option>Sonora</option><option>Tabasco</option>
+          <option>Tamaulipas</option><option>Tlaxcala</option><option>Veracruz</option>
+          <option>Yucatán</option><option>Zacatecas</option>
+        </select>
+      </div>
+      <div id="ob-err" style="display:none;color:var(--red);font-size:12px;margin-top:6px;padding:8px 12px;background:#fef2f2;border-radius:8px"></div>
+      <button class="ob-btn" id="btn-ob1" onclick="guardarZona()">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- Paso 2: Agregar primera escuela -->
+  <div class="ob-step" id="ob-2">
+    <div class="ob-logo">Zona<span>App</span></div>
+    <div class="ob-icon">🏫</div>
+    <h1 class="ob-title">Agrega tus escuelas</h1>
+    <p class="ob-sub">Puedes agregar todas las escuelas de tu zona ahora o hacerlo después desde el panel.</p>
+    <div class="ob-form">
+      <div id="ob-escuelas-lista" style="margin-bottom:12px"></div>
+      <div style="background:var(--surface2);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div class="ob-row">
+          <div class="ob-field" style="margin-bottom:8px">
+            <label>CCT de la escuela</label>
+            <input type="text" id="ob-cct" placeholder="32TTV0001A" maxlength="12" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+          </div>
+          <div class="ob-field" style="margin-bottom:8px">
+            <label>Municipio</label>
+            <input type="text" id="ob-municipio" placeholder="Fresnillo">
+          </div>
+        </div>
+        <div class="ob-field" style="margin-bottom:8px">
+          <label>Nombre de la escuela</label>
+          <input type="text" id="ob-escuela-nombre" placeholder="Telesecundaria Benito Juárez">
+        </div>
+        <button onclick="agregarEscuelaOb()" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700">+ Agregar escuela</button>
+      </div>
+      <button class="ob-btn" onclick="finalizarOnboarding()">Ir al panel →</button>
+      <div class="auth-link" onclick="finalizarOnboarding()">Omitir, agregaré después</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="app">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">Zona<span>App</span></div>
+    <div class="nav-zona" id="nav-zona-info">
+      <span id="nav-zona-nombre">Zona —</span>
+      <small id="nav-zona-sub"></small>
+    </div>
+    <span id="badge-trial" class="badge-trial" style="display:none"></span>
+    <button class="btn-nav" onclick="abrirAgregarEscuela()">+ Escuela</button>
+    <button class="btn-nav" onclick="generarReporteZona()" title="Exportar PDF">📄</button>
+    <button class="btn-nav" onclick="abrirConfigZona()">⚙️</button>
+    <button class="btn-nav" onclick="doLogout()" style="border-color:transparent;font-size:18px;padding:6px 10px">🚪</button>
+  </nav>
+
+  <main>
+    <!-- STATS -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total" style="color:var(--accent)">—</div>
+        <div class="stat-label">Escuelas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-verde" style="color:var(--green)">—</div>
+        <div class="stat-label">En orden</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-pendiente" style="color:var(--amber)">—</div>
+        <div class="stat-label">Pendientes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-faltante" style="color:var(--red)">—</div>
+        <div class="stat-label">Faltantes</div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFiltro('todos',this)">Todas</button>
+      <button class="filter-btn" onclick="setFiltro('verde',this)">✅ En orden</button>
+      <button class="filter-btn" onclick="setFiltro('amarillo',this)">⚠️ Pendientes</button>
+      <button class="filter-btn" onclick="setFiltro('rojo',this)">❌ Faltantes</button>
+      <button class="filter-btn" onclick="setFiltro('gris',this)">— Sin datos</button>
+      <input class="search-input" type="text" placeholder="Buscar escuela..." id="search-input" oninput="renderGrid()">
+    </div>
+
+    <!-- GRID DE ESCUELAS -->
+    <div class="escuelas-grid" id="escuelas-grid"></div>
+  </main>
+</div>
+
+<!-- MODAL DETALLE ESCUELA -->
+<div class="modal-overlay hidden" id="modal-escuela" onclick="cerrarModal(event,'modal-escuela')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="det-nombre">—</div>
+    <div class="modal-sub" id="det-sub">—</div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;margin-bottom:1rem;border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden;background:var(--surface2)">
+      <button class="auth-tab active" id="det-tab-pap" onclick="switchDetTab('papeleria')">📋 Papelería</button>
+      <button class="auth-tab" id="det-tab-info" onclick="switchDetTab('info')">ℹ️ Info</button>
+      <button class="auth-tab" id="det-tab-visitas" onclick="switchDetTab('visitas')">📅 Visitas</button>
+    </div>
+
+    <!-- Papelería -->
+    <div id="det-papeleria">
+      <div class="section-title">Estado de documentos</div>
+      <div id="checklist-container"></div>
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <button onclick="marcarTodo('verificado')" style="flex:1;padding:9px;background:#d1fae5;color:#065f46;border:1.5px solid #6ee7b7;border-radius:8px;font-size:12px;font-weight:700">✅ Todo verificado</button>
+        <button onclick="marcarTodo('faltante')" style="flex:1;padding:9px;background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;border-radius:8px;font-size:12px;font-weight:700">❌ Todo faltante</button>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div id="det-info" style="display:none">
+      <div class="section-title">Datos de la escuela</div>
+      <div id="det-info-content"></div>
+      <div style="margin-top:16px">
+        <div class="section-title">Editar escuela</div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Nombre</label>
+          <input type="text" id="edit-nombre" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        </div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Municipio</label>
+          <input type="text" id="edit-municipio" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        </div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Director(a)</label>
+          <input type="text" id="edit-director" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        </div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Notas internas</label>
+          <textarea id="edit-notas" rows="3" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;resize:vertical"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button onclick="guardarInfoEscuela()" style="flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700">Guardar</button>
+          <button onclick="eliminarEscuela()" style="padding:10px 14px;background:none;border:1.5px solid var(--red);color:var(--red);border-radius:8px;font-size:13px">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visitas -->
+    <div id="det-visitas" style="display:none">
+      <div class="section-title">Registrar visita</div>
+      <div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:14px">
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Fecha de visita</label>
+          <input type="date" id="visita-fecha" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        </div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Tipo de visita</label>
+          <select id="visita-tipo" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+            <option value="verificacion">Verificación de papelería</option>
+            <option value="supervision">Supervisión pedagógica</option>
+            <option value="acompanamiento">Acompañamiento docente</option>
+            <option value="urgente">Atención urgente</option>
+            <option value="otra">Otra</option>
+          </select>
+        </div>
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Observaciones</label>
+          <textarea id="visita-notas" rows="2" placeholder="Observaciones de la visita..." style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;resize:vertical"></textarea>
+        </div>
+        <button onclick="registrarVisita()" style="width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700">Registrar visita</button>
+      </div>
+      <div class="section-title">Historial de visitas</div>
+      <div id="visitas-lista"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR ESCUELA -->
+<div class="modal-overlay hidden" id="modal-agregar" onclick="cerrarModal(event,'modal-agregar')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Agregar escuela</div>
+    <div class="modal-sub">Ingresa los datos de la escuela para agregarla a tu zona</div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">CCT</label>
+      <input type="text" id="add-cct" maxlength="12" placeholder="32TTV0001A" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Nombre de la escuela</label>
+      <input type="text" id="add-nombre" placeholder="Telesecundaria Benito Juárez" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div>
+        <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Municipio</label>
+        <input type="text" id="add-municipio" placeholder="Fresnillo" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Director(a)</label>
+        <input type="text" id="add-director" placeholder="Nombre" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+      </div>
+    </div>
+    <div id="add-err" style="display:none;color:var(--red);font-size:12px;margin-bottom:8px;padding:8px;background:#fef2f2;border-radius:8px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('modal-agregar').classList.add('hidden')" style="flex:0 0 auto;padding:10px 14px;background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:8px;font-size:13px">Cancelar</button>
+      <button onclick="guardarNuevaEscuela()" style="flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700">Agregar escuela</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIG ZONA -->
+<div class="modal-overlay hidden" id="modal-config" onclick="cerrarModal(event,'modal-config')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Configuración de zona</div>
+    <div class="modal-sub" id="config-sub"></div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Número de zona</label>
+      <input type="text" id="cfg-zona-num" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Modalidad</label>
+      <select id="cfg-modalidad" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        <option>Telesecundaria</option><option>Secundaria General</option><option>Secundaria Técnica</option><option>Primaria General</option><option>Preescolar</option><option>Otra</option>
+      </select>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Estado</label>
+      <select id="cfg-estado" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px">
+        <option value="">Selecciona tu estado</option>
+        <option>Aguascalientes</option><option>Baja California</option><option>Baja California Sur</option>
+        <option>Campeche</option><option>Chiapas</option><option>Chihuahua</option>
+        <option>Ciudad de México</option><option>Coahuila</option><option>Colima</option>
+        <option>Durango</option><option>Estado de México</option><option>Guanajuato</option>
+        <option>Guerrero</option><option>Hidalgo</option><option>Jalisco</option>
+        <option>Michoacán</option><option>Morelos</option><option>Nayarit</option>
+        <option>Nuevo León</option><option>Oaxaca</option><option>Puebla</option>
+        <option>Querétaro</option><option>Quintana Roo</option><option>San Luis Potosí</option>
+        <option>Sinaloa</option><option>Sonora</option><option>Tabasco</option>
+        <option>Tamaulipas</option><option>Tlaxcala</option><option>Veracruz</option>
+        <option>Yucatán</option><option>Zacatecas</option>
+      </select>
+    </div>
+    <button onclick="guardarConfigZona()" style="width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:10px">Guardar</button>
+    <button onclick="generarReporteZona()" style="width:100%;padding:11px;background:#fff;color:var(--text);border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;margin-bottom:10px">📄 Exportar reporte PDF</button>
+    <button onclick="doLogout()" style="width:100%;padding:11px;background:none;border:1.5px solid var(--red);color:var(--red);border-radius:8px;font-size:13px;font-weight:600">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
+<div class="modal-overlay hidden" id="modal-confirm">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">¿Eliminar escuela?</div>
+    <div class="modal-sub" id="confirm-msg" style="margin-bottom:1.25rem"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="document.getElementById('modal-confirm').classList.add('hidden')" style="flex:1;padding:11px;background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:8px;font-size:13px;font-weight:600">Cancelar</button>
+      <button id="confirm-ok" style="flex:1;padding:11px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-family:'Syne',sans-serif;font-weight:700">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TRIAL EXPIRADO -->
+<div class="modal-overlay hidden" id="modal-trial" style="align-items:center">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="border-radius:20px;max-width:400px;text-align:center">
+    <div style="font-size:48px;margin-bottom:1rem">⏰</div>
+    <div class="modal-title">Tu período de prueba terminó</div>
+    <p style="font-size:13px;color:var(--muted);margin:.5rem 0 1rem">Para seguir usando ZonaApp necesitas activar tu plan.</p>
+    <div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:1rem;text-align:left">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Plan Supervisor</div>
+      <div style="font-size:26px;font-weight:800;color:var(--accent);font-family:'Syne',sans-serif">$1,499 <span style="font-size:14px;font-weight:400;color:var(--muted)">/año</span></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Todas las escuelas · Reportes PDF · Sin límites</div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Contacta a tu coordinador o escríbenos para activar tu cuenta.</p>
+    <button onclick="doLogout()" style="width:100%;padding:11px;background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:8px;font-size:13px;font-weight:600">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- PRINT -->
+<div id="print-zona"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8FQoPPFVFqvFvStjSLGHAMVCPeo3w68s",
+  authDomain: "docenteappd.firebaseapp.com",
+  projectId: "docenteappd",
+  storageBucket: "docenteappd.firebasestorage.app",
+  messagingSenderId: "437212448028",
+  appId: "1:437212448028:web:fe928cedd62e3ed822a6d9"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ===== PAPELERÍA CONFIG =====
+const PAPELERIA = [
+  { id:'plan911',       label:'Plan 911',                desc:'Estadística escolar SEP' },
+  { id:'estadistica',   label:'Estadística Escolar',       desc:'Reporte de alumnos y matrícula (911/REPASE)' },
+  { id:'proteccionCivil', label:'Protección Civil',      desc:'Plan de emergencias y evacuación' },
+  { id:'comitePadres',  label:'Comité de Padres',        desc:'Acta de constitución del comité' },
+  { id:'higieneSeguridad', label:'Higiene y Seguridad',  desc:'Diagnóstico anual de condiciones' },
+  { id:'reporteFinanciero', label:'Reporte Financiero',  desc:'Transparencia y rendición de cuentas' },
+  { id:'plantillaDocente', label:'Plantilla Docente',    desc:'Lista de personal actualizada' },
+  { id:'calendarioEscolar', label:'Calendario Escolar',  desc:'Actividades del ciclo vigente' },
+];
+
+// ===== STATE =====
+let zonaData = null;    // /zonas/{zonaId}/info/datos
+let zonaId = null;
+let escuelas = {};      // { cct: { nombre, municipio, papeleria, visitas, ... } }
+let filtroActivo = 'todos';
+let escuelaCctActiva = null;
+let _obEscuelas = [];   // temp list during onboarding
+
+// ===== HELPERS =====
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const uid = () => auth.currentUser?.uid;
+const today = () => new Date().toISOString().slice(0,10);
+
+function toast(msg, dur=2800){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), dur);
+}
+
+function cerrarModal(e, id){
+  if(e.target===document.getElementById(id))
+    document.getElementById(id).classList.add('hidden');
+}
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape') return;
+  ['modal-escuela','modal-agregar','modal-config'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&!el.classList.contains('hidden')) el.classList.add('hidden');
+  });
+});
+
+function semaforo(pap){
+  if(!pap) return 'gris';
+  const vals = Object.values(pap);
+  if(!vals.length) return 'gris';
+  const total = PAPELERIA.length;
+  const verificados = PAPELERIA.filter(p => pap[p.id]==='verificado').length;
+  const faltantes = PAPELERIA.filter(p => pap[p.id]==='faltante').length;
+  const pct = verificados / total;
+  if(faltantes > 0 && verificados === 0) return 'rojo';
+  if(pct >= 0.8) return 'verde';
+  if(pct >= 0.4) return 'amarillo';
+  if(faltantes > 0) return 'rojo';
+  return 'gris';
+}
+
+function pctVerificado(pap){
+  if(!pap) return null;
+  const v = PAPELERIA.filter(p => pap[p.id]==='verificado').length;
+  return Math.round(v / PAPELERIA.length * 100);
+}
+
+function buildZonaId(numero, estado, modalidad){
+  const n = String(numero||'').trim().padStart(2,'0');
+  const e = (estado||'').trim().toLowerCase().replace(/\s+/g,'-').slice(0,6);
+  const m = (modalidad||'').trim().toLowerCase().slice(0,3);
+  return `${n}-${e}-${m}`;
+}
+
+// ===== AUTH =====
+window.switchAuthTab = function(tab){
+  document.getElementById('form-login').style.display = tab==='login'?'':'none';
+  document.getElementById('form-reg').style.display = tab==='reg'?'':'none';
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-reg').classList.toggle('active', tab==='reg');
+  document.getElementById('auth-err').style.display='none';
+};
+
+function showAuthErr(msg){
+  const el=document.getElementById('auth-err');
+  el.textContent=msg; el.style.display='';
+}
+
+window.doLogin = async function(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass) return showAuthErr('Completa todos los campos');
+  const btn=document.getElementById('btn-login');
+  btn.disabled=true; btn.textContent='Entrando...';
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(e){
+    const msgs={'auth/user-not-found':'No existe una cuenta con ese correo','auth/wrong-password':'Contraseña incorrecta','auth/invalid-credential':'Correo o contraseña incorrectos','auth/too-many-requests':'Demasiados intentos, espera un momento'};
+    showAuthErr(msgs[e.code]||'Error al iniciar sesión');
+    btn.disabled=false; btn.textContent='Entrar';
+  }
+};
+
+window.doRegister = async function(){
+  const nombre=document.getElementById('reg-nombre').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  if(!nombre||!email||!pass) return showAuthErr('Completa todos los campos');
+  if(pass.length<6) return showAuthErr('La contraseña debe tener al menos 6 caracteres');
+  const btn=document.getElementById('btn-reg');
+  btn.disabled=true; btn.textContent='Creando cuenta...';
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await setDoc(doc(db,`users/${cred.user.uid}/perfil/datos`),{
+      nombre, email, rol:'supervisor', creadoEn:serverTimestamp()
+    });
+  }catch(e){
+    const msgs={'auth/email-already-in-use':'Ya existe una cuenta con ese correo','auth/invalid-email':'Correo no válido','auth/weak-password':'Contraseña muy débil'};
+    showAuthErr(msgs[e.code]||'Error al crear cuenta');
+    btn.disabled=false; btn.textContent='Crear cuenta';
+  }
+};
+
+window.doReset = async function(){
+  const email=document.getElementById('login-email').value.trim();
+  if(!email) return showAuthErr('Escribe tu correo primero');
+  try{
+    await sendPasswordResetEmail(auth,email);
+    document.getElementById('auth-err').className='auth-ok';
+    document.getElementById('auth-err').textContent='Te enviamos un correo para recuperar tu contraseña';
+    document.getElementById('auth-err').style.display='';
+  }catch(e){ showAuthErr('No encontramos esa cuenta'); }
+};
+
+window.doLogout = async function(){
+  await signOut(auth);
+};
+
+// ===== ONBOARDING =====
+window.guardarZona = async function(){
+  const num=(document.getElementById('ob-zona-num').value||'').trim();
+  const sector=(document.getElementById('ob-sector').value||'').trim();
+  const modalidad=document.getElementById('ob-modalidad').value;
+  const estado=document.getElementById('ob-estado').value.trim();
+  const errEl=document.getElementById('ob-err');
+  if(!num){ errEl.textContent='Ingresa el número de zona'; errEl.style.display=''; return; }
+  if(!estado){ errEl.textContent='Ingresa el estado'; errEl.style.display=''; return; }
+  errEl.style.display='none';
+  const btn=document.getElementById('btn-ob1');
+  btn.disabled=true; btn.textContent='Guardando...';
+  try{
+    const zId=buildZonaId(num,estado,modalidad);
+    const datos={ numero:num, sector, modalidad, estado, supervisorUid:uid(), creadoEn:serverTimestamp(), plan:'free', trialStartedAt:serverTimestamp() };
+    await setDoc(doc(db,`zonas/${zId}`), datos);
+    await updateDoc(doc(db,`users/${uid()}/perfil/datos`),{ zonaId:zId, zonaNumero:num, modalidad, estado });
+    zonaId=zId; zonaData=datos;
+    document.getElementById('ob-1').classList.remove('active');
+    document.getElementById('ob-2').classList.add('active');
+  }catch(e){
+    const msg=(e.code==='permission-denied'||e.message?.includes('permission'))
+      ? 'Este número de zona ya está registrado. Prueba con otro número o contacta soporte.'
+      : 'Error al guardar: '+e.message;
+    errEl.textContent=msg; errEl.style.display='';
+  }
+  btn.disabled=false; btn.textContent='Continuar →';
+};
+
+window.agregarEscuelaOb = function(){
+  const cct=(document.getElementById('ob-cct').value||'').trim().toUpperCase();
+  const nombre=(document.getElementById('ob-escuela-nombre').value||'').trim();
+  const municipio=(document.getElementById('ob-municipio').value||'').trim();
+  if(!cct||!nombre) return toast('CCT y nombre son requeridos');
+  if(_obEscuelas.find(e=>e.cct===cct)) return toast('Esa CCT ya fue agregada');
+  _obEscuelas.push({cct,nombre,municipio});
+  document.getElementById('ob-cct').value='';
+  document.getElementById('ob-escuela-nombre').value='';
+  document.getElementById('ob-municipio').value='';
+  renderObEscuelas();
+};
+
+function renderObEscuelas(){
+  document.getElementById('ob-escuelas-lista').innerHTML=_obEscuelas.map((e,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;font-size:13px">
+      <div><span style="font-weight:700">${esc(e.cct)}</span> · ${esc(e.nombre)} <span style="color:var(--muted)">${e.municipio?'('+esc(e.municipio)+')':''}</span></div>
+      <button onclick="_obEscuelas.splice(${i},1);renderObEscuelas()" style="background:none;border:none;color:var(--red);font-size:14px;cursor:pointer">✕</button>
+    </div>`).join('');
+}
+
+window.finalizarOnboarding = async function(){
+  if(_obEscuelas.length && zonaId){
+    for(const e of _obEscuelas){
+      await setDoc(doc(db,`zonas/${zonaId}/escuelas/${e.cct}`),{
+        cct:e.cct, nombre:e.nombre, municipio:e.municipio||'',
+        director:'', notas:'', papeleria:{}, visitas:[],
+        agregadaEn:serverTimestamp()
+      }).catch(()=>{});
+    }
+  }
+  document.getElementById('onboarding').classList.add('hidden');
+  await iniciarApp();
+};
+
+// ===== APP INIT =====
+async function iniciarApp(){
+  document.getElementById('app').style.display='block';
+  await cargarZonaYEscuelas();
+  actualizarNav();
+  actualizarBadge();
+  checkTrialGate();
+  renderGrid();
+}
+
+function checkTrialGate(){
+  if(!zonaData?.trialStartedAt) return;
+  if(zonaData.plan==='supervisor') return;
+  const inicio=zonaData.trialStartedAt.toDate?.()??new Date();
+  const dias=30-Math.floor((Date.now()-inicio.getTime())/(1000*60*60*24));
+  if(dias<=0) document.getElementById('modal-trial').classList.remove('hidden');
+}
+
+async function cargarZonaYEscuelas(){
+  const perfilSnap=await getDoc(doc(db,`users/${uid()}/perfil/datos`));
+  const perfil=perfilSnap.data()||{};
+  const zId=perfil.zonaId;
+  if(!zId){ toast('Sin zona configurada'); return; }
+  zonaId=zId;
+  const zonaSnap=await getDoc(doc(db,`zonas/${zId}`));
+  zonaData=zonaSnap.exists()?zonaSnap.data():{};
+  const escSnap=await getDocs(collection(db,`zonas/${zId}/escuelas`));
+  escuelas={};
+  escSnap.docs.forEach(d=>{ escuelas[d.id]={...d.data(), cct:d.id}; });
+}
+
+function actualizarNav(){
+  if(!zonaData) return;
+  document.getElementById('nav-zona-nombre').textContent=`Zona ${zonaData.numero||'—'} · ${zonaData.modalidad||''}`;
+  document.getElementById('nav-zona-sub').textContent=zonaData.estado||'';
+}
+
+function actualizarBadge(){
+  const badge=document.getElementById('badge-trial');
+  if(!zonaData?.trialStartedAt) return;
+  if(zonaData.plan==='supervisor'){ badge.style.display='none'; return; }
+  const inicio=zonaData.trialStartedAt.toDate?.()??new Date();
+  const dias=30-Math.floor((Date.now()-inicio.getTime())/(1000*60*60*24));
+  if(dias>0){
+    badge.textContent=`${dias} días de prueba`;
+    badge.className='badge-trial';
+    badge.style.display='inline-block';
+  }else{
+    badge.textContent='Prueba expirada';
+    badge.className='badge-trial expirado';
+    badge.style.display='inline-block';
+  }
+}
+
+// ===== GRID =====
+function renderGrid(){
+  const grid=document.getElementById('escuelas-grid');
+  const busqueda=(document.getElementById('search-input')?.value||'').toLowerCase();
+  let lista=Object.values(escuelas);
+  if(busqueda) lista=lista.filter(e=>
+    (e.nombre||'').toLowerCase().includes(busqueda)||
+    (e.cct||'').toLowerCase().includes(busqueda)||
+    (e.municipio||'').toLowerCase().includes(busqueda)
+  );
+  if(filtroActivo!=='todos') lista=lista.filter(e=>semaforo(e.papeleria)===filtroActivo);
+
+  // stats
+  const total=Object.values(escuelas).length;
+  const verdes=Object.values(escuelas).filter(e=>semaforo(e.papeleria)==='verde').length;
+  const amarillos=Object.values(escuelas).filter(e=>semaforo(e.papeleria)==='amarillo').length;
+  const rojos=Object.values(escuelas).filter(e=>semaforo(e.papeleria)==='rojo').length;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-verde').textContent=verdes;
+  document.getElementById('stat-pendiente').textContent=amarillos;
+  document.getElementById('stat-faltante').textContent=rojos;
+
+  if(!lista.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">${total?'🔍':'🏫'}</div>
+      <h3>${total?'Sin resultados':'Sin escuelas aún'}</h3>
+      <p>${total?'Intenta otro filtro o búsqueda':'Agrega las escuelas de tu zona con el botón + Escuela'}</p>
+    </div>`;
+    return;
+  }
+
+  lista.sort((a,b)=>{
+    const orden={rojo:0,amarillo:1,gris:2,verde:3};
+    return (orden[semaforo(a.papeleria)]??2)-(orden[semaforo(b.papeleria)]??2);
+  });
+
+  grid.innerHTML=lista.map(e=>{
+    const sem=semaforo(e.papeleria);
+    const pct=pctVerificado(e.papeleria);
+    const pctLabel=pct!==null?`${pct}%`:'—';
+    const pctCls=pct===null?'pct-gris':pct>=80?'pct-verde':pct>=40?'pct-amarillo':'pct-rojo';
+    const ultimaVisita=Array.isArray(e.visitas)&&e.visitas.length
+      ?e.visitas[e.visitas.length-1].fecha:null;
+    return `<div class="escuela-card ${sem}" onclick="abrirDetalle('${esc(e.cct)}')">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+        <div class="semaforo ${sem}" style="margin-top:3px"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.nombre||'Sin nombre')}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px">${esc(e.cct)}${e.municipio?' · '+esc(e.municipio):''}</div>
+        </div>
+        <div class="pct-badge ${pctCls}">${pctLabel}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px">
+        ${PAPELERIA.slice(0,8).map(p=>{
+          const v=e.papeleria?.[p.id];
+          const col=v==='verificado'?'#16a34a':v==='faltante'?'#dc2626':v==='pendiente'?'#d97706':'#d1d5db';
+          return `<div title="${esc(p.label)}" style="height:5px;border-radius:3px;background:${col}"></div>`;
+        }).join('')}
+      </div>
+      ${e.director?`<div style="font-size:11px;color:var(--muted);margin-top:8px">Dir: ${esc(e.director)}</div>`:''}
+      ${ultimaVisita?`<div style="font-size:10px;color:var(--muted);margin-top:2px">Última visita: ${ultimaVisita}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+window.setFiltro = function(f, btn){
+  filtroActivo=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+};
+
+// ===== DETALLE ESCUELA =====
+window.abrirDetalle = function(cct){
+  escuelaCctActiva=cct;
+  const e=escuelas[cct];
+  if(!e) return;
+  document.getElementById('det-nombre').textContent=e.nombre||'Sin nombre';
+  document.getElementById('det-sub').textContent=`${e.cct}${e.municipio?' · '+e.municipio:''}${e.director?' · Dir: '+e.director:''}`;
+  switchDetTab('papeleria');
+  document.getElementById('modal-escuela').classList.remove('hidden');
+};
+
+window.switchDetTab = function(tab){
+  ['papeleria','info','visitas'].forEach(t=>{
+    document.getElementById('det-'+t).style.display=t===tab?'':'none';
+    document.getElementById('det-tab-'+t.replace('papeleria','pap')).classList.toggle('active',t===tab);
+  });
+  if(tab==='papeleria') renderChecklist();
+  if(tab==='info') renderInfoTab();
+  if(tab==='visitas') renderVisitasTab();
+};
+
+function renderChecklist(){
+  const e=escuelas[escuelaCctActiva];
+  if(!e) return;
+  document.getElementById('checklist-container').innerHTML=PAPELERIA.map(p=>{
+    const v=e.papeleria?.[p.id]||null;
+    return `<div class="check-item">
+      <div class="check-doc">
+        <div class="check-doc-name">${esc(p.label)}</div>
+        <div class="check-doc-desc">${esc(p.desc)}</div>
+      </div>
+      <div class="check-btns">
+        <button class="check-btn ${v==='verificado'?'verificado':''}" onclick="setPapeleria('${esc(escuelaCctActiva)}','${p.id}','verificado')">✅</button>
+        <button class="check-btn ${v==='pendiente'?'pendiente':''}" onclick="setPapeleria('${esc(escuelaCctActiva)}','${p.id}','pendiente')">⚠️</button>
+        <button class="check-btn ${v==='faltante'?'faltante':''}" onclick="setPapeleria('${esc(escuelaCctActiva)}','${p.id}','faltante')">❌</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.setPapeleria = async function(cct, docId, valor){
+  if(!escuelas[cct]) return;
+  if(!escuelas[cct].papeleria) escuelas[cct].papeleria={};
+  escuelas[cct].papeleria[docId]=valor;
+  renderChecklist();
+  renderGrid();
+  try{
+    await updateDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`),{
+      [`papeleria.${docId}`]:valor,
+      ultimaVerificacion:serverTimestamp()
+    });
+  }catch(_){ toast('Error al guardar'); }
+};
+
+window.marcarTodo = async function(valor){
+  const cct=escuelaCctActiva;
+  if(!cct||!escuelas[cct]) return;
+  const pap={};
+  PAPELERIA.forEach(p=>pap[p.id]=valor);
+  escuelas[cct].papeleria=pap;
+  renderChecklist();
+  renderGrid();
+  try{
+    await updateDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`),{
+      papeleria:pap, ultimaVerificacion:serverTimestamp()
+    });
+    toast(valor==='verificado'?'✅ Todo marcado como verificado':'❌ Todo marcado como faltante');
+  }catch(e){ toast('Error al guardar'); }
+};
+
+function renderInfoTab(){
+  const e=escuelas[escuelaCctActiva];
+  if(!e) return;
+  document.getElementById('det-info-content').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--surface2);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px">CCT</div>
+        <div style="font-size:13px;font-weight:700;margin-top:2px">${esc(e.cct)}</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px">Municipio</div>
+        <div style="font-size:13px;font-weight:700;margin-top:2px">${esc(e.municipio||'—')}</div>
+      </div>
+    </div>`;
+  document.getElementById('edit-nombre').value=e.nombre||'';
+  document.getElementById('edit-municipio').value=e.municipio||'';
+  document.getElementById('edit-director').value=e.director||'';
+  document.getElementById('edit-notas').value=e.notas||'';
+}
+
+window.guardarInfoEscuela = async function(){
+  const cct=escuelaCctActiva;
+  if(!cct) return;
+  const nombre=document.getElementById('edit-nombre').value.trim();
+  const municipio=document.getElementById('edit-municipio').value.trim();
+  const director=document.getElementById('edit-director').value.trim();
+  const notas=document.getElementById('edit-notas').value.trim();
+  escuelas[cct]={...escuelas[cct],nombre,municipio,director,notas};
+  renderGrid();
+  try{
+    await updateDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`),{nombre,municipio,director,notas});
+    toast('✅ Guardado');
+    document.getElementById('det-nombre').textContent=nombre||'Sin nombre';
+  }catch(e){ toast('Error al guardar'); }
+};
+
+window.eliminarEscuela = function(){
+  const cct=escuelaCctActiva;
+  if(!cct) return;
+  const nombre=escuelas[cct]?.nombre||cct;
+  document.getElementById('confirm-msg').textContent=`"${nombre}" será eliminada de tu zona. Esta acción no se puede deshacer.`;
+  document.getElementById('modal-confirm').classList.remove('hidden');
+  document.getElementById('confirm-ok').onclick = async function(){
+    document.getElementById('modal-confirm').classList.add('hidden');
+    delete escuelas[cct];
+    document.getElementById('modal-escuela').classList.add('hidden');
+    renderGrid();
+    try{
+      await deleteDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`));
+      toast('Escuela eliminada');
+    }catch(e){ toast('Error al eliminar'); }
+  };
+};
+
+// ===== VISITAS =====
+function renderVisitasTab(){
+  const e=escuelas[escuelaCctActiva];
+  if(!e) return;
+  document.getElementById('visita-fecha').value=today();
+  const lista=Array.isArray(e.visitas)?[...e.visitas].reverse():[];
+  document.getElementById('visitas-lista').innerHTML=lista.length
+    ?lista.map(v=>`<div class="visita-item">
+        <div style="font-size:18px">${v.tipo==='verificacion'?'📋':v.tipo==='supervision'?'🔍':v.tipo==='acompanamiento'?'🤝':v.tipo==='urgente'?'🚨':'📅'}</div>
+        <div style="flex:1">
+          <div style="font-weight:600">${esc(v.fecha)}</div>
+          <div style="font-size:12px;color:var(--muted)">${esc(v.tipo)}</div>
+          ${v.notas?`<div style="font-size:12px;color:var(--text);margin-top:2px">${esc(v.notas)}</div>`:''}
+        </div>
+      </div>`).join('')
+    :`<div style="color:var(--muted);font-size:13px;padding:8px 0;font-style:italic">Sin visitas registradas</div>`;
+}
+
+window.registrarVisita = async function(){
+  const cct=escuelaCctActiva;
+  if(!cct) return;
+  const fecha=document.getElementById('visita-fecha').value;
+  const tipo=document.getElementById('visita-tipo').value;
+  const notas=document.getElementById('visita-notas').value.trim();
+  if(!fecha) return toast('Selecciona una fecha');
+  const visita={fecha,tipo,notas,registradaEn:new Date().toISOString()};
+  if(!escuelas[cct].visitas) escuelas[cct].visitas=[];
+  escuelas[cct].visitas.push(visita);
+  document.getElementById('visita-notas').value='';
+  renderVisitasTab();
+  renderGrid();
+  try{
+    await updateDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`),{visitas:escuelas[cct].visitas});
+    toast('✅ Visita registrada');
+  }catch(e){ toast('Error al guardar'); }
+};
+
+// ===== AGREGAR ESCUELA =====
+window.abrirAgregarEscuela = function(){
+  document.getElementById('add-cct').value='';
+  document.getElementById('add-nombre').value='';
+  document.getElementById('add-municipio').value='';
+  document.getElementById('add-director').value='';
+  document.getElementById('add-err').style.display='none';
+  document.getElementById('modal-agregar').classList.remove('hidden');
+};
+
+window.guardarNuevaEscuela = async function(){
+  const cct=(document.getElementById('add-cct').value||'').trim().toUpperCase();
+  const nombre=(document.getElementById('add-nombre').value||'').trim();
+  const municipio=(document.getElementById('add-municipio').value||'').trim();
+  const director=(document.getElementById('add-director').value||'').trim();
+  const errEl=document.getElementById('add-err');
+  if(!cct||!nombre){ errEl.textContent='CCT y nombre son requeridos'; errEl.style.display=''; return; }
+  if(escuelas[cct]){ errEl.textContent='Esa CCT ya existe en tu zona'; errEl.style.display=''; return; }
+  const nueva={cct,nombre,municipio,director,notas:'',papeleria:{},visitas:[],agregadaEn:serverTimestamp()};
+  escuelas[cct]=nueva;
+  document.getElementById('modal-agregar').classList.add('hidden');
+  renderGrid();
+  try{
+    await setDoc(doc(db,`zonas/${zonaId}/escuelas/${cct}`), nueva);
+    toast(`✅ ${nombre} agregada`);
+  }catch(e){ toast('Error al guardar'); }
+};
+
+// ===== CONFIG ZONA =====
+window.abrirConfigZona = function(){
+  if(!zonaData) return;
+  document.getElementById('cfg-zona-num').value=zonaData.numero||'';
+  document.getElementById('cfg-modalidad').value=zonaData.modalidad||'Telesecundaria';
+  document.getElementById('cfg-estado').value=zonaData.estado||'';
+  document.getElementById('config-sub').textContent=`ZonaID: ${zonaId}`;
+  document.getElementById('modal-config').classList.remove('hidden');
+};
+
+window.guardarConfigZona = async function(){
+  const numero=document.getElementById('cfg-zona-num').value.trim();
+  const modalidad=document.getElementById('cfg-modalidad').value;
+  const estado=document.getElementById('cfg-estado').value.trim();
+  if(!numero||!estado) return toast('Completa los campos requeridos');
+  zonaData={...zonaData,numero,modalidad,estado};
+  actualizarNav();
+  document.getElementById('modal-config').classList.add('hidden');
+  try{
+    await updateDoc(doc(db,`zonas/${zonaId}`),{numero,modalidad,estado});
+    toast('✅ Configuración guardada');
+  }catch(e){ toast('Error al guardar'); }
+};
+
+// ===== REPORTE PDF =====
+window.generarReporteZona = function(){
+  const lista=Object.values(escuelas);
+  const fecha=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'});
+  const verdes=lista.filter(e=>semaforo(e.papeleria)==='verde').length;
+  const amarillos=lista.filter(e=>semaforo(e.papeleria)==='amarillo').length;
+  const rojos=lista.filter(e=>semaforo(e.papeleria)==='rojo').length;
+  const sinDatos=lista.filter(e=>semaforo(e.papeleria)==='gris').length;
+
+  let html=`<div style="font-family:Arial,sans-serif;padding:24px;max-width:800px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:20px;border-bottom:2px solid #333;padding-bottom:12px">
+      <h2 style="margin:0;font-size:18px">Zona Escolar ${esc(zonaData?.numero||'—')} · ${esc(zonaData?.modalidad||'')}</h2>
+      <p style="margin:4px 0;font-size:12px;color:#666">${esc(zonaData?.estado||'')} · Reporte generado el ${fecha}</p>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:20px;text-align:center">
+      <div style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px"><div style="font-size:22px;font-weight:700">${lista.length}</div><div style="font-size:11px;color:#666">Total</div></div>
+      <div style="flex:1;padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px"><div style="font-size:22px;font-weight:700;color:#16a34a">${verdes}</div><div style="font-size:11px;color:#16a34a">En orden</div></div>
+      <div style="flex:1;padding:10px;background:#fefce8;border:1px solid #fcd34d;border-radius:8px"><div style="font-size:22px;font-weight:700;color:#d97706">${amarillos}</div><div style="font-size:11px;color:#d97706">Pendiente</div></div>
+      <div style="flex:1;padding:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px"><div style="font-size:22px;font-weight:700;color:#dc2626">${rojos}</div><div style="font-size:11px;color:#dc2626">Faltante</div></div>
+      <div style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px"><div style="font-size:22px;font-weight:700;color:#9ca3af">${sinDatos}</div><div style="font-size:11px;color:#9ca3af">Sin datos</div></div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead>
+        <tr style="background:#f3f4f6">
+          <th style="padding:6px 8px;text-align:left;border:1px solid #ddd">CCT</th>
+          <th style="padding:6px 8px;text-align:left;border:1px solid #ddd">Escuela</th>
+          <th style="padding:6px 8px;text-align:left;border:1px solid #ddd">Municipio</th>
+          ${PAPELERIA.map(p=>`<th style="padding:6px 4px;text-align:center;border:1px solid #ddd;writing-mode:vertical-rl;min-width:28px;max-width:28px">${esc(p.label)}</th>`).join('')}
+          <th style="padding:6px 8px;text-align:center;border:1px solid #ddd">%</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lista.sort((a,b)=>{const o={rojo:0,amarillo:1,gris:2,verde:3};return(o[semaforo(a.papeleria)]??2)-(o[semaforo(b.papeleria)]??2);}).map((e,i)=>{
+          const sem=semaforo(e.papeleria);
+          const rowBg=i%2?'#f9fafb':'#fff';
+          const pct=pctVerificado(e.papeleria);
+          const statusBg=sem==='verde'?'#d1fae5':sem==='amarillo'?'#fef9c3':sem==='rojo'?'#fee2e2':'#f3f4f6';
+          return `<tr style="background:${rowBg}">
+            <td style="padding:5px 8px;border:1px solid #ddd;font-weight:600">${esc(e.cct)}</td>
+            <td style="padding:5px 8px;border:1px solid #ddd">${esc(e.nombre||'—')}</td>
+            <td style="padding:5px 8px;border:1px solid #ddd">${esc(e.municipio||'—')}</td>
+            ${PAPELERIA.map(p=>{
+              const v=e.papeleria?.[p.id];
+              const icon=v==='verificado'?'✅':v==='faltante'?'❌':v==='pendiente'?'⚠️':'—';
+              return `<td style="padding:5px 4px;text-align:center;border:1px solid #ddd">${icon}</td>`;
+            }).join('')}
+            <td style="padding:5px 8px;text-align:center;border:1px solid #ddd;background:${statusBg};font-weight:700">${pct!==null?pct+'%':'—'}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <p style="margin-top:24px;font-size:10px;color:#999;text-align:center">ZonaApp · Reporte de papelería · ${fecha}</p>
+  </div>`;
+
+  document.getElementById('print-zona').innerHTML=html;
+  document.getElementById('modal-config').classList.add('hidden');
+  window.print();
+};
+
+// ===== AUTH STATE =====
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('auth-screen').classList.remove('hidden');
+    document.getElementById('app').style.display='none';
+    document.getElementById('onboarding').classList.add('hidden');
+    return;
+  }
+  document.getElementById('auth-screen').classList.add('hidden');
+  try{
+    const snap=await getDoc(doc(db,`users/${user.uid}/perfil/datos`));
+    const perfil=snap.data()||{};
+    if(perfil.rol && perfil.rol !== 'supervisor'){
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      showAuthErr('Esta cuenta no es de supervisor. Usa DocenteApp para maestros y directivos.');
+      await signOut(auth);
+      return;
+    }
+    if(!perfil.zonaId){
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('onboarding').classList.remove('hidden');
+      document.getElementById('ob-1').classList.add('active');
+      document.getElementById('ob-2').classList.remove('active');
+    }else{
+      document.getElementById('loading-screen').classList.add('hidden');
+      await iniciarApp();
+    }
+  }catch(e){
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('auth-screen').classList.remove('hidden');
+  }
+});
+
+</script>
+</body>
+</html>

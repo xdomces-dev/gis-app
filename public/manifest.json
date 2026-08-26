@@ -1,0 +1,18 @@
+{
+  "name": "GIS — Gestión Integral Escolar",
+  "short_name": "GIS",
+  "description": "Expediente docente digital personal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1f3520",
+  "theme_color": "#2a4728",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/gis-icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

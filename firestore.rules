@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Short-code global index — any authenticated user can read; only the directivo can create their own code
+    match /codigosInvitacion/{code} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                     && request.auth.uid == request.resource.data.directivoUid;
+      allow update, delete: if false;
+    }
+
+    // Teacher summary doc — directivo can read if teacher embedded their directivoId in this doc
+    match /users/{userId}/resumen/{doc} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        resource.data.get('directivoId', '') == request.auth.uid
+      );
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Teacher perfil — owners can update any field except plan and rol;
+    // any authenticated user can arrayUnion only their own UID into maestrosVinculados
+    match /users/{userId}/perfil/{doc} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && (
+        (request.auth.uid == userId
+          && !('plan' in request.resource.data.diff(resource.data).affectedKeys())
+          && !('rol' in request.resource.data.diff(resource.data).affectedKeys())) ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['maestrosVinculados'])
+          && request.resource.data.maestrosVinculados.hasAll(resource.data.get('maestrosVinculados', []))
+          && request.resource.data.maestrosVinculados.removeAll(resource.data.get('maestrosVinculados', [])).hasOnly([request.auth.uid]))
+      );
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Alumnos — owner only; validate name is non-empty string
+    match /users/{userId}/alumnos/{alumnoId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.n is string
+        && request.resource.data.n.size() > 0
+        && request.resource.data.n.size() <= 200
+        && request.resource.data.grado is string;
+    }
+
+    // Asistencias — owner only; validate estado enum
+    match /users/{userId}/asistencias/{docId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.alumno is string
+        && request.resource.data.fecha is string
+        && request.resource.data.estado in ['A', 'F', 'J'];
+    }
+
+    // Puntos — owner only; validate tipo enum and positive valor
+    match /users/{userId}/puntos/{docId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.alumno is string
+        && request.resource.data.tipo in ['pos', 'neg']
+        && request.resource.data.valor is int
+        && request.resource.data.valor > 0;
+    }
+
+    // All other user sub-collections (evaluaciones, tareas, meta, organizacion, eventos, etc.) — owner only
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Zonas — supervisor can read/write only their own zone document
+    match /zonas/{zonaId} {
+      allow read, update, delete: if request.auth != null
+        && resource.data.supervisorUid == request.auth.uid;
+      allow create: if request.auth != null
+        && request.resource.data.supervisorUid == request.auth.uid;
+    }
+
+    // Zona subcollections (escuelas, etc.) — only the zone's supervisor
+    match /zonas/{zonaId}/{document=**} {
+      allow read, write: if request.auth != null
+        && get(/databases/$(database)/documents/zonas/$(zonaId)).data.supervisorUid == request.auth.uid;
+    }
+
+    // Directorio de escuela — any school member can write their own entry (teachers + director)
+    match /escuelas/{cct}/directorio/{userId} {
+      allow write: if request.auth != null && userId == request.auth.uid && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('escuelaCct', '') == cct
+      );
+    }
+
+    // Comunicados — director can write; any member can update lecturas field only
+    match /escuelas/{cct}/comunicados/{comId} {
+      allow read: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('escuelaCct', '') == cct
+      );
+      allow create, delete: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct;
+      allow update: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct ||
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('escuelaCct', '') == cct
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lecturas']))
+      );
+    }
+
+    // Escuelas — director (cct match) can read/write; linked teachers (escuelaCct match) can read
+    match /escuelas/{cct}/{document=**} {
+      allow read: if request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('escuelaCct', '') == cct
+      );
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)/perfil/datos).data.get('cct', '') == cct;
+    }
+  }
+}
