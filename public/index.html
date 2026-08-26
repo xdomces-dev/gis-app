@@ -281,6 +281,10 @@ select:focus,input:focus{border-color:var(--accent);background:#fff}
 .ab.sA{background:rgba(26,138,92,0.12);color:#065f46;border-color:rgba(26,138,92,0.28)}
 .ab.sF{background:rgba(214,69,69,0.10);color:#991b1b;border-color:rgba(214,69,69,0.28)}
 .ab.sJ{background:rgba(201,130,10,0.10);color:#92400e;border-color:rgba(201,130,10,0.28)}
+.lista-card{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;background:#fff}
+.lista-card:hover{border-color:var(--accent);background:var(--surface2)}
+.lista-card-nombre{font-size:14px;font-weight:600;color:var(--text)}
+.lista-card-meta{font-size:11.5px;color:var(--muted)}
 .table-wrap{overflow-x:auto;margin-top:8px;border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:14px;min-width:380px;background:rgba(255,255,255,0.84)}
 th{text-align:left;padding:11px 14px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;background:rgba(32,75,58,0.05)}
@@ -1023,6 +1027,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="menu-item" id="mi-asistencia"  onclick="menuNav('asistencia')">📋 Asistencia</button>
       <button class="menu-item" id="mi-semana"      onclick="menuNav('semana')" style="display:flex;align-items:center">📅 Vista semanal<span class="lock-icon" id="lock-semana" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-tareas"      onclick="menuNav('tareas')">📝 Tareas</button>
+      <button class="menu-item" id="mi-listas"      onclick="menuNav('listas')">☑️ Listas</button>
 
       <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Evaluación</div>
       <button class="menu-item" id="mi-evaluacion"  onclick="menuNav('evaluacion')" style="display:flex;align-items:center">📊 Evaluación<span class="lock-icon" id="lock-evaluacion" style="display:none">🔒</span></button>
@@ -1186,6 +1191,34 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="btn btn-sm" onclick="renderTablaTareas()">Filtrar</button>
       </div>
       <div class="table-wrap" id="tabla-tareas"><div class="empty">Sin registros aún</div></div>
+    </div>
+
+    <!-- LISTAS -->
+    <div id="sec-listas" class="sec">
+      <div id="listas-vista-cards">
+        <div class="row">
+          <div style="flex:1"><label>Nombre de la lista</label><input type="text" id="nl-nombre" placeholder="Ej: Mochilas SEP"></div>
+          <div><label>Grupo</label>
+            <select id="nl-grupo">
+              <option value="">Todos los grupos</option>
+              <option value="1°">1°</option>
+              <option value="2°">2°</option>
+              <option value="3°">3°</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn btn-save" onclick="crearLista()">+ Crear lista</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div id="listas-cards"><div class="empty">Aún no hay listas. Crea la primera arriba.</div></div>
+      </div>
+
+      <div id="listas-vista-detalle" style="display:none">
+        <button class="btn btn-sm" onclick="volverListas()">← Listas</button>
+        <div id="ld-header"></div>
+        <div id="ld-grid"></div>
+      </div>
     </div>
 
     <!-- EVALUACIÓN -->
@@ -2111,6 +2144,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-bottom:20px">
         <button class="mas-item" onclick="docNavToMas('semana')"><span>📅</span>Semanal<span class="lock-icon" id="lock2-semana" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('tareas')"><span>📝</span>Tareas</button>
+        <button class="mas-item" onclick="docNavToMas('listas')"><span>☑️</span>Listas</button>
         <button class="mas-item" onclick="docNavToMas('evaluacion')"><span>📊</span>Evaluación</button>
         <button class="mas-item" onclick="docNavToMas('concentrado')"><span>📋</span>Concentrado<span class="lock-icon" id="lock2-concentrado" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('estadisticas')"><span>📈</span>Estadísticas</button>
@@ -2725,7 +2759,8 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache() });
 // ===== ESTADO =====
 let currentUser = null;
 let ALUMNOS=[], escuelaData=null, planData=null, schoolData=null;
-let tareasData=[], asistencias=[], evaluaciones=[], puntosData=[];
+let tareasData=[], asistencias=[], evaluaciones=[], puntosData=[], listasData=[];
+let listaActivaId=null;
 let metaData={valor:50,premio:''};
 let eventosPersonales=[], eventosEscuela=[];
 let metaYaCelebrada=false;
@@ -2735,7 +2770,8 @@ window.obAlumnos=[];
 window.cfgAlumnos=[];
 let _modoDirectivo=false, _rolPendiente=null, _tipoDirPendiente=null, _editandoEscuelaDir=false;
 // ─── CICLO & GRUPO ───
-let _todosAlumnos=[], _todasAsistencias=[], _todasTareas=[], _todasEvals=[], _todosPuntos=[];
+let _todosAlumnos=[], _todasAsistencias=[], _todasTareas=[], _todasEvals=[], _todosPuntos=[], _todasListas=[];
+let ALUMNOS_CICLO=[]; // todos los alumnos del ciclo activo, sin filtrar por grupo
 let grupoActivo=''; // '1°' | '2°' | '3°' | '' = todos
 
 const CAMPOS={P1:'1er Periodo',P2:'2do Periodo',P3:'3er Periodo'};
@@ -3135,7 +3171,7 @@ async function fsGetCol(colPath){
 
 // ===== CARGAR DATOS =====
 async function cargarTodosLosDatos(){
-  const [perfil,als,asis,tar,evals,pts,meta,evs]=await Promise.all([
+  const [perfil,als,asis,tar,evals,pts,meta,evs,lst]=await Promise.all([
     fsGet('perfil/datos'),
     fsGetCol('alumnos'),
     fsGetCol('asistencias'),
@@ -3144,6 +3180,7 @@ async function cargarTodosLosDatos(){
     fsGetCol('puntos'),
     fsGet('meta/datos'),
     fsGetCol('eventos'),
+    fsGetCol('listas'),
   ]);
   escuelaData=perfil;
   _todosAlumnos=als||[];
@@ -3151,6 +3188,7 @@ async function cargarTodosLosDatos(){
   _todasTareas=tar||[];
   _todasEvals=evals||[];
   _todosPuntos=pts||[];
+  _todasListas=lst||[];
   aplicarFiltrosCicloGrupo();
   metaData=meta||{valor:50,premio:''};
   metaYaCelebrada=metaData.celebrada||false;
@@ -3170,6 +3208,7 @@ function aplicarFiltrosCicloGrupo(){
   const ciclo=escuelaData?.cicloActivo||'';
   // Docs sin ciclo son compatibles con cualquier ciclo (migración pendiente)
   let als=ciclo?_todosAlumnos.filter(a=>!a.ciclo||a.ciclo===ciclo):_todosAlumnos;
+  ALUMNOS_CICLO=als; // todos los grupos del ciclo activo (roster para listas "Todos los grupos")
   if(grupoActivo) als=als.filter(a=>a.grado===grupoActivo);
   ALUMNOS=als;
   const ids=new Set(ALUMNOS.map(a=>a.id));
@@ -3179,6 +3218,8 @@ function aplicarFiltrosCicloGrupo(){
   tareasData=_todasTareas.filter(r=>byCiclo(r)&&byAlumno(r));
   evaluaciones=_todasEvals.filter(r=>byCiclo(r)&&byAlumno(r));
   puntosData=_todosPuntos.filter(r=>byCiclo(r)&&byAlumno(r));
+  // Una lista aplica si es de "todos los grupos" o coincide con el grupoActivo
+  listasData=_todasListas.filter(l=>byCiclo(l)&&(!grupoActivo||!l.grupo||l.grupo===grupoActivo));
 }
 
 async function migrarCicloInicial(){
@@ -3224,7 +3265,7 @@ window.cambiarGrupo=function(grupo){
   renderListaTareas();renderTablaTareas();
   renderListaEval();renderTablaEval();
   initCatChips();initUmbrals();renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
-  renderInicio();
+  renderInicio();renderListaListas();
   toast('Grupo: '+(grupo||'Todos'));
 };
 
@@ -3297,7 +3338,7 @@ window.confirmarNuevoCiclo=async function(){
 };
 
 window.exportarDatos=function(){
-  const backup={exportadoEn:new Date().toISOString(),perfil:escuelaData,alumnos:_todosAlumnos,asistencias:_todasAsistencias,tareas:_todasTareas,evaluaciones:_todasEvals,puntos:_todosPuntos};
+  const backup={exportadoEn:new Date().toISOString(),perfil:escuelaData,alumnos:_todosAlumnos,asistencias:_todasAsistencias,tareas:_todasTareas,evaluaciones:_todasEvals,puntos:_todosPuntos,listas:_todasListas};
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='docente-respaldo-'+(new Date().toISOString().slice(0,10))+'.json';a.click();
@@ -4317,7 +4358,7 @@ window.showTab=function(t){
   const _nb=document.getElementById(_NM[t]||'doc-nav-mas');
   if(_nb)_nb.classList.add('active');
   const lbl=document.getElementById('nav-seccion-label');
-  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración'};
+  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración'};
   if(lbl)lbl.textContent=MENU_LABELS[t]||t;
   if(t==='inicio')renderInicio();
   if(t==='reportes'){generarReporte();initWASelect();initConstanciaSelect();}
@@ -4328,6 +4369,7 @@ window.showTab=function(t){
   if(t==='cumpleanos')renderCumpleanos();
   if(t==='semana')renderSemana();
   if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();}
+  if(t==='listas'){volverListas();}
 };
 
 // ===== ASISTENCIA =====
@@ -4442,6 +4484,111 @@ window.delTarea=async function(id){
   if(!await showConfirm('¿Eliminar esta tarea?','Eliminar'))return;
   await fsDel(`tareas/${id}`);
   tareasData=tareasData.filter(r=>r.id!==id);renderTablaTareas();
+};
+
+// ===== LISTAS (checklist persistente por alumno) =====
+function rosterLista(l){
+  const base=l.grupo?ALUMNOS_CICLO.filter(a=>a.grado===l.grupo):ALUMNOS_CICLO;
+  return base.slice().sort((a,b)=>(a.n||'').localeCompare(b.n||''));
+}
+
+function renderListaListas(){
+  const cont=document.getElementById('listas-cards');
+  if(!cont)return;
+  if(!listasData.length){cont.innerHTML='<div class="empty">Aún no hay listas. Crea la primera arriba.</div>';return;}
+  cont.innerHTML=listasData.map(l=>{
+    const roster=rosterLista(l);
+    const estados=l.estados||{};
+    const marcados=roster.filter(a=>estados[a.id]==='si').length;
+    return `<div class="lista-card" onclick="abrirDetalleLista('${l.id}')">
+      <div>
+        <div class="lista-card-nombre">${esc(l.nombre)}</div>
+        <div class="lista-card-meta">${l.grupo?esc(l.grupo):'Todos los grupos'}</div>
+      </div>
+      <div class="lista-card-meta" style="font-family:var(--font-mono);font-size:13px">${marcados}/${roster.length}</div>
+    </div>`;
+  }).join('');
+}
+window.renderListaListas=renderListaListas;
+
+window.crearLista=async function(){
+  const nombreEl=document.getElementById('nl-nombre');
+  const nombre=nombreEl.value.trim();
+  const grupo=document.getElementById('nl-grupo').value;
+  if(!nombre)return mostrarCel('⚠️','Falta el nombre','Escribe un nombre para la lista');
+  try{
+    const id=await fsAdd('listas',{nombre,grupo,estados:{}});
+    _todasListas.unshift({id,nombre,grupo,estados:{},ciclo:escuelaData?.cicloActivo||''});
+    aplicarFiltrosCicloGrupo();
+    nombreEl.value='';
+    renderListaListas();
+    toast('✅ Lista creada: '+nombre);
+  }catch(err){toast('Error creando la lista');console.error(err);}
+};
+
+window.abrirDetalleLista=function(id){
+  listaActivaId=id;
+  document.getElementById('listas-vista-cards').style.display='none';
+  document.getElementById('listas-vista-detalle').style.display='';
+  renderDetalleLista();
+};
+
+window.volverListas=function(){
+  listaActivaId=null;
+  document.getElementById('listas-vista-detalle').style.display='none';
+  document.getElementById('listas-vista-cards').style.display='';
+  renderListaListas();
+};
+
+function renderDetalleLista(){
+  const l=_todasListas.find(x=>x.id===listaActivaId);
+  if(!l){volverListas();return;}
+  const roster=rosterLista(l);
+  const estados=l.estados||{};
+  const marcados=roster.filter(a=>estados[a.id]==='si').length;
+  document.getElementById('ld-header').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0">
+      <div>
+        <p class="sec-title" style="margin:0">${esc(l.nombre)}</p>
+        <div class="lista-card-meta">${l.grupo?esc(l.grupo):'Todos los grupos'} · <span style="font-family:var(--font-mono)">${marcados}/${roster.length} marcados</span></div>
+      </div>
+      <button class="btn btn-sm" onclick="eliminarLista('${l.id}')" style="color:var(--red);border-color:var(--red)">🗑️ Eliminar lista</button>
+    </div>`;
+  document.getElementById('ld-grid').innerHTML=!roster.length?'<div class="empty">Sin alumnos en este grupo</div>':'<div class="alumno-grid">'+roster.map(a=>{
+    const est=estados[a.id]||'';
+    return `<div class="ac">
+      <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
+      <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
+      <div class="asist-row">
+        <span class="ab ${est==='si'?'sA':''}" onclick="setEstadoListaAlumno('${a.id}','si')">✓</span>
+        <span class="ab ${est==='no'?'sF':''}" onclick="setEstadoListaAlumno('${a.id}','no')">✗</span>
+        <span class="ab ${est==='na'?'sJ':''}" onclick="setEstadoListaAlumno('${a.id}','na')">N/A</span>
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+window.setEstadoListaAlumno=async function(alumnoId,val){
+  const l=_todasListas.find(x=>x.id===listaActivaId);
+  if(!l)return;
+  l.estados=l.estados||{};
+  const nuevo=l.estados[alumnoId]===val?'':val;
+  l.estados[alumnoId]=nuevo;
+  renderDetalleLista();
+  try{await fsUpdate('listas/'+l.id,{['estados.'+alumnoId]:nuevo});}
+  catch(err){toast('Error guardando');console.error(err);}
+};
+
+window.eliminarLista=async function(id){
+  const l=_todasListas.find(x=>x.id===id);
+  if(!await showConfirm(`¿Eliminar la lista "${l?l.nombre:''}"? Se perderá el progreso.`,'Eliminar'))return;
+  try{
+    await fsDel('listas/'+id);
+    _todasListas=_todasListas.filter(x=>x.id!==id);
+    aplicarFiltrosCicloGrupo();
+    volverListas();
+    toast('Lista eliminada');
+  }catch(err){toast('Error eliminando');console.error(err);}
 };
 
 // ===== EVALUACIÓN =====
@@ -5072,7 +5219,7 @@ window.guardarAlumnosCfg=async function(){
     _todosAlumnos=[..._todosAlumnos.filter(a=>a.ciclo&&a.ciclo!==cicloActivo),...nuevos];
     aplicarFiltrosCicloGrupo();
     setSynced();
-    initSelects();renderListaAsist();renderListaTareas();renderListaEval();renderPuntosGrid();renderRankingPuntos();
+    initSelects();renderListaAsist();renderListaTareas();renderListaEval();renderPuntosGrid();renderRankingPuntos();renderListaListas();
     mostrarCel('👥','¡Alumnos actualizados!',`${ALUMNOS.length} alumnos`);
     actualizarResumen();
   }catch(e){setSyncError();mostrarCel('❌','Error al guardar',e.message||'Intenta de nuevo');}
@@ -5082,7 +5229,7 @@ window.borrarTodo=async function(){
   if(!await showConfirm('¿Borrar TODOS los registros? Esta acción no se puede deshacer.','Borrar todo'))return;
   setSyncing();
   try{
-    const cols=['asistencias','tareas','evaluaciones','puntos'];
+    const cols=['asistencias','tareas','evaluaciones','puntos','listas'];
     for(const col of cols){
       const snap=await getDocs(collection(db,`users/${uid()}/${col}`));
       const batch=writeBatch(db);
@@ -5090,9 +5237,9 @@ window.borrarTodo=async function(){
       await batch.commit();
     }
 
-    tareasData=[];asistencias=[];evaluaciones=[];puntosData=[];metaData={valor:50,premio:''};
+    tareasData=[];asistencias=[];evaluaciones=[];puntosData=[];listasData=[];_todasListas=[];metaData={valor:50,premio:''};
     setSynced();
-    renderTablaAsist();renderTablaTareas();renderTablaEval();renderTablaPuntos();
+    renderTablaAsist();renderTablaTareas();renderTablaEval();renderTablaPuntos();renderListaListas();
     mostrarCel('🗑️','Datos borrados','Todo limpio');
   }catch(e){setSyncError();mostrarCel('❌','Error al borrar',e.message||'Intenta de nuevo');}
 };
