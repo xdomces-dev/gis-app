@@ -154,6 +154,10 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 
 /* NAV */
 .nav{display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(240,244,242,0.55);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);position:sticky;top:0;z-index:100;padding:0 1rem;box-shadow:0 1px 0 rgba(32,75,58,0.06)}
+#nav-back-btn{width:36px;height:36px;background:none;border:1.5px solid var(--border);border-radius:10px;font-size:22px;line-height:1;cursor:pointer;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .15s;opacity:.28;pointer-events:none;margin-right:6px;font-weight:300}
+#nav-back-btn.can-go-back{opacity:1;pointer-events:auto}
+#nav-back-btn.can-go-back:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+#nav-back-btn:active{transform:scale(0.93)}
 .nav-brand{font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--text);padding:.85rem .85rem .85rem 0;border-right:1px solid var(--border);margin-right:.85rem;white-space:nowrap;cursor:pointer;max-width:130px;overflow:hidden;text-overflow:ellipsis}
 .nav-brand span{color:var(--accent)}
 .nav-tabs{display:flex;flex:1;overflow-x:auto;gap:2px;padding:6px 0}
@@ -255,6 +259,20 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 .evento-escuela{background:#ecfdf5;border-color:#059669;color:var(--text)}
 .cal-seccion{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px}
 @media print{#print-org{display:block!important}body>*:not(#print-org){display:none!important}.no-print{display:none}}
+/* ===== GESTIÓN PEDAGÓGICA ===== */
+.gp-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.80);border-radius:var(--r);padding:16px 14px;cursor:pointer;transition:background .2s,box-shadow .2s,transform .18s;box-shadow:0 2px 12px rgba(20,40,32,0.07)}
+.gp-card:hover{background:rgba(255,255,255,0.90);box-shadow:0 6px 20px rgba(20,40,32,0.12);transform:translateY(-2px)}
+.gp-card:active{transform:scale(0.97)!important}
+.gp-card-nombre{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;font-family:var(--font-display)}
+.gp-card-meta{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.cont-row{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);background:#fff;transition:background .12s}
+.cont-row:last-child{border-bottom:none}
+.cont-row:hover{background:rgba(32,75,58,0.03)}
+.cont-ind{padding:4px 9px;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;font-family:var(--font);white-space:nowrap}
+.cont-ind:hover{border-color:var(--accent);color:var(--accent)}
+.cont-ind.on{background:rgba(32,75,58,0.10);border-color:var(--accent);color:var(--accent)}
+.cont-ind.on-green{background:rgba(26,138,92,0.12);border-color:var(--green);color:#065f46}
+.gp-propósito{background:rgba(32,75,58,0.06);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:1.25rem;font-size:13px;color:var(--text);line-height:1.65}
 
 
 label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.6px;font-weight:600;font-family:var(--font)}
@@ -1038,6 +1056,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="menu-item" id="mi-puntos"      onclick="menuNav('puntos')" style="display:flex;align-items:center">⭐ Puntos<span class="lock-icon" id="lock-puntos" style="display:none">🔒</span></button>
 
 
+      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Pedagógico</div>
+      <button class="menu-item" id="mi-gestion" onclick="menuNav('gestion')">📚 Gestión Pedagógica</button>
+
       <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Comunicación</div>
       <button class="menu-item" id="mi-reportes"    onclick="menuNav('reportes')" style="display:flex;align-items:center">📄 Reportes<span class="lock-icon" id="lock-reportes" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-cumpleanos"  onclick="menuNav('cumpleanos')">🎂 Cumpleaños <span id="cumple-badge" style="display:none;background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700;margin-left:4px"></span></button>
@@ -1056,6 +1077,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   <!-- TOP NAV (compacta) -->
   <nav class="nav">
+    <button id="nav-back-btn" onclick="navBack()" title="Atrás">‹</button>
     <button id="hamburger-btn" onclick="toggleMenu()" style="display:none;width:38px;height:38px;background:none;border:1.5px solid var(--border);border-radius:10px;font-size:18px;cursor:pointer;flex-shrink:0;color:var(--text);align-items:center;justify-content:center;transition:all .15s" title="Menú">☰</button>
     <div class="nav-brand" id="nav-label" onclick="menuNav('inicio')" style="cursor:pointer" title="Ver inicio"><span style="font-family:var(--font-display);font-size:1em;font-weight:800;letter-spacing:2.5px;">GIS</span></div>
     <div style="flex:1;display:flex;align-items:center;padding:0 8px;overflow:hidden">
@@ -1604,6 +1626,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         </div>
       </div>
       <div id="cumple-lista"></div>
+    </div>
+
+    <!-- GESTIÓN PEDAGÓGICA -->
+    <div id="sec-gestion" class="sec">
+      <div id="gp-overview"></div>
+      <div id="gp-detalle" style="display:none"></div>
+      <div id="gp-temporal" style="display:none"></div>
     </div>
 
     <!-- CONFIG -->
@@ -2171,6 +2200,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="mas-item" onclick="docNavToMas('concentrado')"><span>📋</span>Concentrado<span class="lock-icon" id="lock2-concentrado" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('estadisticas')"><span>📈</span>Estadísticas</button>
         <button class="mas-item" onclick="docNavToMas('puntos')"><span>⭐</span>Puntos</button>
+        <button class="mas-item" onclick="docNavToMas('gestion')"><span>📚</span>Pedagógica</button>
         <button class="mas-item" onclick="docNavToMas('reportes')"><span>📄</span>Reportes<span class="lock-icon" id="lock2-reportes" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('cumpleanos')"><span>🎂</span>Cumpleaños</button>
         <button class="mas-item" onclick="cerrarMasSheet();toggleHerrSidebar()"><span>🛠️</span>Herramientas</button>
@@ -2782,6 +2812,8 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache() });
 let currentUser = null;
 let ALUMNOS=[], escuelaData=null, planData=null, schoolData=null;
 let tareasData=[], asistencias=[], evaluaciones=[], puntosData=[], listasData=[], diasSinClase=[];
+let contenidosData=[], _todasContenidos=[];
+let gestionVistaDetalle=null;
 let listaActivaId=null;
 let metaData={valor:50,premio:''};
 let eventosPersonales=[], eventosEscuela=[];
@@ -3196,7 +3228,7 @@ async function fsGetCol(colPath){
 
 // ===== CARGAR DATOS =====
 async function cargarTodosLosDatos(){
-  const [perfil,als,asis,tar,evals,pts,meta,evs,lst,dsc]=await Promise.all([
+  const [perfil,als,asis,tar,evals,pts,meta,evs,lst,dsc,cont]=await Promise.all([
     fsGet('perfil/datos'),
     fsGetCol('alumnos'),
     fsGetCol('asistencias'),
@@ -3207,6 +3239,7 @@ async function cargarTodosLosDatos(){
     fsGetCol('eventos'),
     fsGetCol('listas'),
     fsGetCol('diasSinClase'),
+    fsGetCol('contenidos'),
   ]);
   escuelaData=perfil;
   _todosAlumnos=als||[];
@@ -3216,6 +3249,7 @@ async function cargarTodosLosDatos(){
   _todosPuntos=pts||[];
   _todasListas=lst||[];
   _todosDiasSinClase=dsc||[];
+  _todasContenidos=cont||[];
   aplicarFiltrosCicloGrupo();
   metaData=meta||{valor:50,premio:''};
   metaYaCelebrada=metaData.celebrada||false;
@@ -3248,6 +3282,7 @@ function aplicarFiltrosCicloGrupo(){
   // Una lista aplica si es de "todos los grupos" o coincide con el grupoActivo
   listasData=_todasListas.filter(l=>byCiclo(l)&&(!grupoActivo||!l.grupo||l.grupo===grupoActivo));
   diasSinClase=_todosDiasSinClase.filter(byCiclo);
+  contenidosData=_todasContenidos.filter(byCiclo);
 }
 
 async function migrarCicloInicial(){
@@ -3711,7 +3746,10 @@ function iniciarApp(){
       miSistema.insertBefore(btn,document.getElementById('mi-config'));
     }
   }
-  // Mostrar inicio
+  // Mostrar inicio + inicializar historial de navegación
+  _navHistory = [];
+  _navCurrent = 'inicio';
+  history.replaceState({gis:true, tab:'inicio'}, '', location.href);
   showTab('inicio');
   // Hamburger nav — ocultar bottom nav, mostrar botón menú
   const _dn=document.getElementById('doc-bottom-nav'); if(_dn)_dn.style.display='flex';
@@ -4369,6 +4407,14 @@ function initSelects(){
 
 window.showTab=function(t){
   if(_modoDirectivo) return;
+  // Registrar historial de navegación interna
+  if(!_navGoingBack && _navCurrent && _navCurrent !== t){
+    _navHistory.push(_navCurrent);
+    if(_navHistory.length > 25) _navHistory.shift();
+    history.pushState({gis:true, tab:t}, '', location.href);
+  }
+  _navCurrent = t;
+  _updateNavBackBtn();
   const PREMIUM_TABS=['semana','evaluacion','concentrado','puntos','reportes'];
   if(PREMIUM_TABS.includes(t)&&!isPremium()){
     mostrarUpgrade();
@@ -4386,7 +4432,7 @@ window.showTab=function(t){
   const _nb=document.getElementById(_NM[t]||'doc-nav-mas');
   if(_nb)_nb.classList.add('active');
   const lbl=document.getElementById('nav-seccion-label');
-  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración'};
+  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración',gestion:'📚 Gestión Pedagógica'};
   if(lbl)lbl.textContent=MENU_LABELS[t]||t;
   if(t==='inicio')renderInicio();
   if(t==='reportes'){generarReporte();initWASelect();initConstanciaSelect();}
@@ -4396,6 +4442,7 @@ window.showTab=function(t){
   if(t==='config'){cargarConfig();renderSeccionVinculo();}
   if(t==='cumpleanos')renderCumpleanos();
   if(t==='semana')renderSemana();
+  if(t==='gestion')renderGestionPedagogica();
   if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();}
   if(t==='listas'){volverListas();}
 };
@@ -4532,14 +4579,16 @@ window.guardarTareas=async function(){
   const fecha=document.getElementById('fecha-tarea').value,campo=document.getElementById('campo-tarea').value,desc=document.getElementById('desc-tarea').value.trim()||'Tarea del día';
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
   let cnt=0;const proms=[];
+  const _gpCid=window._gpContenidoId||null;
   ALUMNOS.forEach(a=>{
     if(tareasSel[a.id]){
-      const r={fecha,campo,desc,alumno:a.id,estado:tareasSel[a.id]};
-      proms.push(fsAdd('tareas',r).then(id=>{tareasData.unshift({id,...r});cnt++;}));
+      const r={fecha,campo,desc,alumno:a.id,estado:tareasSel[a.id],evidenciaFisica:false,...(_gpCid?{contenidoId:_gpCid}:{})};
+      proms.push(fsAdd('tareas',r).then(id=>{tareasData.unshift({id,...r});_todasTareas.unshift({id,...r});cnt++;}));
     }
   });
   if(!proms.length)return mostrarCel('⚠️','Sin alumnos','Marca al menos un alumno');
   await Promise.all(proms);
+  window._gpContenidoId=null;
   renderListaTareas();renderTablaTareas();
   document.getElementById('desc-tarea').value='';
   mostrarCel('📋','¡Tareas registradas!',`${cnt} alumnos`);
@@ -6346,6 +6395,39 @@ window.menuNav = function(t){
   showTab(t);
 };
 
+// ===== NAVEGACIÓN INTERNA — HISTORIAL =====
+let _navHistory = [];
+let _navCurrent = 'inicio';
+let _navGoingBack = false;
+
+function _updateNavBackBtn(){
+  const btn = document.getElementById('nav-back-btn');
+  if(!btn) return;
+  if(_navHistory.length > 0) btn.classList.add('can-go-back');
+  else btn.classList.remove('can-go-back');
+}
+
+window.navBack = function(){
+  if(_navHistory.length > 0){
+    const prev = _navHistory.pop();
+    _navGoingBack = true;
+    showTab(prev);
+    _navGoingBack = false;
+  }
+};
+
+window.addEventListener('popstate', function(e){
+  if(_navHistory.length > 0){
+    const prev = _navHistory.pop();
+    _navGoingBack = true;
+    showTab(prev);
+    _navGoingBack = false;
+  } else {
+    // Sin historial — devolver al estado actual para no salir de la app
+    history.pushState({gis:true, tab:_navCurrent||'inicio'}, '', location.href);
+  }
+});
+
 // ===== BOTTOM NAV — DOCENTE =====
 window.docNavTo = function(tab, btn){
   document.querySelectorAll('.doc-nav-btn').forEach(b=>b.classList.remove('active'));
@@ -7072,9 +7154,11 @@ window.verPerfil=function(id){
       ${tabBtn('datos','📋 Datos',true)}
       ${tabBtn('bitacora','📔 Bitácora',false)}
       ${tabBtn('diag','📊 Diagnóstico',false)}
+      ${tabBtn('portafolio','📁 Portafolio',false)}
     </div>
     <div id="ptab-datos">${datosHTML}</div>
     <div id="ptab-diag" style="display:none"></div>
+    <div id="ptab-portafolio" style="display:none"></div>
     <div id="ptab-bitacora" style="display:none">
       <div style="background:var(--surface2);border-radius:var(--rs);padding:12px;margin-bottom:12px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -7124,7 +7208,8 @@ window.showPerfilTab=function(tab,id){
   document.getElementById('ptab-datos').style.display=tab==='datos'?'':'none';
   document.getElementById('ptab-bitacora').style.display=tab==='bitacora'?'':'none';
   document.getElementById('ptab-diag').style.display=tab==='diag'?'':'none';
-  ['datos','bitacora','diag'].forEach(t=>{
+  const pp=document.getElementById('ptab-portafolio');if(pp)pp.style.display=tab==='portafolio'?'':'none';
+  ['datos','bitacora','diag','portafolio'].forEach(t=>{
     const btn=document.getElementById('ptab-btn-'+t);
     if(!btn)return;
     const active=t===tab;
@@ -7134,6 +7219,7 @@ window.showPerfilTab=function(tab,id){
   });
   if(tab==='bitacora'&&id)renderBitacoraLista(id);
   if(tab==='diag'&&id)renderDiagTab(id);
+  if(tab==='portafolio'&&id)renderPerfilPortafolio(id);
 };
 
 function renderDiagTab(alumnoId){
@@ -8907,6 +8993,474 @@ window.supGenerarReporte = function(){
   win.document.close();
   win.focus();
   setTimeout(()=>win.print(), 600);
+};
+
+// ===== GESTIÓN PEDAGÓGICA =====
+
+const GP_MATERIAS=['Lenguajes / Español','Matemáticas','Biología / Ciencias de la Vida','Física y Química','Historia','Geografía','Formación Cívica y Ética','Inglés Básico'];
+
+const GP_EMOJI={
+  'Lenguajes / Español':'📖',
+  'Matemáticas':'🔢',
+  'Biología / Ciencias de la Vida':'🌿',
+  'Física y Química':'⚗️',
+  'Historia':'🏛️',
+  'Geografía':'🗺️',
+  'Formación Cívica y Ética':'⚖️',
+  'Inglés Básico':'🇬🇧',
+};
+
+const GP_CAMPO={
+  'Lenguajes / Español':'LEN',
+  'Inglés Básico':'LEN',
+  'Matemáticas':'SPC',
+  'Biología / Ciencias de la Vida':'SPC',
+  'Física y Química':'SPC',
+  'Historia':'ENS',
+  'Geografía':'ENS',
+  'Formación Cívica y Ética':'ENS',
+};
+
+const PROPOSITOS={
+  'Lenguajes / Español':'Desarrollar comprensión lectora, expresión oral y escrita a través de textos funcionales y literarios.',
+  'Matemáticas':'Construir pensamiento lógico-matemático aplicado a problemas cotidianos y de la comunidad.',
+  'Biología / Ciencias de la Vida':'Comprender los seres vivos, sus procesos y su relación con la salud y el entorno.',
+  'Física y Química':'Introducir el método científico y los fenómenos físico-químicos básicos de forma experimental.',
+  'Historia':'Ubicar a México dentro de procesos históricos más amplios, de la prehistoria al mundo contemporáneo.',
+  'Geografía':'Comprender el espacio geográfico, sus recursos y la relación entre población y territorio.',
+  'Formación Cívica y Ética':'Formar criterio ético y ciudadano para la convivencia, los derechos y la participación.',
+  'Inglés Básico':'Desarrollar comunicación básica en inglés a través de módulos temáticos progresivos.',
+};
+
+const MAPA_MAESTRO={
+  'Lenguajes / Español':['Identidad y autobiografía','Descripción de personas y lugares','Estructura de la oración','Ortografía básica','Tipos de texto','Cuentos y leyendas','Noticias','Entrevista','Carta y correo','Instructivos','Reglamentos','Exposición oral','Debate','Poesía','Textos argumentativos','Investigación y fuentes'],
+  'Matemáticas':['Operaciones básicas','Números enteros','Fracciones','Decimales','Porcentajes','Proporcionalidad','Regla de tres','Potencias','Raíces','Álgebra básica','Ecuaciones','Perímetro y área','Cuerpos geométricos','Estadística','Gráficas','Probabilidad','Educación financiera'],
+  'Biología / Ciencias de la Vida':['Características de los seres vivos','La célula','Seres unicelulares y pluricelulares','Clasificación de los seres vivos','Reinos de los seres vivos','Bacterias','Protistas','Hongos','Plantas','Animales','Nutrición','Respiración','Reproducción','Ecosistemas','Cadenas alimentarias','Cuerpo humano','Aparatos y sistemas','Alimentación y salud','Genética básica'],
+  'Física y Química':['La ciencia y los experimentos','Medición y unidades','Materia','Estados de la materia','Sustancias y mezclas','Átomos y moléculas','Elementos y tabla periódica','Cambios físicos y químicos','Ácidos, bases y pH','Movimiento','Fuerzas','Máquinas simples','Energía','Calor y temperatura','Electricidad y magnetismo','Luz y sonido'],
+  'Historia':['Prehistoria','Primeros seres humanos','Revolución agrícola','Nacimiento de la escritura','Primeras civilizaciones','Egipto y Mesopotamia','Grecia','Roma','Pueblos originarios de América','Mesoamérica','Olmecas','Periodo Clásico','Toltecas','Mexicas','Fundación de México-Tenochtitlan','Llegada de los europeos a América','Conquista de México','Nueva España','Independencia de México','México durante el siglo XIX','Reforma','Porfiriato','Revolución Mexicana','México posrevolucionario','Primera Guerra Mundial','Segunda Guerra Mundial','Guerra Fría','México y el mundo contemporáneo'],
+  'Geografía':['Orientación','Mapas y coordenadas','Relieve y placas tectónicas','Clima','Agua','Población','Migración','Actividades económicas','Recursos naturales','México y Zacatecas','Continentes y países','Urbanización y medio ambiente'],
+  'Formación Cívica y Ética':['Identidad personal','Autoconocimiento','Emociones','Diversidad','Convivencia','Valores','Normas y reglas','Derechos humanos','Responsabilidades','Libertad','Toma de decisiones','Consecuencias de nuestros actos','Ética','Resolución de conflictos','Justicia','Igualdad','Democracia','Participación ciudadana','Comunidad','Cultura de paz'],
+  'Inglés Básico':["Hello! — saludos, despedidas, My name is…, please, thank you","About me — nombre, edad, lugar donde vive, gustos; I am… / I like… / I don't like…","Alphabet & Numbers — alfabeto, deletreo, números 1–100 y fechas","People & Pronouns — I, you, he, she, we, they; introducción al verbo TO BE","Describing People — adjetivos, características físicas y personales; He is… / She is… / He has… / She has…","My Family — miembros de la familia; This is my… / his / her","My Daily Routine — wake up, eat, go to school, study, play, sleep; introducción al presente simple","Time, Days & Dates — días, meses, fechas y hora; Today, tomorrow, yesterday","Food & Drinks — alimentos y bebidas; I like… / I don't like… / I want…","My House & Community — casa, escuela, tienda, parque, habitaciones y lugares; There is / There are; preposiciones básicas","What Can I Do? — Can / can't; habilidades y acciones","Let's Communicate — preguntas y respuestas básicas, presentaciones, descripciones, rutinas, gustos y pequeños diálogos"],
+};
+
+const MES_PERIODO={Septiembre:'P1',Octubre:'P1',Noviembre:'P1',Diciembre:'P1',Enero:'P2',Febrero:'P2',Marzo:'P2',Abril:'P3',Mayo:'P3',Junio:'P3'};
+const MESES_ORDEN=['Septiembre','Octubre','Noviembre','Diciembre','Enero','Febrero','Marzo','Abril','Mayo','Junio'];
+const MESES_DIST={
+  Septiembre:{Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Octubre:   {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Noviembre: {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Diciembre: {Leng:1,Mat:1,Bio:1,FyQ:2,Hist:2,Geo:1,FCyE:1,Ing:1},
+  Enero:     {Leng:2,Mat:2,Bio:2,FyQ:1,Hist:3,Geo:2,FCyE:2,Ing:2},
+  Febrero:   {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:3,Ing:1},
+  Marzo:     {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Abril:     {Leng:1,Mat:2,Bio:2,FyQ:1,Hist:3,Geo:2,FCyE:2,Ing:1},
+  Mayo:      {Leng:1,Mat:1,Bio:2,FyQ:1,Hist:3,Geo:1,FCyE:2,Ing:2},
+  Junio:     {Leng:1,Mat:1,Bio:2,FyQ:1,Hist:2,Geo:1,FCyE:2,Ing:1},
+};
+const ALIAS_MATERIA={
+  'Lenguajes / Español':'Leng','Matemáticas':'Mat','Biología / Ciencias de la Vida':'Bio',
+  'Física y Química':'FyQ','Historia':'Hist','Geografía':'Geo',
+  'Formación Cívica y Ética':'FCyE','Inglés Básico':'Ing',
+};
+
+function gpGenerarSeedDocs(){
+  const cursor={};
+  GP_MATERIAS.forEach(m=>cursor[m]=0);
+  const docs=[];
+  for(const mes of MESES_ORDEN){
+    const dist=MESES_DIST[mes];
+    const periodo=MES_PERIODO[mes];
+    for(const materia of GP_MATERIAS){
+      const alias=ALIAS_MATERIA[materia];
+      const count=dist[alias]||0;
+      const arr=MAPA_MAESTRO[materia];
+      for(let i=0;i<count;i++){
+        const idx=cursor[materia]++;
+        if(idx<arr.length){
+          docs.push({materia,nombre:arr[idx],orden:idx+1,mesSugerido:mes,periodo,plan:false,material:false,impartido:false,fecha:'',generaEvidencia:false,tareaId:null,temaGeneradorId:null});
+        }
+      }
+    }
+  }
+  return docs;
+}
+
+let _gpSeeding=false;
+async function gpSeedSiVacio(){
+  if(_todasContenidos.length>0)return;
+  if(_gpSeeding)return;
+  _gpSeeding=true;
+  const docs=gpGenerarSeedDocs();
+  for(const d of docs){
+    const id=await fsAdd('contenidos',d);
+    const ciclo=escuelaData?.cicloActivo||'';
+    _todasContenidos.push({id,...d,...(ciclo?{ciclo}:{})});
+  }
+  aplicarFiltrosCicloGrupo();
+  _gpSeeding=false;
+  toast('✅ Plan curricular cargado: 140 contenidos');
+}
+
+window.renderGestionPedagogica=function(){
+  gestionVistaDetalle=null;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov||!det)return;
+  det.style.display='none';
+  if(tmp)tmp.style.display='none';
+  ov.style.display='';
+  if(_todasContenidos.length===0){
+    ov.innerHTML='<div style="text-align:center;padding:2.5rem 1rem;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">📚</div><div style="font-size:14px;font-weight:600;margin-bottom:8px">Cargando plan curricular…</div><div style="font-size:12px">Esto solo ocurre la primera vez.</div></div>';
+    gpSeedSiVacio().then(()=>renderGestionOverview());
+    return;
+  }
+  renderGestionOverview();
+};
+
+function renderGestionOverview(){
+  gestionVistaDetalle=null;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov)return;
+  if(det)det.style.display='none';
+  if(tmp)tmp.style.display='none';
+  ov.style.display='';
+  const totalGlobal=contenidosData.length;
+  const impGlobal=contenidosData.filter(c=>c.impartido).length;
+  ov.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem">
+      <div>
+        <p class="sec-title" style="margin:0">📚 Gestión Pedagógica</p>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px;font-family:var(--font-mono)">${impGlobal} / ${totalGlobal} contenidos impartidos</div>
+      </div>
+      <button class="btn btn-sm" onclick="gpAbrirTemporal()" style="white-space:nowrap">🗓️ Vista Temporal</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:12px">
+      ${GP_MATERIAS.map(m=>{
+        const tot=(MAPA_MAESTRO[m]||[]).length;
+        const imp=contenidosData.filter(c=>c.materia===m&&c.impartido).length;
+        const pct=tot?Math.round(imp/tot*100):0;
+        const color=pct>=75?'var(--green)':pct>=40?'var(--amber)':'var(--accent)';
+        return '<div class="gp-card" onclick="gpAbrirDetalle(\''+esc(m)+'\')">'
+          +'<div style="font-size:28px;margin-bottom:8px;line-height:1">'+(GP_EMOJI[m]||'📖')+'</div>'
+          +'<div class="gp-card-nombre">'+esc(m)+'</div>'
+          +'<div class="gp-card-meta">'+imp+' / '+tot+' impartidos</div>'
+          +'<div style="height:5px;background:var(--surface2);border-radius:3px;margin-top:10px;overflow:hidden">'
+          +'<div style="width:'+pct+'%;height:100%;background:'+color+';border-radius:3px;transition:width .4s"></div></div>'
+          +'<div style="font-size:10.5px;color:var(--muted);margin-top:5px;font-family:var(--font-mono)">'+pct+'%</div>'
+          +'</div>';
+      }).join('')}
+    </div>`;
+}
+window.renderGestionOverview=renderGestionOverview;
+
+window.gpAbrirDetalle=function(materia){
+  gestionVistaDetalle=materia;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  if(!ov||!det)return;
+  ov.style.display='none';
+  det.style.display='';
+  renderGestionDetalle(materia);
+};
+
+function renderGestionDetalle(materia){
+  const det=document.getElementById('gp-detalle');
+  if(!det)return;
+  const arr=MAPA_MAESTRO[materia]||[];
+  const conts=contenidosData.filter(c=>c.materia===materia).sort((a,b)=>a.orden-b.orden);
+  const imp=conts.filter(c=>c.impartido).length;
+  const prop=PROPOSITOS[materia]||'';
+  const emoji=GP_EMOJI[materia]||'📖';
+  let html='<div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">'
+    +'<button class="btn btn-sm" onclick="renderGestionOverview()">← Materias</button>'
+    +'<div><div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">'+emoji+' '+esc(materia)+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);margin-top:1px">'+imp+' / '+arr.length+' impartidos</div></div>'
+    +'</div>';
+  if(prop)html+='<div class="gp-propósito">'+esc(prop)+'</div>';
+  html+='<div style="border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)">';
+  if(conts.length===0)html+='<div class="empty" style="padding:2rem">Sin contenidos — recarga la página</div>';
+  else conts.forEach(c=>{html+=gpFilaCont(c);});
+  html+='</div>';
+  det.innerHTML=html;
+}
+
+function gpFilaCont(c){
+  const planCls=c.plan?'cont-ind on':'cont-ind';
+  const matCls=c.material?'cont-ind on':'cont-ind';
+  const impCls=c.impartido?'cont-ind on-green':'cont-ind';
+  const fecha=esc(c.fecha||'');
+  const cid=c.id;
+  const mesc=esc(c.materia);
+  const nesc=esc(c.nombre);
+  let btns='<button class="'+planCls+'" onclick="gpToggle(\''+cid+'\',\'plan\')" title="Plan listo">📋 Plan</button>'
+    +'<button class="'+matCls+'" onclick="gpToggle(\''+cid+'\',\'material\')" title="Material listo">📦 Mat.</button>'
+    +'<button class="'+impCls+'" onclick="gpToggle(\''+cid+'\',\'impartido\')" title="Impartido">✅ Imp.</button>'
+    +'<input type="text" value="'+fecha+'" placeholder="fecha" title="Fecha de impartición" '
+    +'style="width:58px;height:28px;font-size:11.5px;padding:0 6px;border:1.5px solid var(--border);border-radius:6px;background:#fff;font-family:var(--font-mono);color:var(--text);box-sizing:border-box" '
+    +'onblur="gpGuardarFecha(\''+cid+'\',this.value)" onkeydown="if(event.key===\'Enter\')this.blur()">';
+  if(c.generaEvidencia)btns+='<button onclick="gpCrearTarea(\''+cid+'\',\''+nesc+'\',\''+mesc+'\')" style="padding:3px 9px;border:1.5px solid var(--blue);border-radius:6px;background:rgba(37,99,235,0.07);color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">📝 Tarea</button>';
+  btns+='<button onclick="gpIrEval(\''+cid+'\')" style="padding:3px 9px;border:1.5px solid var(--amber);border-radius:6px;background:rgba(201,130,10,0.07);color:var(--amber);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">📊 Eval.</button>';
+  return '<div class="cont-row" id="cont-row-'+cid+'">'
+    +'<div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono);width:24px;flex-shrink:0;padding-top:2px">'+c.orden+'</div>'
+    +'<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--text);line-height:1.35">'+nesc+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(c.mesSugerido)+' · '+c.periodo+'</div></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;flex-shrink:0">'+btns+'</div>'
+    +'</div>';
+}
+
+window.gpToggle=async function(id,campo){
+  const c=contenidosData.find(x=>x.id===id);
+  if(!c)return;
+  const nuevo=!c[campo];
+  c[campo]=nuevo;
+  const mc=_todasContenidos.find(x=>x.id===id);
+  if(mc)mc[campo]=nuevo;
+  await fsUpdate('contenidos/'+id,{[campo]:nuevo});
+  const row=document.getElementById('cont-row-'+id);
+  if(row){
+    const btns=row.querySelectorAll('.cont-ind');
+    btns.forEach(b=>{
+      if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+campo+"'")){
+        if(campo==='impartido')b.className='cont-ind '+(nuevo?'on-green':'');
+        else b.className='cont-ind '+(nuevo?'on':'');
+      }
+    });
+  }
+  toast(campo==='impartido'?(nuevo?'✅ Marcado como impartido':'↩️ Desmarcado'):'✓ Guardado');
+};
+
+window.gpGuardarFecha=async function(id,val){
+  const c=contenidosData.find(x=>x.id===id);
+  if(!c||c.fecha===val)return;
+  c.fecha=val;
+  const mc=_todasContenidos.find(x=>x.id===id);
+  if(mc)mc.fecha=val;
+  await fsUpdate('contenidos/'+id,{fecha:val});
+};
+
+window.gpCrearTarea=function(contenidoId,nombre,materia){
+  window._gpContenidoId=contenidoId;
+  const campo=GP_CAMPO[materia]||'LEN';
+  menuNav('tareas');
+  setTimeout(function(){
+    const descEl=document.getElementById('desc-tarea');
+    const campoEl=document.getElementById('campo-tarea');
+    const fechaEl=document.getElementById('fecha-tarea');
+    if(descEl)descEl.value=nombre;
+    if(campoEl)campoEl.value=campo;
+    if(fechaEl&&!fechaEl.value)fechaEl.value=new Date().toISOString().slice(0,10);
+    toast('📝 Rellena la fecha y marca los alumnos, luego guarda');
+  },120);
+};
+
+window.gpIrEval=function(contenidoId){
+  const c=contenidosData.find(x=>x.id===contenidoId);
+  if(!c)return;
+  menuNav('evaluacion');
+  setTimeout(function(){
+    const periodoEl=document.getElementById('campo-eval');
+    const nombreEl=document.getElementById('nombre-eval');
+    const fechaEl=document.getElementById('fecha-eval');
+    if(periodoEl)periodoEl.value=c.periodo||'P1';
+    if(nombreEl)nombreEl.value=c.nombre;
+    if(fechaEl&&!fechaEl.value)fechaEl.value=new Date().toISOString().slice(0,10);
+    toast('📊 Selecciona tipo y alumnos, luego guarda');
+  },120);
+};
+
+// ===== VISTA TEMPORAL =====
+
+window.gpAbrirTemporal=function(){
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov||!tmp)return;
+  ov.style.display='none';
+  if(det)det.style.display='none';
+  tmp.style.display='';
+  renderGestionTemporalidad();
+};
+
+function renderGestionTemporalidad(){
+  const tmp=document.getElementById('gp-temporal');
+  if(!tmp)return;
+
+  const now=new Date();
+  const MES_FECHA={
+    'Septiembre':{m:8,y:2026},'Octubre':{m:9,y:2026},
+    'Noviembre':{m:10,y:2026},'Diciembre':{m:11,y:2026},
+    'Enero':{m:0,y:2027},'Febrero':{m:1,y:2027},
+    'Marzo':{m:2,y:2027},'Abril':{m:3,y:2027},
+    'Mayo':{m:4,y:2027},'Junio':{m:5,y:2027}
+  };
+  const nowMes=new Date(now.getFullYear(),now.getMonth(),1);
+
+  const totalGlobal=contenidosData.length;
+  const impGlobal=contenidosData.filter(function(c){return c.impartido;}).length;
+  const pctGlobal=totalGlobal?Math.round(impGlobal/totalGlobal*100):0;
+
+  let html='<div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">'
+    +'<button class="btn btn-sm" onclick="renderGestionOverview()">← Materias</button>'
+    +'<div style="flex:1;min-width:0">'
+    +'<div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">🗓️ Temporalidad</div>'
+    +'<div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);margin-top:1px">'+impGlobal+' / '+totalGlobal+' impartidos en el ciclo ('+pctGlobal+'%)</div>'
+    +'</div></div>';
+
+  // Barra de progreso global
+  const gColor=pctGlobal>=75?'var(--green)':pctGlobal>=40?'var(--amber)':'var(--accent)';
+  html+='<div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:1.25rem;overflow:hidden">'
+    +'<div style="width:'+pctGlobal+'%;height:100%;background:'+gColor+';border-radius:3px;transition:width .4s"></div></div>';
+
+  for(var mi=0;mi<MESES_ORDEN.length;mi++){
+    var mes=MESES_ORDEN[mi];
+    var contsDelMes=contenidosData.filter(function(c){return c.mesSugerido===mes;}).slice().sort(function(a,b){
+      return GP_MATERIAS.indexOf(a.materia)-GP_MATERIAS.indexOf(b.materia)||a.orden-b.orden;
+    });
+    var total=contsDelMes.length;
+    if(!total)continue;
+
+    var imp=contsDelMes.filter(function(c){return c.impartido;}).length;
+    var pct=Math.round(imp/total*100);
+    var periodo=MES_PERIODO[mes]||'';
+
+    var estado='futuro';
+    var mf=MES_FECHA[mes];
+    if(mf){
+      var mesDate=new Date(mf.y,mf.m,1);
+      if(mesDate<nowMes)estado='pasado';
+      else if(mesDate.getTime()===nowMes.getTime())estado='actual';
+    }
+
+    var pendientesPasado=estado==='pasado'&&pct<100;
+    var barColor=pct===100?'var(--green)':pendientesPasado?'#ef4444':'var(--amber)';
+    var headerBg=estado==='actual'?'rgba(32,75,58,0.07)':pendientesPasado?'rgba(239,68,68,0.05)':'#f8faf9';
+    var cardBorder=estado==='actual'?'2px solid var(--accent)':pendientesPasado?'1.5px solid rgba(239,68,68,0.30)':'1.5px solid var(--border)';
+
+    html+='<div style="border:'+cardBorder+';border-radius:var(--r);margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)">';
+
+    // Header del mes
+    html+='<div style="padding:11px 14px;background:'+headerBg+';display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px">'
+      +'<span style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">'+mes+'</span>'
+      +'<span style="font-size:10.5px;font-weight:700;color:var(--accent);background:rgba(32,75,58,0.10);border-radius:4px;padding:1px 7px">'+periodo+'</span>';
+
+    if(estado==='actual')html+='<span style="font-size:10.5px;font-weight:700;color:#fff;background:var(--accent);border-radius:4px;padding:1px 7px">◉ Mes actual</span>';
+    if(pendientesPasado)html+='<span style="font-size:10.5px;font-weight:700;color:#92400e;background:rgba(201,130,10,0.15);border-radius:4px;padding:1px 7px">⚠️ '+(total-imp)+' sin impartir</span>';
+    if(pct===100)html+='<span style="font-size:10.5px;font-weight:700;color:#166534;background:rgba(22,163,74,0.12);border-radius:4px;padding:1px 7px">✓ Completo</span>';
+
+    html+='</div>'
+      +'<div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">'+imp+' / '+total+' impartidos</div>'
+      +'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:15px;font-weight:800;color:'+barColor+'">'+pct+'%</div>'
+      +'</div>';
+
+    // Barra de progreso del mes
+    html+='<div style="height:3px;background:var(--surface2)"><div style="width:'+pct+'%;height:100%;background:'+barColor+'"></div></div>';
+
+    // Contenidos agrupados por materia
+    html+='<div>';
+    for(var gi=0;gi<GP_MATERIAS.length;gi++){
+      var mat=GP_MATERIAS[gi];
+      var matsConts=contsDelMes.filter(function(c){return c.materia===mat;});
+      if(!matsConts.length)continue;
+      var emoji=GP_EMOJI[mat]||'📖';
+      var matCorto=mat.split('/')[0].trim();
+      var matImp=matsConts.filter(function(c){return c.impartido;}).length;
+
+      html+='<div style="padding:10px 14px;border-top:1px solid var(--surface2)">'
+        +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">'
+        +'<span style="font-size:17px">'+emoji+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:var(--text)">'+esc(matCorto)+'</span>'
+        +'<span style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">'+matImp+'/'+matsConts.length+'</span>'
+        +'</div><div style="display:flex;flex-direction:column;gap:4px">';
+
+      for(var ci=0;ci<matsConts.length;ci++){
+        var c=matsConts[ci];
+        var isImp=c.impartido;
+        var isPlan=c.plan;
+        var isMat=c.material;
+        var isMissed=!isImp&&estado==='pasado';
+
+        var rowBg=isImp?'rgba(22,163,74,0.06)':isMissed?'rgba(239,68,68,0.05)':'transparent';
+        var rowBorder=isImp?'rgba(22,163,74,0.20)':isMissed?'rgba(239,68,68,0.18)':'var(--surface2)';
+        var nameColor=isImp?'#166534':isMissed?'#dc2626':'var(--text)';
+
+        var planBadge=isPlan
+          ?'<span style="font-size:14px;color:var(--accent);background:rgba(32,75,58,0.10);border-radius:4px;padding:3px 7px;font-weight:700">📋</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">📋</span>';
+        var matBadge=isMat
+          ?'<span style="font-size:14px;color:var(--blue);background:rgba(37,99,235,0.09);border-radius:4px;padding:3px 7px;font-weight:700">📦</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">📦</span>';
+        var impBadge=isImp
+          ?'<span style="font-size:14px;color:#166534;background:rgba(22,163,74,0.14);border-radius:4px;padding:3px 7px;font-weight:700">✅</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">✅</span>';
+
+        var cmat=c.materia;
+        html+='<div onclick="gpAbrirDetalle(\''+esc(cmat)+'\')" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;border:1px solid '+rowBorder+';background:'+rowBg+';cursor:pointer">'
+          +'<div style="flex:1;min-width:0;font-size:13px;font-weight:600;color:'+nameColor+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.nombre)+'</div>'
+          +'<div style="display:flex;gap:4px;flex-shrink:0">'+planBadge+matBadge+impBadge+'</div>'
+          +'</div>';
+      }
+
+      html+='</div></div>';
+    }
+
+    html+='</div></div>';
+  }
+
+  tmp.innerHTML=html;
+}
+window.renderGestionTemporalidad=renderGestionTemporalidad;
+
+// ===== PORTAFOLIO en perfil de alumno =====
+
+function renderPerfilPortafolio(alumnoId){
+  const cont=document.getElementById('ptab-portafolio');
+  if(!cont)return;
+  const tareas=tareasData.filter(function(t){return t.alumno===alumnoId;}).slice().sort(function(a,b){return(b.fecha||'').localeCompare(a.fecha||'');});
+  if(!tareas.length){cont.innerHTML='<div class="empty" style="padding:1.5rem;text-align:center">Sin tareas registradas</div>';return;}
+  const conEv=tareas.filter(function(t){return t.contenidoId;});
+  const pendArchiv=conEv.filter(function(t){return t.estado==='si'&&!t.evidenciaFisica;}).length;
+  let html='';
+  if(pendArchiv>0)html+='<div style="background:rgba(201,130,10,0.10);border:1.5px solid rgba(201,130,10,0.30);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:#92400e">⚠️ '+pendArchiv+' '+(pendArchiv===1?'tarea entregada pendiente':'tareas entregadas pendientes')+' de archivar</div>';
+  tareas.forEach(function(t){
+    const contenido=t.contenidoId?contenidosData.find(function(c){return c.id===t.contenidoId;}):null;
+    const pendienteArch=t.estado==='si'&&!t.evidenciaFisica;
+    const estClass=t.estado==='si'?'bg':t.estado==='no'?'br':'bo';
+    const estLabel=t.estado==='si'?'Entregó':t.estado==='no'?'No entregó':'Incompleta';
+    html+='<div style="padding:10px 12px;border:1.5px solid '+(pendienteArch?'rgba(201,130,10,0.35)':'var(--border)')+';border-radius:var(--rs);margin-bottom:8px;background:'+(pendienteArch?'rgba(201,130,10,0.04)':'#fff')+'">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:13.5px;font-weight:600;color:var(--text)">'+esc(contenido?contenido.nombre:t.desc)+'</div>'
+      +(contenido?'<div style="font-size:11px;color:var(--accent);margin-top:2px">'+(GP_EMOJI[contenido.materia]||'📖')+' '+esc(contenido.materia)+' · '+esc(contenido.mesSugerido)+'</div>':'')
+      +(!contenido?'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(t.desc||'')+'</div>':'')
+      +'<div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">'+fmt(t.fecha)+'</div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
+      +'<span class="badge '+estClass+'">'+estLabel+'</span>'
+      +(pendienteArch?'<span style="font-size:10px;font-weight:700;color:#92400e">⚠️ Sin archivar</span>':'')
+      +(t.evidenciaFisica?'<span style="font-size:10px;font-weight:600;color:var(--green)">✓ Archivada</span>':'')
+      +'</div></div>'
+      +(pendienteArch?'<button onclick="gpMarcarArchivada(\''+t.id+'\')" style="margin-top:8px;padding:4px 11px;background:rgba(201,130,10,0.10);border:1.5px solid rgba(201,130,10,0.30);border-radius:6px;font-size:12px;color:#92400e;cursor:pointer;font-family:var(--font);font-weight:600;display:block">📁 Marcar como archivada</button>':'')
+      +(t.evidenciaFisica&&t.ubicacion?'<div style="font-size:11px;color:var(--muted);margin-top:6px">📍 '+esc(t.ubicacion)+'</div>':'')
+      +'</div>';
+  });
+  cont.innerHTML=html;
+}
+window.renderPerfilPortafolio=renderPerfilPortafolio;
+
+window.gpMarcarArchivada=async function(tareaId){
+  await fsUpdate('tareas/'+tareaId,{evidenciaFisica:true});
+  const t=_todasTareas.find(function(x){return x.id===tareaId;});
+  if(t)t.evidenciaFisica=true;
+  aplicarFiltrosCicloGrupo();
+  const modal=document.getElementById('perfil-modal');
+  if(modal&&modal._alumnoId)renderPerfilPortafolio(modal._alumnoId);
+  toast('📁 Evidencia archivada');
 };
 
 </script>
