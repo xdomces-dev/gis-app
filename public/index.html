@@ -318,6 +318,15 @@ td.num,td.fecha,.mono{font-family:var(--font-mono);font-size:12.5px;color:var(--
 .sec-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);margin-bottom:.85rem;letter-spacing:-.01em}
 .empty{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
 
+/* Tarjetas de captura agrupadas por grado (Asistencia, Tareas, Evaluación) */
+.grid-grado-head{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:8px}
+.grid-grado-head:first-child{margin-top:0}
+.grid-grado-pill{background:var(--gc);color:#fff;padding:4px 14px;border-radius:6px;font-family:var(--font-display);font-size:12.5px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.grid-grado-n{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.grid-grado-line{flex:1;height:1.5px;background:var(--gc);opacity:.25}
+.ac.con-grado{border-top:3px solid var(--gc)}
+.ac.con-grado .ag{color:var(--gc);font-weight:700}
+
 /* Subpestañas por grado (Configuración > Alumnos y listados de Historial) */
 .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
 .subtab{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-display);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s}
@@ -3003,6 +3012,27 @@ const primerNombre=n=>fmtNombre(n).split(' ')[0];
 const GRADE_COLORS=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545','#0891b2'];
 const gradosNivel=()=>GRADOS[escuelaData?.nivel||'secundaria'];
 function gradeColorOf(g){const i=gradosNivel().indexOf(g);return i<0?'#9ca3af':GRADE_COLORS[i%GRADE_COLORS.length];}
+// Orden de lista: por grado (1°, 2°, 3°) y luego alfabético por apellido (como se captura el nombre)
+function ordenLista(lista){
+  const gr=gradosNivel(),o=g=>{const i=gr.indexOf(g);return i<0?99:i;};
+  return [...lista].sort((a,b)=>o(a.grado)-o(b.grado)||(a.n||'').localeCompare(b.n||'','es'));
+}
+// Cuadrícula de tarjetas de alumnos agrupada por grado con su color; card(a) devuelve el HTML interior de la tarjeta
+function gridPorGrado(card){
+  const lista=ordenLista(ALUMNOS),cnt={};
+  lista.forEach(a=>{const g=a.grado||'';cnt[g]=(cnt[g]||0)+1;});
+  const multi=Object.keys(cnt).length>1;
+  let html='',last=null;
+  lista.forEach(a=>{
+    const g=a.grado||'',gc=gradeColorOf(g);
+    if(multi&&g!==last){
+      html+=`<div class="grid-grado-head" style="--gc:${gc}"><span class="grid-grado-pill">${esc(g||'Sin grado')}</span><span class="grid-grado-n">${cnt[g]} alumno${cnt[g]!==1?'s':''}</span><span class="grid-grado-line"></span></div>`;
+      last=g;
+    }
+    html+=`<div class="ac con-grado" style="--gc:${gc}">${card(a)}</div>`;
+  });
+  return '<div class="alumno-grid">'+html+'</div>';
+}
 const gradoChip=g=>g?`<span class="grado-chip" style="--gc:${gradeColorOf(g)}">${esc(g)}</span>`:'';
 // Botones Multigrado | 1° | 2° | 3° — onclick llama window[fn](key, grado)
 function subtabsGradoHTML(key,grados,activo,counts,total,fn){
@@ -4681,16 +4711,14 @@ function renderListaAsist(){
   if(form)form.style.display='none';
   if(leyenda)leyenda.style.display='';
   if(btns)btns.style.display='';
-  lista.innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
-    <div class="ac">
+  lista.innerHTML=gridPorGrado(a=>`
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab" id="ab-A-${a.id}" onclick="setAsist('${a.id}','A')">✓</span>
         <span class="ab" id="ab-F-${a.id}" onclick="setAsist('${a.id}','F')">✗</span>
         <span class="ab" id="ab-J-${a.id}" onclick="setAsist('${a.id}','J')">J</span>
-      </div>
-    </div>`).join('')+'</div>';
+      </div>`);
 }
 
 window.setAsist=function(id,val){
@@ -4769,16 +4797,14 @@ window.delAsist=async function(id){
 // ===== TAREAS =====
 function renderListaTareas(){
   tareasSel={};
-  document.getElementById('lista-tareas').innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
-    <div class="ac">
+  document.getElementById('lista-tareas').innerHTML=gridPorGrado(a=>`
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab" id="tb-si-${a.id}" onclick="setTarea('${a.id}','si')">✓</span>
         <span class="ab" id="tb-no-${a.id}" onclick="setTarea('${a.id}','no')">✗</span>
         <span class="ab" id="tb-inc-${a.id}" onclick="setTarea('${a.id}','inc')">½</span>
-      </div>
-    </div>`).join('')+'</div>';
+      </div>`);
 }
 
 window.setTarea=function(id,val){
@@ -4911,12 +4937,12 @@ function renderDetalleLista(){
     if(mostrarGrado&&a.grado!==gradoActual){
       if(gradoActual) html+='</div>';
       gradoActual=a.grado;
-      html+=`<div style="margin:16px 0 6px;font-weight:700;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.05em">${esc(a.grado)}</div><div class="alumno-grid">`;
+      html+=`<div class="grid-grado-head" style="--gc:${gradeColorOf(a.grado)};margin:16px 0 10px"><span class="grid-grado-pill">${esc(a.grado||'Sin grado')}</span><span class="grid-grado-line"></span></div><div class="alumno-grid">`;
     }else if(!mostrarGrado&&gradoActual===''){
       gradoActual='x';html+='<div class="alumno-grid">';
     }
     num++;
-    html+=`<div class="ac">
+    html+=`<div class="ac con-grado" style="--gc:${gradeColorOf(a.grado)}">
       <div class="av ${a.av||'av1'}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
@@ -5021,8 +5047,7 @@ window.toggleSubtipoCustom=function(val){
 
 function renderListaEval(){
   evalData={};
-  document.getElementById('lista-eval').innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
-    <div class="ac">
+  document.getElementById('lista-eval').innerHTML=gridPorGrado(a=>`
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div style="display:flex;align-items:center;gap:4px;justify-content:center;margin-top:4px">
@@ -5030,8 +5055,7 @@ function renderListaEval(){
         <span id="cal-${a.id}" style="font-size:14px;font-weight:700;font-family:var(--font-mono);min-width:24px;text-align:center;color:var(--muted)">—</span>
         <button class="btn-p plus" onclick="stepCal('${a.id}',1)">+</button>
       </div>
-      <div style="font-size:10px;color:var(--muted);text-align:center">/10</div>
-    </div>`).join('')+'</div>';
+      <div style="font-size:10px;color:var(--muted);text-align:center">/10</div>`);
 }
 
 window.stepCal=function(id,d){
