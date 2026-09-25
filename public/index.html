@@ -317,17 +317,6 @@ td.num,td.fecha,.mono{font-family:var(--font-mono);font-size:12.5px;color:var(--
 .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
 .sec-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);margin-bottom:.85rem;letter-spacing:-.01em}
 .empty{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
-
-.preview-chart-box{border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);margin:14px 0;overflow:hidden}
-.preview-chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;cursor:pointer;user-select:none}
-.preview-chart-head:hover{background:var(--surface2)}
-.preview-chart-head-label{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:13.5px;font-weight:700;color:var(--text)}
-.preview-chart-sub{font-size:11px;color:var(--muted);font-weight:500}
-.preview-chart-arrow{color:var(--muted);font-size:12px;transition:transform .2s ease}
-.preview-chart-box.collapsed .preview-chart-arrow{transform:rotate(-90deg)}
-.preview-chart-body{padding:4px 16px 16px}
-.preview-chart-box.collapsed .preview-chart-body{display:none}
-.preview-chart-body .empty{padding:1.25rem;font-size:12.5px}
 .filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
 .del-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:4px 8px;border-radius:6px;transition:all .18s}
 .del-btn:hover{background:rgba(214,69,69,0.10);color:var(--red)}
@@ -1131,6 +1120,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <!-- ASISTENCIA -->
     <div id="sec-asistencia" class="sec">
+      <div id="asist-preview"></div>
       <div class="row"><div><label>Fecha</label><input type="date" id="fecha-asist" onchange="renderListaAsist()"></div></div>
       <!-- Banner día sin clase -->
       <div id="banner-sin-clase" style="display:none;background:rgba(100,116,139,0.10);border:1.5px solid rgba(100,116,139,0.25);border-radius:12px;padding:14px 16px;margin-bottom:12px">
@@ -1150,13 +1140,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <button class="btn btn-save" onclick="guardarDiaSinClase()" style="flex:1">Confirmar día sin clase</button>
           <button class="btn btn-sm" onclick="document.getElementById('form-sin-clase').style.display='none'">Cancelar</button>
         </div>
-      </div>
-      <div class="preview-chart-box" id="preview-box-asist">
-        <div class="preview-chart-head" onclick="togglePreviewChart('asist')">
-          <span class="preview-chart-head-label">📈 Vista previa <span class="preview-chart-sub">· % de asistencia por alumno</span></span>
-          <span class="preview-chart-arrow" id="preview-arrow-asist">▾</span>
-        </div>
-        <div class="preview-chart-body" id="preview-chart-asist"></div>
       </div>
       <div id="lista-asistencia"></div>
       <div id="leyenda-asist" style="display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;font-size:11.5px;color:var(--muted)">
@@ -1234,6 +1217,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <!-- TAREAS -->
     <div id="sec-tareas" class="sec">
+      <div id="tareas-preview"></div>
       <div class="row">
         <div><label>Fecha</label><input type="date" id="fecha-tarea"></div>
         <div><label>Campo formativo</label>
@@ -1242,13 +1226,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           </select>
         </div>
         <div style="flex:1"><label>Descripción</label><input type="text" id="desc-tarea" placeholder="Ej: Lectura págs. 12–15" style="width:100%"></div>
-      </div>
-      <div class="preview-chart-box" id="preview-box-tarea">
-        <div class="preview-chart-head" onclick="togglePreviewChart('tarea')">
-          <span class="preview-chart-head-label">📈 Vista previa <span class="preview-chart-sub">· % de cumplimiento por alumno</span></span>
-          <span class="preview-chart-arrow" id="preview-arrow-tarea">▾</span>
-        </div>
-        <div class="preview-chart-body" id="preview-chart-tarea"></div>
       </div>
       <div id="lista-tareas"></div>
       <button class="btn btn-save" onclick="guardarTareas()">Guardar tareas</button>
@@ -3004,25 +2981,6 @@ const uid=()=>currentUser.uid;
 // Sanitización XSS — escapa HTML en datos del usuario
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 
-// ---- HELPER SVG BARRAS HORIZONTALES (usado en Estadísticas y vistas previas) ----
-function svgBarrasH(datos, colorFn, labelFn){
-  const barH=34, gap=8, svgH=datos.length*(barH+gap);
-  const maxVal=Math.max(...datos.map(d=>d.val),1);
-  let svg=`<svg width="100%" height="${svgH}" viewBox="0 0 600 ${svgH}" style="overflow:visible">`;
-  datos.forEach((d,i)=>{
-    const y=i*(barH+gap);
-    const pct=d.val/maxVal;
-    const bW=Math.max(4,Math.round(pct*360));
-    const color=colorFn(d);
-    const lbl=labelFn?labelFn(d):d.val;
-    svg+=`
-      <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(fmtNombre(d.n))}</text>
-      <rect x="170" y="${y+6}" width="${bW}" height="${barH-12}" rx="6" fill="${color}" opacity=".88"/>
-      <text x="${175+bW}" y="${y+22}" font-size="13" font-weight="700" fill="${color}" font-family="Syne,sans-serif">${lbl}</text>`;
-  });
-  return svg+'</svg>';
-}
-
 // ===== PLAN / TRIAL =====
 function diasRestantesTrial(){
   if(!planData?.trialEndsAt) return 0;
@@ -4479,6 +4437,8 @@ window.showTab=function(t){
   const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración',gestion:'📚 Gestión Pedagógica'};
   if(lbl)lbl.textContent=MENU_LABELS[t]||t;
   if(t==='inicio')renderInicio();
+  if(t==='asistencia')renderAsistPreview();
+  if(t==='tareas')renderTareasPreview();
   if(t==='reportes'){generarReporte();initWASelect();initConstanciaSelect();}
   if(t==='estadisticas')renderEstadisticas();
   if(t==='concentrado')renderConcentrado();
@@ -4491,54 +4451,106 @@ window.showTab=function(t){
   if(t==='listas'){volverListas();}
 };
 
-// ===== VISTA PREVIA (mini gráfica en Asistencia/Tareas) =====
-window.togglePreviewChart=function(tipo){
-  const box=document.getElementById('preview-box-'+tipo);
-  if(!box)return;
-  const collapsed=box.classList.toggle('collapsed');
-  localStorage.setItem('previewChartCollapsed_'+tipo,collapsed?'1':'0');
-};
-
-function initPreviewChartState(){
-  ['asist','tarea'].forEach(tipo=>{
-    const box=document.getElementById('preview-box-'+tipo);
-    if(box&&localStorage.getItem('previewChartCollapsed_'+tipo)==='1')box.classList.add('collapsed');
-  });
+// ===== PREVIEWS ASISTENCIA / TAREAS =====
+function _previewBarras(recs, total, grados, gradeOrder, GCOLOR, keyFn){
+  // keyFn(r) devuelve {ok, no, mid} boolean por cada registro
+  return grados.map(g=>{
+    const gc=GCOLOR[gradeOrder[g]??GCOLOR.length-1]||'#9ca3af';
+    const alG=ALUMNOS.filter(a=>a.grado===g);
+    if(!alG.length)return '';
+    const ids=new Set(alG.map(a=>a.id));
+    const recsG=recs.filter(r=>ids.has(r.alumno));
+    // unique alumnos por estado
+    const setOk=new Set(recsG.filter(r=>keyFn(r).ok).map(r=>r.alumno));
+    const setNo=new Set(recsG.filter(r=>keyFn(r).no).map(r=>r.alumno));
+    const setMid=new Set(recsG.filter(r=>keyFn(r).mid).map(r=>r.alumno));
+    // alumnos sin ningún registro ese día
+    const conRec=new Set(recsG.map(r=>r.alumno));
+    const sin=alG.length-conRec.size;
+    const nOk=setOk.size,nNo=setNo.size,nMid=setMid.size;
+    const segs=[
+      nOk?`<div style="flex:${nOk};background:#1a8a5c;min-width:3px"></div>`:'',
+      nNo?`<div style="flex:${nNo};background:#d64545;min-width:3px"></div>`:'',
+      nMid?`<div style="flex:${nMid};background:#c9820a;min-width:3px"></div>`:'',
+      sin>0?`<div style="flex:${sin};background:rgba(0,0,0,0.07);min-width:3px"></div>`:''
+    ].join('');
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:28px;text-align:center;background:${gc};color:#fff;border-radius:6px;padding:2px 0;font-family:var(--font-display);font-size:11px;font-weight:800;flex-shrink:0;line-height:18px">${g}</div>
+      <div style="flex:1;height:12px;border-radius:6px;overflow:hidden;display:flex;gap:1.5px;background:rgba(0,0,0,0.06)">${segs}</div>
+      <div style="font-family:var(--font-mono);font-size:11px;min-width:72px;text-align:right">
+        <span style="color:#1a8a5c;font-weight:700">${nOk}✓</span>${nNo?` <span style="color:#d64545;font-weight:700">${nNo}✗</span>`:''}${nMid?` <span style="color:#c9820a">${nMid}½</span>`:''}<span style="color:var(--muted)">/${alG.length}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
-initPreviewChartState();
 
-function renderPreviewChart(tipo){
-  const el=document.getElementById('preview-chart-'+tipo);
+function renderAsistPreview(){
+  const el=document.getElementById('asist-preview');
   if(!el)return;
-  const MAX=6;
-  let datos;
-  if(tipo==='asist'){
-    datos=ALUMNOS.map(a=>{
-      const r=asistencias.filter(x=>x.alumno===a.id);
-      if(!r.length)return null;
-      const val=Math.round(r.filter(x=>x.estado==='A').length/r.length*100);
-      const fal=r.filter(x=>x.estado==='F').length;
-      return{n:a.n.split(' ').slice(0,2).join(' '),val,fal};
-    }).filter(Boolean).sort((a,b)=>a.val-b.val);
-  }else{
-    datos=ALUMNOS.map(a=>{
-      const r=tareasData.filter(x=>x.alumno===a.id);
-      if(!r.length)return null;
-      const val=Math.round(r.filter(x=>x.estado==='si').length/r.length*100);
-      const no=r.filter(x=>x.estado==='no').length;
-      return{n:a.n.split(' ').slice(0,2).join(' '),val,no};
-    }).filter(Boolean).sort((a,b)=>a.val-b.val);
-  }
-  if(!datos.length){
-    el.innerHTML=`<div class="empty">Aún no hay ${tipo==='asist'?'registros de asistencia':'tareas registradas'} para mostrar</div>`;
-    return;
-  }
-  const top=datos.slice(0,MAX);
-  const colorFn=d=>d.val>=80?'var(--green)':d.val>=60?'var(--amber)':'var(--red)';
-  const labelFn=tipo==='asist'?d=>`${d.val}% (${d.fal} faltas)`:d=>`${d.val}% (${d.no} no entregó)`;
-  el.innerHTML=svgBarrasH(top,colorFn,labelFn)+
-    (datos.length>MAX?`<div style="text-align:center;margin-top:10px"><button class="btn btn-sm" onclick="showTab('estadisticas')">Ver estadísticas completas →</button></div>`:'');
+  if(!asistencias.length){el.innerHTML='';return;}
+  const fecha=[...new Set(asistencias.map(r=>r.fecha))].sort().reverse()[0];
+  if(!fecha){el.innerHTML='';return;}
+  const recs=asistencias.filter(r=>r.fecha===fecha);
+  const cntA=recs.filter(r=>r.estado==='A').length;
+  const cntF=recs.filter(r=>r.estado==='F').length;
+  const cntJ=recs.filter(r=>r.estado==='J').length;
+  const total=ALUMNOS.length;
+  const pct=total?Math.round(cntA/total*100):0;
+  const semColor=pct>=80?'#1a8a5c':pct>=60?'#c9820a':'#d64545';
+  const grados=GRADOS[escuelaData?.nivel||'secundaria'];
+  const gradeOrder={};grados.forEach((g,i)=>gradeOrder[g]=i);
+  const GCOLOR=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545'];
+  const barras=_previewBarras(recs,total,grados,gradeOrder,GCOLOR,r=>({ok:r.estado==='A',no:r.estado==='F',mid:r.estado==='J'}));
+  el.innerHTML=`<div style="background:rgba(255,255,255,0.82);border:1.5px solid rgba(32,75,58,0.13);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
+      <div><span style="font-family:var(--font-display);font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Último registro</span><span style="font-size:12px;color:var(--muted);margin-left:8px">${fmt(fecha)}</span></div>
+      <div style="font-family:var(--font-mono);font-size:22px;font-weight:800;color:${semColor}">${pct}%</div>
+    </div>
+    ${barras}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#1a8a5c;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntA}</b> asistieron</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#d64545;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntF}</b> faltaron</span>
+      ${cntJ?`<span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#2563eb;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntJ}</b> justificadas</span>`:''}
+      <span style="margin-left:auto">${recs.length}/${total} registrados</span>
+    </div>
+  </div>`;
 }
+window.renderAsistPreview=renderAsistPreview;
+
+function renderTareasPreview(){
+  const el=document.getElementById('tareas-preview');
+  if(!el)return;
+  if(!tareasData.length){el.innerHTML='';return;}
+  const fecha=[...new Set(tareasData.map(r=>r.fecha))].sort().reverse()[0];
+  if(!fecha){el.innerHTML='';return;}
+  const recs=tareasData.filter(r=>r.fecha===fecha);
+  const cntSi=recs.filter(r=>r.estado==='si').length;
+  const cntNo=recs.filter(r=>r.estado==='no').length;
+  const cntInc=recs.filter(r=>r.estado==='inc').length;
+  const total=ALUMNOS.length;
+  const pct=total?Math.round(new Set(recs.filter(r=>r.estado==='si').map(r=>r.alumno)).size/total*100):0;
+  const semColor=pct>=80?'#1a8a5c':pct>=60?'#c9820a':'#d64545';
+  const nombresTask=[...new Set(recs.map(r=>r.desc||'Tarea'))];
+  const grados=GRADOS[escuelaData?.nivel||'secundaria'];
+  const gradeOrder={};grados.forEach((g,i)=>gradeOrder[g]=i);
+  const GCOLOR=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545'];
+  const barras=_previewBarras(recs,total,grados,gradeOrder,GCOLOR,r=>({ok:r.estado==='si',no:r.estado==='no',mid:r.estado==='inc'}));
+  el.innerHTML=`<div style="background:rgba(255,255,255,0.82);border:1.5px solid rgba(32,75,58,0.13);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px">
+      <div><span style="font-family:var(--font-display);font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Último registro</span><span style="font-size:12px;color:var(--muted);margin-left:8px">${fmt(fecha)}</span></div>
+      <div style="font-family:var(--font-mono);font-size:22px;font-weight:800;color:${semColor}">${pct}%</div>
+    </div>
+    ${nombresTask.length?`<div style="font-size:11px;color:var(--muted);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombresTask.slice(0,2).map(n=>`📝 ${esc(n)}`).join(' · ')}${nombresTask.length>2?` <span>+${nombresTask.length-2} más</span>`:''}</div>`:''}
+    ${barras}
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#1a8a5c;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntSi}</b> entregaron</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#d64545;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntNo}</b> no entregaron</span>
+      ${cntInc?`<span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#c9820a;border-radius:2px;display:inline-block"></span><b style="color:var(--text)">${cntInc}</b> incompletas</span>`:''}
+      <span style="margin-left:auto">${nombresTask.length} tarea${nombresTask.length!==1?'s':''} ese día</span>
+    </div>
+  </div>`;
+}
+window.renderTareasPreview=renderTareasPreview;
 
 // ===== ASISTENCIA =====
 function renderListaAsist(){
@@ -4574,7 +4586,6 @@ function renderListaAsist(){
         <span class="ab" id="ab-J-${a.id}" onclick="setAsist('${a.id}','J')">J</span>
       </div>
     </div>`).join('')+'</div>';
-  renderPreviewChart('asist');
 }
 
 window.setAsist=function(id,val){
@@ -4595,7 +4606,7 @@ window.guardarAsistencia=async function(){
   });
   if(!proms.length)return mostrarCel('⚠️','Sin alumnos','Selecciona al menos un alumno');
   await Promise.all(proms);
-  renderListaAsist();renderTablaAsist();
+  renderListaAsist();renderTablaAsist();renderAsistPreview();
   mostrarCel('✅','¡Asistencia guardada!',`${cnt} registros · ${fmt(fecha)}`);
   actualizarResumen();
 };
@@ -4662,7 +4673,6 @@ function renderListaTareas(){
         <span class="ab" id="tb-inc-${a.id}" onclick="setTarea('${a.id}','inc')">½</span>
       </div>
     </div>`).join('')+'</div>';
-  renderPreviewChart('tarea');
 }
 
 window.setTarea=function(id,val){
@@ -4684,7 +4694,7 @@ window.guardarTareas=async function(){
   if(!proms.length)return mostrarCel('⚠️','Sin alumnos','Marca al menos un alumno');
   await Promise.all(proms);
   window._gpContenidoId=null;
-  renderListaTareas();renderTablaTareas();
+  renderListaTareas();renderTablaTareas();renderTareasPreview();
   document.getElementById('desc-tarea').value='';
   mostrarCel('📋','¡Tareas registradas!',`${cnt} alumnos`);
 };
@@ -5448,16 +5458,49 @@ function renderCfgAlumnos(){
 
 function _renderCfgList(){
   const grados=GRADOS[escuelaData?.nivel||'secundaria'];
-  document.getElementById('cfg-alumnos-list').innerHTML=window.cfgAlumnos.map((a,i)=>`
-    <div class="alumno-config-item" style="flex-direction:column;align-items:stretch;gap:8px;padding:14px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--surface);margin-bottom:8px">
+  const gradeOrder={};grados.forEach((g,i)=>gradeOrder[g]=i);
+  // Color por grado: azul, ámbar, morado
+  const GRADE_COLORS=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545','#0891b2'];
+  const gradeColor=(g)=>GRADE_COLORS[gradeOrder[g]??GRADE_COLORS.length-1]||'#9ca3af';
+
+  // Ordenar: por grado (1°, 2°, 3°) luego alfabético
+  window.cfgAlumnos.sort((a,b)=>{
+    const ga=gradeOrder[a.grado]??99,gb=gradeOrder[b.grado]??99;
+    if(ga!==gb)return ga-gb;
+    return (a.n||'').localeCompare(b.n||'','es');
+  });
+
+  // Conteo por grado para encabezados
+  const gradeCounts={};
+  window.cfgAlumnos.forEach(a=>{const g=a.grado||'';gradeCounts[g]=(gradeCounts[g]||0)+1;});
+
+  // Resumen total al inicio
+  const resumen=grados.filter(g=>gradeCounts[g]).map(g=>{const c=gradeColor(g);return `<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${c};display:inline-block"></span>${g}: ${gradeCounts[g]}</span>`;}).join('<span style="color:var(--border);margin:0 4px">|</span>');
+  let html=window.cfgAlumnos.length?`<div style="font-size:12px;color:var(--muted);margin-bottom:16px;padding:10px 14px;background:rgba(32,75,58,0.05);border-radius:10px;font-weight:600;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span>${window.cfgAlumnos.length} alumnos total</span><span style="color:var(--border)">|</span>${resumen}</div>`:'';
+
+  let lastGrade=null;
+  window.cfgAlumnos.forEach((a,i)=>{
+    const g=a.grado||'';
+    const gc=gradeColor(g);
+    if(g!==lastGrade){
+      if(lastGrade!==null)html+=`<div style="height:24px"></div>`;
+      html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="background:${gc};color:#fff;padding:6px 16px;border-radius:999px;font-family:var(--font-display);font-size:13px;font-weight:800;letter-spacing:.5px;white-space:nowrap">${g||'Sin grado'}</div>
+        <span style="font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap">${gradeCounts[g]} alumno${gradeCounts[g]!==1?'s':''}</span>
+        <div style="flex:1;height:1.5px;background:${gc};opacity:.25"></div>
+      </div>`;
+      lastGrade=g;
+    }
+    html+=`<div class="alumno-config-item" style="flex-direction:column;align-items:stretch;gap:8px;padding:14px 14px 14px 16px;border:1.5px solid ${gc}40;border-left:4px solid ${gc};border-radius:var(--rs);background:var(--surface);margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
         <div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div>
-        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Alumno ${i+1}</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text)">${a.n?esc(fmtNombre(a.n)):'<span style="color:var(--muted);font-style:italic">Nuevo alumno</span>'}</span>
         <button class="del-al" onclick="window.cfgAlumnos.splice(${i},1);_renderCfgList()" style="margin-left:auto">✕</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr auto;gap:6px">
         <input type="text" placeholder="Nombre completo" value="${esc(a.n)}" onchange="window.cfgAlumnos[${i}].n=this.value">
         <select style="width:72px" onchange="window.cfgAlumnos[${i}].grado=this.value">${grados.map(g=>`<option${a.grado===g?' selected':''}>${g}</option>`).join('')}</select>
+      </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
         <input type="text" placeholder="🔒 CURP (opcional)" value="${esc(a.curp||'')}" style="text-transform:uppercase;font-size:12px" onchange="window.cfgAlumnos[${i}].curp=this.value.toUpperCase()">
         <input type="date" placeholder="Fecha nacimiento" value="${esc(a.fnac||'')}" title="Fecha de nacimiento" onchange="window.cfgAlumnos[${i}].fnac=this.value">
@@ -5485,7 +5528,9 @@ function _renderCfgList(){
         <input type="tel" placeholder="Tel. de la madre" value="${esc(a.telMadre||'')}" onchange="window.cfgAlumnos[${i}].telMadre=this.value">
       </div>
       <input type="text" placeholder="NEE — Necesidades educativas especiales (opcional)" value="${esc(a.nee||'')}" onchange="window.cfgAlumnos[${i}].nee=this.value">
-    </div>`).join('');
+    </div>`;
+  });
+  document.getElementById('cfg-alumnos-list').innerHTML=html;
 }
 window._renderCfgList=_renderCfgList;
 
@@ -5968,6 +6013,25 @@ window.renderEstadisticas = function(){
       <div style="font-size:30px;font-weight:800;font-family:var(--font-display);color:${alEn>0?'var(--red)':'var(--green)'}">${alEn}</div>
       <div style="font-size:12px;color:var(--muted);margin-top:4px">alumnos en riesgo</div>
     </div>`;
+
+  // ---- HELPER SVG BARRAS HORIZONTALES ----
+  function svgBarrasH(datos, colorFn, labelFn){
+    const barH=34, gap=8, svgH=datos.length*(barH+gap);
+    const maxVal=Math.max(...datos.map(d=>d.val),1);
+    let svg=`<svg width="100%" height="${svgH}" viewBox="0 0 600 ${svgH}" style="overflow:visible">`;
+    datos.forEach((d,i)=>{
+      const y=i*(barH+gap);
+      const pct=d.val/maxVal;
+      const bW=Math.max(4,Math.round(pct*360));
+      const color=colorFn(d);
+      const lbl=labelFn?labelFn(d):d.val;
+      svg+=`
+        <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(fmtNombre(d.n))}</text>
+        <rect x="170" y="${y+6}" width="${bW}" height="${barH-12}" rx="6" fill="${color}" opacity=".88"/>
+        <text x="${175+bW}" y="${y+22}" font-size="13" font-weight="700" fill="${color}" font-family="Syne,sans-serif">${lbl}</text>`;
+    });
+    return svg+'</svg>';
+  }
 
   // ---- 1. ASISTENCIA POR ALUMNO ----
   const datosAsist=ALUMNOS.map(a=>{
@@ -6723,6 +6787,12 @@ function renderInicio(){
   // Próximo cumpleaños
   const proxCumple = ALUMNOS.filter(a=>a.fnac).map(a=>({...a,dias:diasParaCumple(a.fnac)})).filter(a=>a.dias!==null&&a.dias<=7).sort((a,b)=>a.dias-b.dias)[0];
 
+  const _DL={lectura:'Lectura',comprension:'Comprensión',matematica:'Matemáticas',escritura:'Escritura',expresion_oral:'Expr. Oral'};
+  const _DC={lectura:'#2563eb',comprension:'#7c3aed',matematica:'#16a34a',escritura:'#d97706',expresion_oral:'#0891b2'};
+  const _de=evaluaciones.filter(r=>r.tipo==='diagnostico');
+  let diagSummary=[];
+  if(_de.length){const _bs={};_de.forEach(r=>{const k=r.subtipo||'otro';if(!_bs[k])_bs[k]={};if(!_bs[k][r.alumno]||(r.fecha||'')>(_bs[k][r.alumno].fecha||''))_bs[k][r.alumno]=r;});diagSummary=Object.keys(_bs).sort().map(k=>{const es=Object.values(_bs[k]);return{label:_DL[k]||k,avg:Math.round(es.reduce((s,r)=>s+r.cal,0)/es.length*10)/10,color:_DC[k]||'#9ca3af',cnt:es.length};});}
+
   const nombre=d.docente||'Maestro(a)';
   document.getElementById('inicio-content').innerHTML = `
     <!-- Stats Hero Card (mobile feed style) -->
@@ -6763,15 +6833,23 @@ function renderInicio(){
       <div><div style="font-weight:700;color:var(--green);font-size:13.5px">${esc(proxCumple.n)} — ${proxCumple.dias===0?'¡Hoy!':'En '+proxCumple.dias+' día'+(proxCumple.dias>1?'s':'')}</div>
       <div style="font-size:11px;color:var(--muted)">Ver cumpleaños →</div></div>
     </div>`:''}
+    ${diagSummary.length?`<div class="feed-section" onclick="menuNav('estadisticas')" style="cursor:pointer">
+      <div class="feed-hdr"><span class="feed-title">Diagnóstico del grupo</span><span class="feed-link">Ver estadísticas →</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;padding:2px 0">
+        ${diagSummary.map(d=>`<div style="flex:1;min-width:120px;background:rgba(0,0,0,0.03);border:1.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:10px 12px"><div style="font-size:11px;font-weight:700;color:${d.color};margin-bottom:4px">${d.label}</div><div style="font-size:22px;font-weight:800;color:${d.avg>=7?'var(--green)':d.avg>=5?'var(--amber)':'var(--red)'};font-family:var(--font-mono);line-height:1">${d.avg}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${d.cnt} al.</div><div style="height:3px;background:rgba(0,0,0,0.07);border-radius:2px;margin-top:6px"><div style="height:3px;background:${d.color};border-radius:2px;width:${Math.round(d.avg/10*100)}%"></div></div></div>`).join('')}
+      </div>
+    </div>`:''}
 
     <!-- Acciones rápidas -->
     <div class="feed-section">
       <div class="feed-hdr"><span class="feed-title">Acciones rápidas</span></div>
-      <div class="quick-grid">
+      <div class="quick-grid" style="grid-template-columns:repeat(3,1fr)">
         <button class="qa-btn" onclick="menuNav('asistencia')"><span class="qa-icon">📋</span>Lista</button>
         <button class="qa-btn" onclick="menuNav('evaluacion')"><span class="qa-icon">📊</span>Notas</button>
         <button class="qa-btn" onclick="menuNav('puntos')"><span class="qa-icon">⭐</span>Conducta</button>
         <button class="qa-btn" onclick="menuNav('reportes')"><span class="qa-icon">📄</span>Reportes</button>
+        <button class="qa-btn" onclick="menuNav('gestion')"><span class="qa-icon">📚</span>Gestión</button>
+        <button class="qa-btn" onclick="menuNav('semana')"><span class="qa-icon">📅</span>Semana</button>
       </div>
     </div>
 
