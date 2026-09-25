@@ -324,7 +324,8 @@ td.num,td.fecha,.mono{font-family:var(--font-mono);font-size:12.5px;color:var(--
 .grid-grado-pill{background:var(--gc);color:#fff;padding:4px 14px;border-radius:6px;font-family:var(--font-display);font-size:12.5px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
 .grid-grado-n{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
 .grid-grado-line{flex:1;height:1.5px;background:var(--gc);opacity:.25}
-.ac.con-grado{border-top:3px solid var(--gc)}
+.ac.con-grado,.pc.con-grado{border-top:3px solid var(--gc)}
+.tr-grado td{padding:10px 12px 6px !important;background:transparent;border-bottom:none}
 .ac.con-grado .ag{color:var(--gc);font-weight:700}
 
 /* Subpestañas por grado (Configuración > Alumnos y listados de Historial) */
@@ -3018,7 +3019,7 @@ function ordenLista(lista){
   return [...lista].sort((a,b)=>o(a.grado)-o(b.grado)||(a.n||'').localeCompare(b.n||'','es'));
 }
 // Cuadrícula de tarjetas de alumnos agrupada por grado con su color; card(a) devuelve el HTML interior de la tarjeta
-function gridPorGrado(card){
+function gridPorGrado(card,{wrap='alumno-grid',cls='ac'}={}){
   const lista=ordenLista(ALUMNOS),cnt={};
   lista.forEach(a=>{const g=a.grado||'';cnt[g]=(cnt[g]||0)+1;});
   const multi=Object.keys(cnt).length>1;
@@ -3029,10 +3030,17 @@ function gridPorGrado(card){
       html+=`<div class="grid-grado-head" style="--gc:${gc}"><span class="grid-grado-pill">${esc(g||'Sin grado')}</span><span class="grid-grado-n">${cnt[g]} alumno${cnt[g]!==1?'s':''}</span><span class="grid-grado-line"></span></div>`;
       last=g;
     }
-    html+=`<div class="ac con-grado" style="--gc:${gc}">${card(a)}</div>`;
+    html+=`<div class="${cls} con-grado" style="--gc:${gc}">${card(a)}</div>`;
   });
-  return '<div class="alumno-grid">'+html+'</div>';
+  return `<div class="${wrap}">`+html+'</div>';
 }
+// Fila de encabezado de grado dentro de una tabla (colspan = número de columnas)
+function filaGrado(g,cols){
+  const n=ALUMNOS.filter(a=>a.grado===g).length;
+  return `<tr class="tr-grado"><td colspan="${cols}"><div class="grid-grado-head" style="--gc:${gradeColorOf(g)}"><span class="grid-grado-pill">${esc(g||'Sin grado')}</span><span class="grid-grado-n">${n} alumno${n!==1?'s':''}</span><span class="grid-grado-line"></span></div></td></tr>`;
+}
+// Color para claves de grado numéricas ('1','2','3') usadas en Concentrado
+const gradeColorNum=n=>gradeColorOf(gradosNivel().find(g=>g.startsWith(n+'°'))||'');
 const gradoChip=g=>g?`<span class="grado-chip" style="--gc:${gradeColorOf(g)}">${esc(g)}</span>`:'';
 // Botones Multigrado | 1° | 2° | 3° — onclick llama window[fn](key, grado)
 function subtabsGradoHTML(key,grados,activo,counts,total,fn){
@@ -3406,6 +3414,7 @@ function aplicarFiltrosCicloGrupo(){
   const ciclo=escuelaData?.cicloActivo||'';
   // Docs sin ciclo son compatibles con cualquier ciclo (migración pendiente)
   let als=ciclo?_todosAlumnos.filter(a=>!a.ciclo||a.ciclo===ciclo):_todosAlumnos;
+  als=ordenLista(als); // orden de lista: grado y luego apellido, para toda la app
   ALUMNOS_CICLO=als; // todos los grupos del ciclo activo (roster para listas "Todos los grupos")
   if(grupoActivo) als=als.filter(a=>a.grado===grupoActivo);
   ALUMNOS=als;
@@ -4538,7 +4547,11 @@ function initSelects(){
   ['fa-a','fe-a','fp-a','ft-a','rep-a'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
     while(el.options.length>1)el.remove(1);
-    ALUMNOS.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=fmtNombre(a.n)+(a.grado?' ('+a.grado+')':'');el.appendChild(o);});
+    const multi=new Set(ALUMNOS.map(a=>a.grado)).size>1;let grupo=null,gPrev=null;
+    ALUMNOS.forEach(a=>{
+      if(multi&&a.grado!==gPrev){grupo=document.createElement('optgroup');grupo.label=(a.grado||'Sin grado')+' grado';el.appendChild(grupo);gPrev=a.grado;}
+      const o=document.createElement('option');o.value=a.id;o.textContent=fmtNombre(a.n)+(a.grado&&!multi?' ('+a.grado+')':'');(multi?grupo:el).appendChild(o);
+    });
   });
 }
 
@@ -5135,12 +5148,10 @@ window.selCat=function(t,cat,el){
 
 function renderPuntosGrid(){
   ptosTemp={};ALUMNOS.forEach(a=>ptosTemp[a.id]={pos:0,neg:0});
-  document.getElementById('puntos-grid').innerHTML='<div class="puntos-grid">'+ALUMNOS.map(a=>`
-    <div class="pc">
+  document.getElementById('puntos-grid').innerHTML=gridPorGrado(a=>`
       <div class="pc-name">${esc(fmtNombre(a.n))}</div>
       <div class="pc-bal"><span class="pc-pos" id="ppos-${a.id}">+0</span><span class="pc-sep">/</span><span class="pc-neg" id="pneg-${a.id}">−0</span></div>
-      <div class="pbtns"><button class="btn-p plus" onclick="addPunto('${a.id}','pos')">+</button><button class="btn-p minus" onclick="addPunto('${a.id}','neg')">−</button></div>
-    </div>`).join('')+'</div>';
+      <div class="pbtns"><button class="btn-p plus" onclick="addPunto('${a.id}','pos')">+</button><button class="btn-p minus" onclick="addPunto('${a.id}','neg')">−</button></div>`,{wrap:'puntos-grid',cls:'pc'});
 }
 
 window.addPunto=function(id,t){
@@ -5239,7 +5250,7 @@ function renderRankingPuntos(){
       <div class="av ${d.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(d.n)}</div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px">
-          <span style="font-size:12.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${esc(fmtNombre(d.n).split(' ').slice(0,2).join(' '))}</span>
+          ${gradoChip(d.grado)}<span style="font-size:12.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${esc(fmtNombre(d.n).split(' ').slice(0,2).join(' '))}</span>
           <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);font-weight:700">+${d.pos}</span>
           ${d.neg>0?`<span style="font-family:var(--font-mono);font-size:11px;color:var(--red);font-weight:700">−${d.neg}</span>`:''}
           ${goldBadge}${alertBadge}
@@ -5280,7 +5291,7 @@ function generarReporte(){
     const pp=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='pos').reduce((s,r)=>s+r.valor,0);
     const pn=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='neg').reduce((s,r)=>s+r.valor,0);
     const bal=pp-pn,cc=avgE===null?'':avgE>=7?'bg':avgE>=5?'bo':'br';
-    return `<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>${esc(fmtNombre(a.n))}<span style="font-size:10px;color:var(--muted)">${a.grado||''}</span></div></td>
+    return `<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>${gradoChip(a.grado)}${esc(fmtNombre(a.n))}</div></td>
       <td>${pA!==null?`<span class="badge ${pA>=80?'bg':pA>=60?'bo':'br'}">${pA}%</span>`:'—'}</td>
       <td>${avgE!==null?`<span class="badge ${cc}">${avgE}</span>`:'—'}</td>
       <td style="color:var(--green);font-weight:700">+${pp}</td>
@@ -5781,7 +5792,7 @@ function renderOvRanking(body){
       <div class="rank-num">${i+1}</div>${i<3?`<div class="crown">${medals[i]}</div>`:''}
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
       <div class="rank-name">${esc(fmtNombre(a.n))}</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${esc(a.grado||'')}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${gradoChip(a.grado)}</div>
       <div class="rank-bal" style="color:${a.bal>=0?'var(--green)':'var(--red)'}">${a.bal>=0?'+':''}${a.bal}</div>
       <div style="font-size:11px;color:var(--muted)">+${a.pp} / −${a.pn}</div>
       <div class="rank-bar"><div class="rank-fill" style="width:${Math.max(0,Math.round(a.bal/max*100))}%"></div></div>
@@ -5794,7 +5805,7 @@ function renderOvAsistencia(body){
   datos.map((a,i)=>`<tr style="animation:slideUp .3s ease ${i*.05}s both">
     <td style="color:var(--muted)">${i+1}</td>
     <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(fmtNombre(a.n))}</span></div></td>
-    <td style="color:var(--muted)">${esc(a.grado||'—')}</td>
+    <td>${gradoChip(a.grado)||'—'}</td>
     <td><span class="big-num" style="color:var(--green)">${a.asi}</span></td>
     <td><span class="big-num" style="color:var(--red)">${a.fal}</span></td>
     <td>${a.pct!==null?`<span class="big-num" style="color:${a.pct>=80?'var(--green)':a.pct>=60?'var(--amber)':'var(--red)'}">${a.pct}%</span>`:'—'}</td>
@@ -5807,7 +5818,7 @@ function renderOvNotas(body){
   datos.map((a,i)=>`<tr style="animation:slideUp .3s ease ${i*.05}s both">
     <td style="color:var(--muted)">${i+1}</td>
     <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(fmtNombre(a.n))}</span></div></td>
-    <td style="color:var(--muted)">${esc(a.grado||'—')}</td>
+    <td>${gradoChip(a.grado)||'—'}</td>
     <td><span class="big-num" style="color:${a.avg>=7?'var(--green)':a.avg>=5?'var(--amber)':'var(--red)'}">${a.avg??'—'}</span></td>
     <td style="color:var(--muted)">${a.total}</td>
     <td>${a.avg===null?'⬜':a.avg>=8?'🟢':a.avg>=6?'🟡':a.avg>=5?'🟠':'🔴'}</td>
@@ -5901,14 +5912,17 @@ function renderSemana(){
   });
   html+=`</tr></thead><tbody>`;
 
+  const multiGrado=new Set(ALUMNOS.map(a=>a.grado)).size>1;
+  let gradoPrev=null;
   ALUMNOS.forEach(a=>{
-    html+=`<tr style="border-bottom:1px solid var(--border)">
+    if(multiGrado&&a.grado!==gradoPrev){html+=filaGrado(a.grado,dias.length+1);gradoPrev=a.grado;}
+    html+=`<tr style="border-bottom:1px solid var(--border);box-shadow:inset 3px 0 0 ${gradeColorOf(a.grado)}">
       <td style="padding:8px 10px;vertical-align:middle">
         <div style="display:flex;align-items:center;gap:6px">
           <div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>
           <div>
             <div style="font-size:12px;font-weight:600">${esc(fmtNombre(a.n))}</div>
-            <div style="font-size:10px;color:var(--muted)">${a.grado||''}</div>
+            <div style="font-size:10px;color:${gradeColorOf(a.grado)};font-weight:700">${a.grado||''}</div>
           </div>
         </div>
       </td>`;
@@ -6345,7 +6359,7 @@ window.renderEstadisticas = function(){
         <span style="font-size:26px">${medallas[i]}</span>
         <div class="av ${a.av}" style="margin:0;width:36px;height:36px;font-size:12px;flex-shrink:0">${initials(a.n)}</div>
         <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(fmtNombre(a.n))}</div>
-        <div style="font-size:12px;color:var(--muted)">${a.grado||''} · +${a.pp} pts</div></div>
+        <div style="font-size:12px;color:var(--muted)">${gradoChip(a.grado)}+${a.pp} pts</div></div>
         <span style="font-size:22px;font-weight:800;font-family:var(--font-display);color:var(--green)">${a.avg}</span>
       </div>`).join('')
     :'<p style="font-size:14px;color:var(--muted)">Sin evaluaciones registradas aún</p>';
@@ -6482,7 +6496,7 @@ window.renderConcentrado=function(){
     Object.entries(porGrado).sort().forEach(([gNum,als])=>{
       const asigs=getAsignaturas(gNum);
       html+=`<div style="margin-bottom:2rem">
-        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--accent);margin-bottom:10px;padding:8px 14px;background:var(--accent-light);border-radius:8px;border-left:4px solid var(--accent)">${gNum}° Grado · ${als.length} alumnos</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado · ${als.length} alumnos</div>
         <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
         <table style="min-width:900px;font-size:14px"><thead><tr style="background:var(--surface2)">
           <th style="min-width:180px;font-size:13px">Alumno</th>
@@ -6537,7 +6551,7 @@ window.renderConcentrado=function(){
     Object.entries(porGrado).sort().forEach(([gNum,als])=>{
       if(!als.length)return;
       html+=`<div style="margin-bottom:2rem">
-        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--accent);margin-bottom:10px;padding:8px 14px;background:var(--accent-light);border-radius:8px;border-left:4px solid var(--accent)">${gNum}° Grado</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado</div>
         <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
         <table style="font-size:14px"><thead><tr style="background:var(--surface2)">
           <th style="min-width:180px">Alumno</th>
@@ -6580,7 +6594,7 @@ window.renderConcentrado=function(){
     if(!als.length)return;
     const actsGrado=actividades.filter(act=>evals2.some(r=>r.nombre===act&&als.find(a=>a.id===r.alumno)));
     html2+=`<div style="margin-bottom:2rem">
-      <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--accent);margin-bottom:10px;padding:8px 14px;background:var(--accent-light);border-radius:8px;border-left:4px solid var(--accent)">${gNum}° Grado · ${tipoLabel}</div>
+      <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado · ${tipoLabel}</div>
       <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
       <table style="font-size:14px"><thead><tr style="background:var(--surface2)">
         <th style="min-width:180px">Alumno</th>
@@ -7012,7 +7026,7 @@ function renderInicio(){
             <div class="af-dot ${dotCls}"></div>
             <div class="af-body">
               <div class="af-ttl">${esc(fmtNombre(a.n))}</div>
-              <div class="af-sub">${esc(a.grado||'')}${a.tutor?' · '+esc(a.tutor):''}</div>
+              <div class="af-sub">${gradoChip(a.grado)}${a.tutor?esc(a.tutor):''}</div>
             </div>
             ${pct!==null?`<span style="font-size:12px;font-weight:700;color:${pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">${pct}%</span>`:''}
             <span class="af-time">›</span>
@@ -7843,7 +7857,7 @@ window.renderCumpleanos=function(){
         <div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:700;color:var(--text)">${esc(fmtNombre(a.n))}</div>
-          <div style="font-size:11px;color:var(--muted)">${esc(a.grado||'')} · Cumple ${edad} años</div>
+          <div style="font-size:11px;color:var(--muted)">${gradoChip(a.grado)}Cumple ${edad} años</div>
         </div>
         <div style="font-size:12px;font-weight:700;color:${dias===0?'var(--accent)':'var(--text)'}">
           ${msg}
@@ -7895,7 +7909,7 @@ window.renderCumpleanos=function(){
             <div class="av ${a.av}" style="margin:0;width:34px;height:34px;font-size:11px;flex-shrink:0">${initials(a.n)}</div>
             <div style="flex:1">
               <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(fmtNombre(a.n))} ${esHoy?'🎂':''}</div>
-              <div style="font-size:11px;color:var(--muted)">${esc(a.grado||'')} · ${edad!==null?edad+' años actualmente':''}</div>
+              <div style="font-size:11px;color:var(--muted)">${gradoChip(a.grado)}${edad!==null?edad+' años actualmente':''}</div>
             </div>
             <div style="text-align:right">
               ${esHoy?`<span style="background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px">¡Hoy!</span>`:
