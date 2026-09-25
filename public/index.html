@@ -299,6 +299,17 @@ td.num,td.fecha,.mono{font-family:var(--font-mono);font-size:12.5px;color:var(--
 .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
 .sec-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);margin-bottom:.85rem;letter-spacing:-.01em}
 .empty{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
+
+.preview-chart-box{border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);margin:14px 0;overflow:hidden}
+.preview-chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;cursor:pointer;user-select:none}
+.preview-chart-head:hover{background:var(--surface2)}
+.preview-chart-head-label{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:13.5px;font-weight:700;color:var(--text)}
+.preview-chart-sub{font-size:11px;color:var(--muted);font-weight:500}
+.preview-chart-arrow{color:var(--muted);font-size:12px;transition:transform .2s ease}
+.preview-chart-box.collapsed .preview-chart-arrow{transform:rotate(-90deg)}
+.preview-chart-body{padding:4px 16px 16px}
+.preview-chart-box.collapsed .preview-chart-body{display:none}
+.preview-chart-body .empty{padding:1.25rem;font-size:12.5px}
 .filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
 .del-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:4px 8px;border-radius:6px;transition:all .18s}
 .del-btn:hover{background:rgba(214,69,69,0.10);color:var(--red)}
@@ -1099,6 +1110,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <!-- ASISTENCIA -->
     <div id="sec-asistencia" class="sec">
       <div class="row"><div><label>Fecha</label><input type="date" id="fecha-asist"></div></div>
+      <div class="preview-chart-box" id="preview-box-asist">
+        <div class="preview-chart-head" onclick="togglePreviewChart('asist')">
+          <span class="preview-chart-head-label">📈 Vista previa <span class="preview-chart-sub">· % de asistencia por alumno</span></span>
+          <span class="preview-chart-arrow" id="preview-arrow-asist">▾</span>
+        </div>
+        <div class="preview-chart-body" id="preview-chart-asist"></div>
+      </div>
       <div id="lista-asistencia"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;font-size:11.5px;color:var(--muted)">
         <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(26,138,92,0.18)"></span>A = Asistencia</span>
@@ -1180,6 +1198,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           </select>
         </div>
         <div style="flex:1"><label>Descripción</label><input type="text" id="desc-tarea" placeholder="Ej: Lectura págs. 12–15" style="width:100%"></div>
+      </div>
+      <div class="preview-chart-box" id="preview-box-tarea">
+        <div class="preview-chart-head" onclick="togglePreviewChart('tarea')">
+          <span class="preview-chart-head-label">📈 Vista previa <span class="preview-chart-sub">· % de cumplimiento por alumno</span></span>
+          <span class="preview-chart-arrow" id="preview-arrow-tarea">▾</span>
+        </div>
+        <div class="preview-chart-body" id="preview-chart-tarea"></div>
       </div>
       <div id="lista-tareas"></div>
       <button class="btn btn-save" onclick="guardarTareas()">Guardar tareas</button>
@@ -2922,6 +2947,25 @@ const uid=()=>currentUser.uid;
 // Sanitización XSS — escapa HTML en datos del usuario
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 
+// ---- HELPER SVG BARRAS HORIZONTALES (usado en Estadísticas y vistas previas) ----
+function svgBarrasH(datos, colorFn, labelFn){
+  const barH=34, gap=8, svgH=datos.length*(barH+gap);
+  const maxVal=Math.max(...datos.map(d=>d.val),1);
+  let svg=`<svg width="100%" height="${svgH}" viewBox="0 0 600 ${svgH}" style="overflow:visible">`;
+  datos.forEach((d,i)=>{
+    const y=i*(barH+gap);
+    const pct=d.val/maxVal;
+    const bW=Math.max(4,Math.round(pct*360));
+    const color=colorFn(d);
+    const lbl=labelFn?labelFn(d):d.val;
+    svg+=`
+      <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(d.n)}</text>
+      <rect x="170" y="${y+6}" width="${bW}" height="${barH-12}" rx="6" fill="${color}" opacity=".88"/>
+      <text x="${175+bW}" y="${y+22}" font-size="13" font-weight="700" fill="${color}" font-family="Syne,sans-serif">${lbl}</text>`;
+  });
+  return svg+'</svg>';
+}
+
 // ===== PLAN / TRIAL =====
 function diasRestantesTrial(){
   if(!planData?.trialEndsAt) return 0;
@@ -4372,6 +4416,55 @@ window.showTab=function(t){
   if(t==='listas'){volverListas();}
 };
 
+// ===== VISTA PREVIA (mini gráfica en Asistencia/Tareas) =====
+window.togglePreviewChart=function(tipo){
+  const box=document.getElementById('preview-box-'+tipo);
+  if(!box)return;
+  const collapsed=box.classList.toggle('collapsed');
+  localStorage.setItem('previewChartCollapsed_'+tipo,collapsed?'1':'0');
+};
+
+function initPreviewChartState(){
+  ['asist','tarea'].forEach(tipo=>{
+    const box=document.getElementById('preview-box-'+tipo);
+    if(box&&localStorage.getItem('previewChartCollapsed_'+tipo)==='1')box.classList.add('collapsed');
+  });
+}
+initPreviewChartState();
+
+function renderPreviewChart(tipo){
+  const el=document.getElementById('preview-chart-'+tipo);
+  if(!el)return;
+  const MAX=6;
+  let datos;
+  if(tipo==='asist'){
+    datos=ALUMNOS.map(a=>{
+      const r=asistencias.filter(x=>x.alumno===a.id);
+      if(!r.length)return null;
+      const val=Math.round(r.filter(x=>x.estado==='A').length/r.length*100);
+      const fal=r.filter(x=>x.estado==='F').length;
+      return{n:a.n.split(' ').slice(0,2).join(' '),val,fal};
+    }).filter(Boolean).sort((a,b)=>a.val-b.val);
+  }else{
+    datos=ALUMNOS.map(a=>{
+      const r=tareasData.filter(x=>x.alumno===a.id);
+      if(!r.length)return null;
+      const val=Math.round(r.filter(x=>x.estado==='si').length/r.length*100);
+      const no=r.filter(x=>x.estado==='no').length;
+      return{n:a.n.split(' ').slice(0,2).join(' '),val,no};
+    }).filter(Boolean).sort((a,b)=>a.val-b.val);
+  }
+  if(!datos.length){
+    el.innerHTML=`<div class="empty">Aún no hay ${tipo==='asist'?'registros de asistencia':'tareas registradas'} para mostrar</div>`;
+    return;
+  }
+  const top=datos.slice(0,MAX);
+  const colorFn=d=>d.val>=80?'var(--green)':d.val>=60?'var(--amber)':'var(--red)';
+  const labelFn=tipo==='asist'?d=>`${d.val}% (${d.fal} faltas)`:d=>`${d.val}% (${d.no} no entregó)`;
+  el.innerHTML=svgBarrasH(top,colorFn,labelFn)+
+    (datos.length>MAX?`<div style="text-align:center;margin-top:10px"><button class="btn btn-sm" onclick="showTab('estadisticas')">Ver estadísticas completas →</button></div>`:'');
+}
+
 // ===== ASISTENCIA =====
 function renderListaAsist(){
   asistSel={};
@@ -4385,6 +4478,7 @@ function renderListaAsist(){
         <span class="ab" id="ab-J-${a.id}" onclick="setAsist('${a.id}','J')">J</span>
       </div>
     </div>`).join('')+'</div>';
+  renderPreviewChart('asist');
 }
 
 window.setAsist=function(id,val){
@@ -4443,6 +4537,7 @@ function renderListaTareas(){
         <span class="ab" id="tb-inc-${a.id}" onclick="setTarea('${a.id}','inc')">½</span>
       </div>
     </div>`).join('')+'</div>';
+  renderPreviewChart('tarea');
 }
 
 window.setTarea=function(id,val){
@@ -5724,25 +5819,6 @@ window.renderEstadisticas = function(){
       <div style="font-size:30px;font-weight:800;font-family:var(--font-display);color:${alEn>0?'var(--red)':'var(--green)'}">${alEn}</div>
       <div style="font-size:12px;color:var(--muted);margin-top:4px">alumnos en riesgo</div>
     </div>`;
-
-  // ---- HELPER SVG BARRAS HORIZONTALES ----
-  function svgBarrasH(datos, colorFn, labelFn){
-    const barH=34, gap=8, svgH=datos.length*(barH+gap);
-    const maxVal=Math.max(...datos.map(d=>d.val),1);
-    let svg=`<svg width="100%" height="${svgH}" viewBox="0 0 600 ${svgH}" style="overflow:visible">`;
-    datos.forEach((d,i)=>{
-      const y=i*(barH+gap);
-      const pct=d.val/maxVal;
-      const bW=Math.max(4,Math.round(pct*360));
-      const color=colorFn(d);
-      const lbl=labelFn?labelFn(d):d.val;
-      svg+=`
-        <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(d.n)}</text>
-        <rect x="170" y="${y+6}" width="${bW}" height="${barH-12}" rx="6" fill="${color}" opacity=".88"/>
-        <text x="${175+bW}" y="${y+22}" font-size="13" font-weight="700" fill="${color}" font-family="Syne,sans-serif">${lbl}</text>`;
-    });
-    return svg+'</svg>';
-  }
 
   // ---- 1. ASISTENCIA POR ALUMNO ----
   const datosAsist=ALUMNOS.map(a=>{
