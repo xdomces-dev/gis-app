@@ -59,8 +59,17 @@ Regla crítica: opacidades mínimas 0.70. Serif italic rechazada.
 
 ### Pendientes
 1. **Plan Analítico** — módulo para el documento SEP que se entrega al supervisor. Bloqueado hasta que César defina la estructura con la nueva escuela Teocalli. Referencia local: `Downloads/Libro_Planeacion_Anual_Teocalli.docx`
-2. **Diagnóstico en pantalla Inicio** — resumen del nivel diagnóstico del grupo
+2. ~~Diagnóstico en pantalla Inicio~~ — hecho (resumen de diagnóstico del grupo en Inicio).
 3. Ajustes y bugs que surjan en el ciclo escolar real 2026-2027
+4. **Respaldos automáticos** de Firestore (datos sensibles de menores: CURP, médicos, NEE). Hoy solo existe "Exportar datos" manual. — siguiente en la lista (2026-09-25)
+5. **Limpiar código comercial sin uso** (planes/trial/candados, panel directivo, app supervisor): ~230 referencias.
+6. A futuro: separar CSS/JS del `index.html` (~9,800 líneas) y agregar pruebas básicas.
+
+### Nota técnica
+Funciones llamadas desde `onclick`/`onchange` en el HTML deben ser globales: definirlas como `window.fn=function…` o agregarlas al `Object.assign(window,{…})` al final del `<script type="module">`. Si no, fallan con ReferenceError.
+
+### Flujo multi-máquina (laptop escuela ↔ Leviatan casa)
+`git pull` al empezar · commit + `git push` al terminar · `firebase deploy --only hosting` SOLO después del push (nunca publicar sin subir a GitHub).
 
 ### Skill routing
 Cuando el request del usuario coincida con un skill disponible, invocarlo vía Skill tool:
