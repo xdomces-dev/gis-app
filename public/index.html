@@ -9779,6 +9779,10 @@ window.gpMarcarArchivada=async function(tareaId){
   toast('📁 Evidencia archivada');
 };
 
+// Funciones llamadas desde atributos onclick/onchange del HTML: al vivir dentro de
+// <script type="module"> no son globales, así que se publican en window explícitamente.
+Object.assign(window,{renderListaAsist,today,toast,dirPublicarComunicado,dirBorrarComunicado,supRenderGrid,supRenderObEscuelas});
+
 </script>
 <div id="toast"></div>
 <div id="confirm-overlay">
