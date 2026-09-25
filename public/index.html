@@ -182,7 +182,10 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 .sec{display:none}.sec.active{display:block;animation:secFadeIn 160ms cubic-bezier(.4,0,.2,1) both}
 .menu-item{display:flex;align-items:center;width:100%;padding:13px 20px;border:none;background:none;text-align:left;font-size:15.5px;font-family:var(--font);color:var(--text);cursor:pointer;transition:background .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1),border-radius .2s cubic-bezier(.4,0,.2,1);font-weight:500}
 .menu-item:hover{background:var(--surface2);color:var(--accent)}
-.menu-item.active{background:var(--accent-light);color:var(--accent);font-weight:700;border-radius:8px}
+.menu-item.active{background:var(--accent-light);color:var(--accent);font-weight:700;border-radius:8px;box-shadow:inset 3px 0 0 var(--accent)}
+.menu-sec{display:flex;align-items:center;gap:10px;padding:16px 20px 6px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.menu-sec:first-child{padding-top:4px}
+.menu-sec::after{content:"";flex:1;height:1px;background:var(--border)}
 /* SIDEBAR CALENDARIO */
 .cal-sidebar{width:0;overflow:hidden;transition:width .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;position:relative}
 .cal-sidebar.open{width:300px}
@@ -1072,30 +1075,31 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <!-- Menu items -->
     <div style="flex:1;overflow-y:auto;padding:10px 0">
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px">Registro diario</div>
+      <div class="menu-sec">Registro diario</div>
       <button class="menu-item active" id="mi-inicio"      onclick="menuNav('inicio')">🏠 Inicio</button>
       <button class="menu-item" id="mi-asistencia"  onclick="menuNav('asistencia')">📋 Asistencia</button>
-      <button class="menu-item" id="mi-semana"      onclick="menuNav('semana')" style="display:flex;align-items:center">📅 Vista semanal<span class="lock-icon" id="lock-semana" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-tareas"      onclick="menuNav('tareas')">📝 Tareas</button>
-      <button class="menu-item" id="mi-listas"      onclick="menuNav('listas')">☑️ Listas</button>
 
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Evaluación</div>
+      <div class="menu-sec">Evaluación</div>
       <button class="menu-item" id="mi-evaluacion"  onclick="menuNav('evaluacion')" style="display:flex;align-items:center">📊 Evaluación<span class="lock-icon" id="lock-evaluacion" style="display:none">🔒</span></button>
-      <button class="menu-item" id="mi-concentrado" onclick="menuNav('concentrado')" style="display:flex;align-items:center">📋 Concentrado<span class="lock-icon" id="lock-concentrado" style="display:none">🔒</span></button>
+      <button class="menu-item" id="mi-concentrado" onclick="menuNav('concentrado')" style="display:flex;align-items:center">🗂️ Concentrado<span class="lock-icon" id="lock-concentrado" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-estadisticas" onclick="menuNav('estadisticas')">📈 Estadísticas</button>
 
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Conducta y motivación</div>
+      <div class="menu-sec">Conducta y motivación</div>
       <button class="menu-item" id="mi-puntos"      onclick="menuNav('puntos')" style="display:flex;align-items:center">⭐ Puntos<span class="lock-icon" id="lock-puntos" style="display:none">🔒</span></button>
 
-
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Pedagógico</div>
+      <div class="menu-sec">Pedagógico</div>
       <button class="menu-item" id="mi-gestion" onclick="menuNav('gestion')">📚 Gestión Pedagógica</button>
 
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Comunicación</div>
+      <div class="menu-sec">Comunicación</div>
+      <button class="menu-item" id="mi-listas"      onclick="menuNav('listas')">☑️ Listas</button>
       <button class="menu-item" id="mi-reportes"    onclick="menuNav('reportes')" style="display:flex;align-items:center">📄 Reportes<span class="lock-icon" id="lock-reportes" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-cumpleanos"  onclick="menuNav('cumpleanos')">🎂 Cumpleaños <span id="cumple-badge" style="display:none;background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700;margin-left:4px"></span></button>
 
-      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Sistema</div>
+      <div class="menu-sec">Resumen</div>
+      <button class="menu-item" id="mi-semana"      onclick="menuNav('semana')" style="display:flex;align-items:center">📅 Vista semanal<span class="lock-icon" id="lock-semana" style="display:none">🔒</span></button>
+
+      <div class="menu-sec">Sistema</div>
       <button class="menu-item" id="mi-config"      onclick="menuNav('config')">⚙️ Configuración</button>
     </div>
 
