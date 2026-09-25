@@ -154,6 +154,10 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 
 /* NAV */
 .nav{display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(240,244,242,0.55);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);position:sticky;top:0;z-index:100;padding:0 1rem;box-shadow:0 1px 0 rgba(32,75,58,0.06)}
+#nav-back-btn{width:36px;height:36px;background:none;border:1.5px solid var(--border);border-radius:10px;font-size:22px;line-height:1;cursor:pointer;flex-shrink:0;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .15s;opacity:.28;pointer-events:none;margin-right:6px;font-weight:300}
+#nav-back-btn.can-go-back{opacity:1;pointer-events:auto}
+#nav-back-btn.can-go-back:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+#nav-back-btn:active{transform:scale(0.93)}
 .nav-brand{font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--text);padding:.85rem .85rem .85rem 0;border-right:1px solid var(--border);margin-right:.85rem;white-space:nowrap;cursor:pointer;max-width:130px;overflow:hidden;text-overflow:ellipsis}
 .nav-brand span{color:var(--accent)}
 .nav-tabs{display:flex;flex:1;overflow-x:auto;gap:2px;padding:6px 0}
@@ -255,6 +259,20 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 .evento-escuela{background:#ecfdf5;border-color:#059669;color:var(--text)}
 .cal-seccion{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 5px}
 @media print{#print-org{display:block!important}body>*:not(#print-org){display:none!important}.no-print{display:none}}
+/* ===== GESTIÓN PEDAGÓGICA ===== */
+.gp-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.80);border-radius:var(--r);padding:16px 14px;cursor:pointer;transition:background .2s,box-shadow .2s,transform .18s;box-shadow:0 2px 12px rgba(20,40,32,0.07)}
+.gp-card:hover{background:rgba(255,255,255,0.90);box-shadow:0 6px 20px rgba(20,40,32,0.12);transform:translateY(-2px)}
+.gp-card:active{transform:scale(0.97)!important}
+.gp-card-nombre{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;font-family:var(--font-display)}
+.gp-card-meta{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.cont-row{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);background:#fff;transition:background .12s}
+.cont-row:last-child{border-bottom:none}
+.cont-row:hover{background:rgba(32,75,58,0.03)}
+.cont-ind{padding:4px 9px;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;font-family:var(--font);white-space:nowrap}
+.cont-ind:hover{border-color:var(--accent);color:var(--accent)}
+.cont-ind.on{background:rgba(32,75,58,0.10);border-color:var(--accent);color:var(--accent)}
+.cont-ind.on-green{background:rgba(26,138,92,0.12);border-color:var(--green);color:#065f46}
+.gp-propósito{background:rgba(32,75,58,0.06);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:1.25rem;font-size:13px;color:var(--text);line-height:1.65}
 
 
 label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.6px;font-weight:600;font-family:var(--font)}
@@ -1049,6 +1067,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="menu-item" id="mi-puntos"      onclick="menuNav('puntos')" style="display:flex;align-items:center">⭐ Puntos<span class="lock-icon" id="lock-puntos" style="display:none">🔒</span></button>
 
 
+      <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Pedagógico</div>
+      <button class="menu-item" id="mi-gestion" onclick="menuNav('gestion')">📚 Gestión Pedagógica</button>
+
       <div style="padding:6px 16px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px">Comunicación</div>
       <button class="menu-item" id="mi-reportes"    onclick="menuNav('reportes')" style="display:flex;align-items:center">📄 Reportes<span class="lock-icon" id="lock-reportes" style="display:none">🔒</span></button>
       <button class="menu-item" id="mi-cumpleanos"  onclick="menuNav('cumpleanos')">🎂 Cumpleaños <span id="cumple-badge" style="display:none;background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:10px;font-weight:700;margin-left:4px"></span></button>
@@ -1067,6 +1088,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   <!-- TOP NAV (compacta) -->
   <nav class="nav">
+    <button id="nav-back-btn" onclick="navBack()" title="Atrás">‹</button>
     <button id="hamburger-btn" onclick="toggleMenu()" style="display:none;width:38px;height:38px;background:none;border:1.5px solid var(--border);border-radius:10px;font-size:18px;cursor:pointer;flex-shrink:0;color:var(--text);align-items:center;justify-content:center;transition:all .15s" title="Menú">☰</button>
     <div class="nav-brand" id="nav-label" onclick="menuNav('inicio')" style="cursor:pointer" title="Ver inicio"><span style="font-family:var(--font-display);font-size:1em;font-weight:800;letter-spacing:2.5px;">GIS</span></div>
     <div style="flex:1;display:flex;align-items:center;padding:0 8px;overflow:hidden">
@@ -1109,7 +1131,26 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <!-- ASISTENCIA -->
     <div id="sec-asistencia" class="sec">
-      <div class="row"><div><label>Fecha</label><input type="date" id="fecha-asist"></div></div>
+      <div class="row"><div><label>Fecha</label><input type="date" id="fecha-asist" onchange="renderListaAsist()"></div></div>
+      <!-- Banner día sin clase -->
+      <div id="banner-sin-clase" style="display:none;background:rgba(100,116,139,0.10);border:1.5px solid rgba(100,116,139,0.25);border-radius:12px;padding:14px 16px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div>
+            <span style="font-size:13px;font-weight:700;color:var(--muted)">📵 Sin clase este día</span>
+            <div id="banner-sin-clase-motivo" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <button class="btn btn-sm" onclick="eliminarDiaSinClase()" style="background:rgba(214,69,69,0.10);color:#c0392b;border-color:rgba(214,69,69,0.25)">Quitar</button>
+        </div>
+      </div>
+      <!-- Formulario sin clase -->
+      <div id="form-sin-clase" style="display:none;background:rgba(100,116,139,0.07);border:1.5px dashed rgba(100,116,139,0.30);border-radius:12px;padding:14px 16px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">📵 Registrar día sin clase</div>
+        <input id="input-sin-clase-motivo" type="text" placeholder="Motivo (ej. CTE, puente, lluvia...)" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fff;color:var(--text);box-sizing:border-box;margin-bottom:8px">
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-save" onclick="guardarDiaSinClase()" style="flex:1">Confirmar día sin clase</button>
+          <button class="btn btn-sm" onclick="document.getElementById('form-sin-clase').style.display='none'">Cancelar</button>
+        </div>
+      </div>
       <div class="preview-chart-box" id="preview-box-asist">
         <div class="preview-chart-head" onclick="togglePreviewChart('asist')">
           <span class="preview-chart-head-label">📈 Vista previa <span class="preview-chart-sub">· % de asistencia por alumno</span></span>
@@ -1118,12 +1159,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="preview-chart-body" id="preview-chart-asist"></div>
       </div>
       <div id="lista-asistencia"></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;font-size:11.5px;color:var(--muted)">
+      <div id="leyenda-asist" style="display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;font-size:11.5px;color:var(--muted)">
         <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(26,138,92,0.18)"></span>A = Asistencia</span>
         <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(214,69,69,0.13)"></span>F = Falta</span>
         <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(37,99,235,0.13)"></span>J = Justificada</span>
       </div>
-      <button class="btn btn-save" onclick="guardarAsistencia()">Guardar asistencia</button>
+      <div id="btns-asist" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-save" onclick="guardarAsistencia()">Guardar asistencia</button>
+        <button class="btn btn-sm" onclick="document.getElementById('form-sin-clase').style.display=''" style="color:var(--muted)">📵 Sin clase este día</button>
+      </div>
       <div class="divider"></div>
       <p class="sec-title">Historial</p>
       <div class="filtros">
@@ -1607,6 +1651,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         </div>
       </div>
       <div id="cumple-lista"></div>
+    </div>
+
+    <!-- GESTIÓN PEDAGÓGICA -->
+    <div id="sec-gestion" class="sec">
+      <div id="gp-overview"></div>
+      <div id="gp-detalle" style="display:none"></div>
+      <div id="gp-temporal" style="display:none"></div>
     </div>
 
     <!-- CONFIG -->
@@ -2174,6 +2225,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="mas-item" onclick="docNavToMas('concentrado')"><span>📋</span>Concentrado<span class="lock-icon" id="lock2-concentrado" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('estadisticas')"><span>📈</span>Estadísticas</button>
         <button class="mas-item" onclick="docNavToMas('puntos')"><span>⭐</span>Puntos</button>
+        <button class="mas-item" onclick="docNavToMas('gestion')"><span>📚</span>Pedagógica</button>
         <button class="mas-item" onclick="docNavToMas('reportes')"><span>📄</span>Reportes<span class="lock-icon" id="lock2-reportes" style="display:none;font-size:10px">🔒</span></button>
         <button class="mas-item" onclick="docNavToMas('cumpleanos')"><span>🎂</span>Cumpleaños</button>
         <button class="mas-item" onclick="cerrarMasSheet();toggleHerrSidebar()"><span>🛠️</span>Herramientas</button>
@@ -2784,7 +2836,9 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache() });
 // ===== ESTADO =====
 let currentUser = null;
 let ALUMNOS=[], escuelaData=null, planData=null, schoolData=null;
-let tareasData=[], asistencias=[], evaluaciones=[], puntosData=[], listasData=[];
+let tareasData=[], asistencias=[], evaluaciones=[], puntosData=[], listasData=[], diasSinClase=[];
+let contenidosData=[], _todasContenidos=[];
+let gestionVistaDetalle=null;
 let listaActivaId=null;
 let metaData={valor:50,premio:''};
 let eventosPersonales=[], eventosEscuela=[];
@@ -2795,7 +2849,7 @@ window.obAlumnos=[];
 window.cfgAlumnos=[];
 let _modoDirectivo=false, _rolPendiente=null, _tipoDirPendiente=null, _editandoEscuelaDir=false;
 // ─── CICLO & GRUPO ───
-let _todosAlumnos=[], _todasAsistencias=[], _todasTareas=[], _todasEvals=[], _todosPuntos=[], _todasListas=[];
+let _todosAlumnos=[], _todasAsistencias=[], _todasTareas=[], _todasEvals=[], _todosPuntos=[], _todasListas=[], _todosDiasSinClase=[];
 let ALUMNOS_CICLO=[]; // todos los alumnos del ciclo activo, sin filtrar por grupo
 let grupoActivo=''; // '1°' | '2°' | '3°' | '' = todos
 
@@ -2843,7 +2897,7 @@ function initEvalAlumnoSel(){
   while(sel.options.length>1)sel.remove(1);
   ALUMNOS.forEach(a=>{
     const o=document.createElement('option');
-    o.value=a.id;o.textContent=a.n+' ('+a.grado+')';sel.appendChild(o);
+    o.value=a.id;o.textContent=fmtNombre(a.n)+' ('+a.grado+')';sel.appendChild(o);
   });
 }
 
@@ -2868,7 +2922,7 @@ window.renderEvalBoleta=function(){
   evalBoletaData={alumnoId,periodo,asigs};
 
   container.innerHTML=`
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">📋 <strong>${esc(alumno?.n)}</strong> · ${alumno?.grado} · ${CAMPOS[periodo]}</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">📋 <strong>${esc(fmtNombre(alumno?.n))}</strong> · ${alumno?.grado} · ${CAMPOS[periodo]}</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px">
       ${asigs.map(a=>`
         <div style="background:var(--surface2);border-radius:var(--rs);padding:10px">
@@ -2941,7 +2995,10 @@ const GRADOS={preescolar:['1° Preescolar','2° Preescolar','3° Preescolar'],pr
 
 const today=()=>new Date().toISOString().split('T')[0];
 const fmt=d=>d?d.split('-').reverse().join('/'):'';
-const initials=n=>n.trim().split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+// Reordena "Apellido1 Apellido2 Nombre(s)" → "Nombre(s) Apellido1 Apellido2"
+const fmtNombre=n=>{const p=(n||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return n||'';if(p.length<=2)return[...p].reverse().join(' ');return[...p.slice(2),...p.slice(0,2)].join(' ');};
+const primerNombre=n=>fmtNombre(n).split(' ')[0];
+const initials=n=>{const p=fmtNombre(n).trim().split(/\s+/);return((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase();};
 const uid=()=>currentUser.uid;
 
 // Sanitización XSS — escapa HTML en datos del usuario
@@ -2959,7 +3016,7 @@ function svgBarrasH(datos, colorFn, labelFn){
     const color=colorFn(d);
     const lbl=labelFn?labelFn(d):d.val;
     svg+=`
-      <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(d.n)}</text>
+      <text x="0" y="${y+22}" font-size="13" fill="#555" font-family="DM Sans,sans-serif" font-weight="500">${esc(fmtNombre(d.n))}</text>
       <rect x="170" y="${y+6}" width="${bW}" height="${barH-12}" rx="6" fill="${color}" opacity=".88"/>
       <text x="${175+bW}" y="${y+22}" font-size="13" font-weight="700" fill="${color}" font-family="Syne,sans-serif">${lbl}</text>`;
   });
@@ -3215,7 +3272,7 @@ async function fsGetCol(colPath){
 
 // ===== CARGAR DATOS =====
 async function cargarTodosLosDatos(){
-  const [perfil,als,asis,tar,evals,pts,meta,evs,lst]=await Promise.all([
+  const [perfil,als,asis,tar,evals,pts,meta,evs,lst,dsc,cont]=await Promise.all([
     fsGet('perfil/datos'),
     fsGetCol('alumnos'),
     fsGetCol('asistencias'),
@@ -3225,6 +3282,8 @@ async function cargarTodosLosDatos(){
     fsGet('meta/datos'),
     fsGetCol('eventos'),
     fsGetCol('listas'),
+    fsGetCol('diasSinClase'),
+    fsGetCol('contenidos'),
   ]);
   escuelaData=perfil;
   _todosAlumnos=als||[];
@@ -3233,6 +3292,8 @@ async function cargarTodosLosDatos(){
   _todasEvals=evals||[];
   _todosPuntos=pts||[];
   _todasListas=lst||[];
+  _todosDiasSinClase=dsc||[];
+  _todasContenidos=cont||[];
   aplicarFiltrosCicloGrupo();
   metaData=meta||{valor:50,premio:''};
   metaYaCelebrada=metaData.celebrada||false;
@@ -3264,6 +3325,8 @@ function aplicarFiltrosCicloGrupo(){
   puntosData=_todosPuntos.filter(r=>byCiclo(r)&&byAlumno(r));
   // Una lista aplica si es de "todos los grupos" o coincide con el grupoActivo
   listasData=_todasListas.filter(l=>byCiclo(l)&&(!grupoActivo||!l.grupo||l.grupo===grupoActivo));
+  diasSinClase=_todosDiasSinClase.filter(byCiclo);
+  contenidosData=_todasContenidos.filter(byCiclo);
 }
 
 async function migrarCicloInicial(){
@@ -3727,7 +3790,10 @@ function iniciarApp(){
       miSistema.insertBefore(btn,document.getElementById('mi-config'));
     }
   }
-  // Mostrar inicio
+  // Mostrar inicio + inicializar historial de navegación
+  _navHistory = [];
+  _navCurrent = 'inicio';
+  history.replaceState({gis:true, tab:'inicio'}, '', location.href);
   showTab('inicio');
   // Hamburger nav — ocultar bottom nav, mostrar botón menú
   const _dn=document.getElementById('doc-bottom-nav'); if(_dn)_dn.style.display='flex';
@@ -4379,12 +4445,20 @@ function initSelects(){
   ['fa-a','fe-a','fp-a','ft-a','rep-a'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
     while(el.options.length>1)el.remove(1);
-    ALUMNOS.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.n+(a.grado?' ('+a.grado+')':'');el.appendChild(o);});
+    ALUMNOS.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=fmtNombre(a.n)+(a.grado?' ('+a.grado+')':'');el.appendChild(o);});
   });
 }
 
 window.showTab=function(t){
   if(_modoDirectivo) return;
+  // Registrar historial de navegación interna
+  if(!_navGoingBack && _navCurrent && _navCurrent !== t){
+    _navHistory.push(_navCurrent);
+    if(_navHistory.length > 25) _navHistory.shift();
+    history.pushState({gis:true, tab:t}, '', location.href);
+  }
+  _navCurrent = t;
+  _updateNavBackBtn();
   const PREMIUM_TABS=['semana','evaluacion','concentrado','puntos','reportes'];
   if(PREMIUM_TABS.includes(t)&&!isPremium()){
     mostrarUpgrade();
@@ -4402,7 +4476,7 @@ window.showTab=function(t){
   const _nb=document.getElementById(_NM[t]||'doc-nav-mas');
   if(_nb)_nb.classList.add('active');
   const lbl=document.getElementById('nav-seccion-label');
-  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración'};
+  const MENU_LABELS={inicio:'🏠 Inicio',asistencia:'📋 Asistencia',semana:'📅 Vista semanal',tareas:'📝 Tareas',listas:'☑️ Listas',evaluacion:'📊 Evaluación',concentrado:'📋 Concentrado',estadisticas:'📈 Estadísticas',puntos:'⭐ Puntos',reportes:'📄 Reportes',cumpleanos:'🎂 Cumpleaños',config:'⚙️ Configuración',gestion:'📚 Gestión Pedagógica'};
   if(lbl)lbl.textContent=MENU_LABELS[t]||t;
   if(t==='inicio')renderInicio();
   if(t==='reportes'){generarReporte();initWASelect();initConstanciaSelect();}
@@ -4412,6 +4486,7 @@ window.showTab=function(t){
   if(t==='config'){cargarConfig();renderSeccionVinculo();}
   if(t==='cumpleanos')renderCumpleanos();
   if(t==='semana')renderSemana();
+  if(t==='gestion')renderGestionPedagogica();
   if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();}
   if(t==='listas'){volverListas();}
 };
@@ -4468,10 +4543,31 @@ function renderPreviewChart(tipo){
 // ===== ASISTENCIA =====
 function renderListaAsist(){
   asistSel={};
-  document.getElementById('lista-asistencia').innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
+  const fecha=document.getElementById('fecha-asist')?.value||'';
+  const dsc=fecha?diasSinClase.find(d=>d.fecha===fecha):null;
+  const banner=document.getElementById('banner-sin-clase');
+  const form=document.getElementById('form-sin-clase');
+  const lista=document.getElementById('lista-asistencia');
+  const leyenda=document.getElementById('leyenda-asist');
+  const btns=document.getElementById('btns-asist');
+  if(dsc){
+    // Día sin clase — mostrar banner, ocultar grid y controles
+    if(banner){banner.style.display='';document.getElementById('banner-sin-clase-motivo').textContent=dsc.motivo||'Sin motivo registrado';}
+    if(form)form.style.display='none';
+    if(lista)lista.innerHTML='';
+    if(leyenda)leyenda.style.display='none';
+    if(btns)btns.style.display='none';
+    return;
+  }
+  // Día normal
+  if(banner)banner.style.display='none';
+  if(form)form.style.display='none';
+  if(leyenda)leyenda.style.display='';
+  if(btns)btns.style.display='';
+  lista.innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
     <div class="ac">
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
-      <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
+      <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab" id="ab-A-${a.id}" onclick="setAsist('${a.id}','A')">✓</span>
         <span class="ab" id="ab-F-${a.id}" onclick="setAsist('${a.id}','F')">✗</span>
@@ -4504,6 +4600,35 @@ window.guardarAsistencia=async function(){
   actualizarResumen();
 };
 
+window.guardarDiaSinClase=async function(){
+  const fecha=document.getElementById('fecha-asist').value;
+  if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
+  const motivo=document.getElementById('input-sin-clase-motivo').value.trim()||'Sin especificar';
+  const r={fecha,motivo};
+  const id=await fsAdd('diasSinClase',r);
+  const doc={id,...r,ciclo:escuelaData?.cicloActivo||''};
+  _todosDiasSinClase=_todosDiasSinClase.filter(d=>d.fecha!==fecha);
+  _todosDiasSinClase.push(doc);
+  diasSinClase=_todosDiasSinClase.filter(d=>!escuelaData?.cicloActivo||!d.ciclo||d.ciclo===escuelaData.cicloActivo);
+  document.getElementById('input-sin-clase-motivo').value='';
+  renderListaAsist();
+  if(typeof renderSemana==='function')renderSemana();
+  mostrarCel('📵','Día sin clase registrado',`${fmt(fecha)} · ${motivo}`);
+};
+
+window.eliminarDiaSinClase=async function(){
+  const fecha=document.getElementById('fecha-asist').value;
+  const dsc=diasSinClase.find(d=>d.fecha===fecha);
+  if(!dsc)return;
+  if(!await showConfirm('¿Quitar el registro de día sin clase para esta fecha?','Quitar'))return;
+  await fsDel(`diasSinClase/${dsc.id}`);
+  _todosDiasSinClase=_todosDiasSinClase.filter(d=>d.id!==dsc.id);
+  diasSinClase=diasSinClase.filter(d=>d.id!==dsc.id);
+  renderListaAsist();
+  if(typeof renderSemana==='function')renderSemana();
+  mostrarCel('✅','Registro eliminado',fmt(fecha));
+};
+
 function renderTablaAsist(){
   const fa=document.getElementById('fa-a').value;
   const data=asistencias.filter(r=>!fa||r.alumno===fa).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
@@ -4512,7 +4637,7 @@ function renderTablaAsist(){
     data.map(r=>{
       const al=ALUMNOS.find(a=>a.id===r.alumno);
       const est=r.estado==='A'?'<span class="badge bg">Asistió</span>':r.estado==='F'?'<span class="badge br">Falta</span>':'<span class="badge bo">Justificada</span>';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(al.n):r.alumno}</td><td>${al?.grado||'—'}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('asist','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delAsist('${r.id}')">✕</button></td></tr>`;
+      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td>${al?.grado||'—'}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('asist','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delAsist('${r.id}')">✕</button></td></tr>`;
     }).join('')+'</tbody></table>';
 }
 window.renderTablaAsist=renderTablaAsist;
@@ -4530,7 +4655,7 @@ function renderListaTareas(){
   document.getElementById('lista-tareas').innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
     <div class="ac">
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
-      <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
+      <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab" id="tb-si-${a.id}" onclick="setTarea('${a.id}','si')">✓</span>
         <span class="ab" id="tb-no-${a.id}" onclick="setTarea('${a.id}','no')">✗</span>
@@ -4549,14 +4674,16 @@ window.guardarTareas=async function(){
   const fecha=document.getElementById('fecha-tarea').value,campo=document.getElementById('campo-tarea').value,desc=document.getElementById('desc-tarea').value.trim()||'Tarea del día';
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
   let cnt=0;const proms=[];
+  const _gpCid=window._gpContenidoId||null;
   ALUMNOS.forEach(a=>{
     if(tareasSel[a.id]){
-      const r={fecha,campo,desc,alumno:a.id,estado:tareasSel[a.id]};
-      proms.push(fsAdd('tareas',r).then(id=>{tareasData.unshift({id,...r});cnt++;}));
+      const r={fecha,campo,desc,alumno:a.id,estado:tareasSel[a.id],evidenciaFisica:false,...(_gpCid?{contenidoId:_gpCid}:{})};
+      proms.push(fsAdd('tareas',r).then(id=>{tareasData.unshift({id,...r});_todasTareas.unshift({id,...r});cnt++;}));
     }
   });
   if(!proms.length)return mostrarCel('⚠️','Sin alumnos','Marca al menos un alumno');
   await Promise.all(proms);
+  window._gpContenidoId=null;
   renderListaTareas();renderTablaTareas();
   document.getElementById('desc-tarea').value='';
   mostrarCel('📋','¡Tareas registradas!',`${cnt} alumnos`);
@@ -4570,7 +4697,7 @@ function renderTablaTareas(){
     data.map(r=>{
       const al=ALUMNOS.find(a=>a.id===r.alumno);
       const est=r.estado==='si'?'<span class="badge bg">Entregó</span>':r.estado==='no'?'<span class="badge br">No entregó</span>':'<span class="badge bo">Incompleta</span>';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(al.n):r.alumno}</td><td><span class="badge bp">${CAMPOS[r.campo]||r.campo}</span></td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc)}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('tarea','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delTarea('${r.id}')">✕</button></td></tr>`;
+      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td><span class="badge bp">${CAMPOS[r.campo]||r.campo}</span></td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc)}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('tarea','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delTarea('${r.id}')">✕</button></td></tr>`;
     }).join('')+'</tbody></table>';
 }
 window.renderTablaTareas=renderTablaTareas;
@@ -4674,7 +4801,7 @@ function renderDetalleLista(){
     num++;
     html+=`<div class="ac">
       <div class="av ${a.av||'av1'}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
-      <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
+      <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div class="asist-row">
         <span class="ab ${est==='si'?'sA':''}" onclick="setEstadoListaAlumno('${a.id}','si')">✓</span>
         <span class="ab ${est==='no'?'sF':''}" onclick="setEstadoListaAlumno('${a.id}','no')">✗</span>
@@ -4728,7 +4855,7 @@ window.imprimirLista=function(){
     num++;
     filas+=`<tr>
       <td style="text-align:center;color:#888;font-size:12px">${num}</td>
-      <td style="padding:7px 10px;font-size:13px">${a.n}</td>
+      <td style="padding:7px 10px;font-size:13px">${fmtNombre(a.n)}</td>
       <td style="text-align:center;font-size:15px;font-weight:700;color:${estColor}">${estLabel}</td>
       <td style="border-left:1px solid #eee"></td>
     </tr>`;
@@ -4780,7 +4907,7 @@ function renderListaEval(){
   document.getElementById('lista-eval').innerHTML='<div class="alumno-grid">'+ALUMNOS.map(a=>`
     <div class="ac">
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
-      <div class="an">${esc(a.n)}</div><div class="ag">${a.grado||''}</div>
+      <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div style="display:flex;align-items:center;gap:4px;justify-content:center;margin-top:4px">
         <button class="btn-p minus" onclick="stepCal('${a.id}',-1)">−</button>
         <span id="cal-${a.id}" style="font-size:14px;font-weight:700;font-family:var(--font-mono);min-width:24px;text-align:center;color:var(--muted)">—</span>
@@ -4836,7 +4963,7 @@ function renderTablaEval(){
       const periodoLabel=PERIODOS[r.campo]||r.campo;
       const tipoLabel=r.tipo==='boleta'?'Boleta':(TIPOS[r.tipo]||r.tipo);
       const barColor=r.cal>=7?'#1a8a5c':r.cal>=5?'#c9820a':'#d64545';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(al.n):r.alumno}</td><td><span class="badge bp">${periodoLabel}</span></td><td><span class="badge bb">${tipoLabel}</span></td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.nombre)}</td><td><div style="display:flex;align-items:center;gap:6px"><span class="badge ${cc}" style="font-family:var(--font-mono);font-size:12px">${r.cal}</span><div style="width:30px;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;flex-shrink:0"><div style="width:${(r.cal||0)*10}%;height:100%;border-radius:2px;background:${barColor}"></div></div></div></td><td><button class="del-btn" onclick="delEval('${r.id}')">✕</button></td></tr>`;
+      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td><span class="badge bp">${periodoLabel}</span></td><td><span class="badge bb">${tipoLabel}</span></td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.nombre)}</td><td><div style="display:flex;align-items:center;gap:6px"><span class="badge ${cc}" style="font-family:var(--font-mono);font-size:12px">${r.cal}</span><div style="width:30px;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;flex-shrink:0"><div style="width:${(r.cal||0)*10}%;height:100%;border-radius:2px;background:${barColor}"></div></div></div></td><td><button class="del-btn" onclick="delEval('${r.id}')">✕</button></td></tr>`;
     }).join('')+'</tbody></table>';
 }
 window.renderTablaEval=renderTablaEval;
@@ -4863,7 +4990,7 @@ function renderPuntosGrid(){
   ptosTemp={};ALUMNOS.forEach(a=>ptosTemp[a.id]={pos:0,neg:0});
   document.getElementById('puntos-grid').innerHTML='<div class="puntos-grid">'+ALUMNOS.map(a=>`
     <div class="pc">
-      <div class="pc-name">${esc(a.n)}</div>
+      <div class="pc-name">${esc(fmtNombre(a.n))}</div>
       <div class="pc-bal"><span class="pc-pos" id="ppos-${a.id}">+0</span><span class="pc-sep">/</span><span class="pc-neg" id="pneg-${a.id}">−0</span></div>
       <div class="pbtns"><button class="btn-p plus" onclick="addPunto('${a.id}','pos')">+</button><button class="btn-p minus" onclick="addPunto('${a.id}','neg')">−</button></div>
     </div>`).join('')+'</div>';
@@ -4896,7 +5023,7 @@ function renderTablaPuntos(){
     data.map(r=>{
       const al=ALUMNOS.find(a=>a.id===r.alumno);
       const b=r.tipo==='pos'?`<span class="badge bg" style="font-family:var(--font-mono)">+${r.valor} ${esc(r.cat)}</span>`:`<span class="badge br" style="font-family:var(--font-mono)">−${r.valor} ${esc(r.cat)}</span>`;
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(al.n):r.alumno}</td><td>${b}</td><td><button class="del-btn" onclick="delPunto('${r.id}')">✕</button></td></tr>`;
+      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td>${b}</td><td><button class="del-btn" onclick="delPunto('${r.id}')">✕</button></td></tr>`;
     }).join('')+'</tbody></table>';
 }
 window.renderTablaPuntos=renderTablaPuntos;
@@ -4961,7 +5088,7 @@ function renderRankingPuntos(){
       <div class="av ${d.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(d.n)}</div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px">
-          <span style="font-size:12.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${esc(d.n.split(' ').slice(0,2).join(' '))}</span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${esc(fmtNombre(d.n).split(' ').slice(0,2).join(' '))}</span>
           <span style="font-family:var(--font-mono);font-size:11px;color:var(--green);font-weight:700">+${d.pos}</span>
           ${d.neg>0?`<span style="font-family:var(--font-mono);font-size:11px;color:var(--red);font-weight:700">−${d.neg}</span>`:''}
           ${goldBadge}${alertBadge}
@@ -5002,7 +5129,7 @@ function generarReporte(){
     const pp=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='pos').reduce((s,r)=>s+r.valor,0);
     const pn=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='neg').reduce((s,r)=>s+r.valor,0);
     const bal=pp-pn,cc=avgE===null?'':avgE>=7?'bg':avgE>=5?'bo':'br';
-    return `<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>${esc(a.n)}<span style="font-size:10px;color:var(--muted)">${a.grado||''}</span></div></td>
+    return `<tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>${esc(fmtNombre(a.n))}<span style="font-size:10px;color:var(--muted)">${a.grado||''}</span></div></td>
       <td>${pA!==null?`<span class="badge ${pA>=80?'bg':pA>=60?'bo':'br'}">${pA}%</span>`:'—'}</td>
       <td>${avgE!==null?`<span class="badge ${cc}">${avgE}</span>`:'—'}</td>
       <td style="color:var(--green);font-weight:700">+${pp}</td>
@@ -5464,7 +5591,7 @@ function renderOvRanking(body){
     sorted.map((a,i)=>`<div class="rank-card ${i<3?cc[i]:''}" style="animation-delay:${i*.07}s">
       <div class="rank-num">${i+1}</div>${i<3?`<div class="crown">${medals[i]}</div>`:''}
       <div class="av ${a.av}" style="margin:0 auto 8px;width:44px;height:44px;font-size:15px;flex-shrink:0">${initials(a.n)}</div>
-      <div class="rank-name">${esc(a.n)}</div>
+      <div class="rank-name">${esc(fmtNombre(a.n))}</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${esc(a.grado||'')}</div>
       <div class="rank-bal" style="color:${a.bal>=0?'var(--green)':'var(--red)'}">${a.bal>=0?'+':''}${a.bal}</div>
       <div style="font-size:11px;color:var(--muted)">+${a.pp} / −${a.pn}</div>
@@ -5477,7 +5604,7 @@ function renderOvAsistencia(body){
   <table class="big-table"><thead><tr><th>#</th><th>Alumno</th><th>Grado</th><th>Asist.</th><th>Faltas</th><th>%</th></tr></thead><tbody>`+
   datos.map((a,i)=>`<tr style="animation:slideUp .3s ease ${i*.05}s both">
     <td style="color:var(--muted)">${i+1}</td>
-    <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(a.n)}</span></div></td>
+    <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(fmtNombre(a.n))}</span></div></td>
     <td style="color:var(--muted)">${esc(a.grado||'—')}</td>
     <td><span class="big-num" style="color:var(--green)">${a.asi}</span></td>
     <td><span class="big-num" style="color:var(--red)">${a.fal}</span></td>
@@ -5490,7 +5617,7 @@ function renderOvNotas(body){
   <table class="big-table"><thead><tr><th>#</th><th>Alumno</th><th>Grado</th><th>Promedio</th><th>Evaluaciones</th><th>🚦</th></tr></thead><tbody>`+
   datos.map((a,i)=>`<tr style="animation:slideUp .3s ease ${i*.05}s both">
     <td style="color:var(--muted)">${i+1}</td>
-    <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(a.n)}</span></div></td>
+    <td><div style="display:flex;align-items:center;gap:8px"><div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div><span class="big-name">${esc(fmtNombre(a.n))}</span></div></td>
     <td style="color:var(--muted)">${esc(a.grado||'—')}</td>
     <td><span class="big-num" style="color:${a.avg>=7?'var(--green)':a.avg>=5?'var(--amber)':'var(--red)'}">${a.avg??'—'}</span></td>
     <td style="color:var(--muted)">${a.total}</td>
@@ -5563,12 +5690,25 @@ function renderSemana(){
   const tareaTxt={si:'var(--green)',no:'var(--red)',inc:'var(--amber)'};
   const tareaLabel={si:'✓ Tarea',no:'✗ Sin tarea',inc:'½ Incomp.'};
 
+  // Indexar días sin clase por fecha para esta semana
+  const dscSet={};
+  diasSinClase.forEach(d=>{dscSet[d.fecha]=d.motivo||'Sin especificar';});
+
   let html=`<table style="width:100%;border-collapse:collapse;font-size:12px;min-width:500px">
     <thead><tr>
       <th style="text-align:left;padding:8px 10px;color:var(--muted);font-size:11px;border-bottom:1px solid var(--border);font-weight:500">Alumno</th>`;
   dias.forEach(d=>{
     const hoy=dateStr(new Date())===d.fecha;
-    html+=`<th style="text-align:center;padding:8px 6px;color:${hoy?'var(--accent)':'var(--muted)'};font-size:11px;border-bottom:1px solid var(--border);font-weight:${hoy?'700':'500'};min-width:80px">${d.label}<br><span style="font-size:10px;opacity:.7">${fmtCorto(d.fecha)}</span></th>`;
+    const esSinClase=!!dscSet[d.fecha];
+    if(esSinClase){
+      html+=`<th style="text-align:center;padding:8px 6px;color:rgba(100,116,139,0.55);font-size:11px;border-bottom:1px solid var(--border);font-weight:500;min-width:80px;background:rgba(100,116,139,0.06)">
+        <span style="text-decoration:line-through">${d.label}</span><br>
+        <span style="font-size:9px;opacity:.7">${fmtCorto(d.fecha)}</span><br>
+        <span style="font-size:9px;background:rgba(100,116,139,0.12);border-radius:4px;padding:1px 4px;white-space:nowrap">📵 Sin clase</span>
+      </th>`;
+    } else {
+      html+=`<th style="text-align:center;padding:8px 6px;color:${hoy?'var(--accent)':'var(--muted)'};font-size:11px;border-bottom:1px solid var(--border);font-weight:${hoy?'700':'500'};min-width:80px">${d.label}<br><span style="font-size:10px;opacity:.7">${fmtCorto(d.fecha)}</span></th>`;
+    }
   });
   html+=`</tr></thead><tbody>`;
 
@@ -5578,18 +5718,27 @@ function renderSemana(){
         <div style="display:flex;align-items:center;gap:6px">
           <div class="av ${a.av}" style="margin:0;width:26px;height:26px;font-size:9px;flex-shrink:0">${initials(a.n)}</div>
           <div>
-            <div style="font-size:12px;font-weight:600">${esc(a.n)}</div>
+            <div style="font-size:12px;font-weight:600">${esc(fmtNombre(a.n))}</div>
             <div style="font-size:10px;color:var(--muted)">${a.grado||''}</div>
           </div>
         </div>
       </td>`;
     dias.forEach(d=>{
+      const esSinClase=!!dscSet[d.fecha];
+      if(esSinClase){
+        html+=`<td style="padding:5px 4px;text-align:center;vertical-align:middle;background:rgba(100,116,139,0.06)">
+          <div style="min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <span style="font-size:11px;color:rgba(100,116,139,0.45)">—</span>
+          </div>
+        </td>`;
+        return;
+      }
       const ak=asistIdx[a.id+'_'+d.fecha];
       const tk=tareasIdx[a.id+'_'+d.fecha];
       const pk=puntosIdx[a.id+'_'+d.fecha];
       const hoy=dateStr(new Date())===d.fecha;
       html+=`<td style="padding:5px 4px;text-align:center;vertical-align:middle;${hoy?'background:rgba(249,115,22,.04)':''}">
-        <div onclick="abrirModalSemana('${a.id}','${esc(a.n)}','${d.fecha}')" style="cursor:pointer;border-radius:10px;padding:5px 3px;transition:background .12s;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1.5px solid ${ak||tk||pk?'var(--border)':'transparent'};background:${ak||tk||pk?'#fff':'transparent'}" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='${ak||tk||pk?'#fff':'transparent'}'">
+        <div onclick="abrirModalSemana('${a.id}','${esc(fmtNombre(a.n))}','${d.fecha}')" style="cursor:pointer;border-radius:10px;padding:5px 3px;transition:background .12s;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1.5px solid ${ak||tk||pk?'var(--border)':'transparent'};background:${ak||tk||pk?'#fff':'transparent'}" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='${ak||tk||pk?'#fff':'transparent'}'">
           ${ak?`<span style="background:${asistColor[ak.estado]};color:${asistTxt[ak.estado]};border-radius:6px;padding:2px 6px;font-size:10px;font-weight:700;white-space:nowrap">${asistLabel[ak.estado]}</span>`:'<span style="font-size:18px;color:var(--border);line-height:1">+</span>'}
           ${tk?`<span style="background:${tareaColor[tk.estado]};color:${tareaTxt[tk.estado]};border-radius:6px;padding:2px 6px;font-size:9px;font-weight:600;white-space:nowrap">${tareaLabel[tk.estado]}</span>`:''}
           ${pk&&(pk.pos>0||pk.neg>0)?`<span style="font-size:9px;font-weight:700">${pk.pos>0?`<span style="color:var(--green)">+${pk.pos}</span>`:''}${pk.pos>0&&pk.neg>0?' ':''}${pk.neg>0?`<span style="color:var(--red)">−${pk.neg}</span>`:''}</span>`:''}
@@ -5697,7 +5846,7 @@ window.abrirGeneradorReporte=function(){
   // Llenar select de alumnos
   const sel=document.getElementById('rep-alumno-sel');
   while(sel.options.length>1)sel.remove(1);
-  ALUMNOS.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.n+(a.grado?' — '+a.grado:'');sel.appendChild(o);});
+  ALUMNOS.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=fmtNombre(a.n)+(a.grado?' — '+a.grado:'');sel.appendChild(o);});
   // Renderizar checkboxes de motivos
   document.getElementById('rep-motivos').innerHTML=MOTIVOS_REPORTE.map(m=>`
     <label style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;color:var(--text);background:#fff;transition:all .25s cubic-bezier(.4,0,.2,1) cubic-bezier(.4,0,.2,1)"
@@ -5825,7 +5974,7 @@ window.renderEstadisticas = function(){
     const r=asistencias.filter(x=>x.alumno===a.id);
     const pct=r.length?Math.round(r.filter(x=>x.estado==='A').length/r.length*100):0;
     const fal=r.filter(x=>x.estado==='F').length;
-    return{n:a.n.split(' ').slice(0,2).join(' '),val:pct,fal};
+    return{n:fmtNombre(a.n).split(' ').slice(0,2).join(' '),val:pct,fal};
   }).sort((a,b)=>b.val-a.val);
 
   document.getElementById('stats-asist-chart').innerHTML=datosAsist.length
@@ -5847,7 +5996,7 @@ window.renderEstadisticas = function(){
   const datosEval=ALUMNOS.map(a=>{
     const evs=evaluaciones.filter(r=>r.alumno===a.id&&r.tipo==='boleta');
     const avg=evs.length?Math.round(evs.reduce((s,r)=>s+r.cal,0)/evs.length*10)/10:null;
-    return{n:a.n.split(' ').slice(0,2).join(' '),val:avg??0,raw:avg};
+    return{n:fmtNombre(a.n).split(' ').slice(0,2).join(' '),val:avg??0,raw:avg};
   }).filter(d=>d.raw!==null).sort((a,b)=>b.val-a.val);
 
   document.getElementById('stats-campo-chart').innerHTML=`
@@ -5864,7 +6013,7 @@ window.renderEstadisticas = function(){
   const datosPuntos=ALUMNOS.map(a=>{
     const pos=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='pos').reduce((s,r)=>s+(r.valor||0),0);
     const neg=puntosData.filter(r=>r.alumno===a.id&&r.tipo==='neg').reduce((s,r)=>s+(r.valor||0),0);
-    return{n:a.n.split(' ').slice(0,2).join(' '),pos,neg,bal:pos-neg};
+    return{n:fmtNombre(a.n).split(' ').slice(0,2).join(' '),pos,neg,bal:pos-neg};
   }).sort((a,b)=>b.bal-a.bal);
 
   // Puntos por categoría
@@ -5880,7 +6029,7 @@ window.renderEstadisticas = function(){
     const wPos=Math.max(2,Math.round(d.pos/maxPts*200));
     const wNeg=Math.max(2,Math.round(d.neg/maxPts*100));
     svgPts+=`
-      <text x="0" y="${y+19}" font-size="13" fill="#555" font-family="DM Sans,sans-serif">${esc(d.n)}</text>
+      <text x="0" y="${y+19}" font-size="13" fill="#555" font-family="DM Sans,sans-serif">${esc(fmtNombre(d.n))}</text>
       <rect x="170" y="${y+4}" width="${wPos}" height="${bHp-8}" rx="5" fill="#3ecf8e" opacity=".85"/>
       <text x="${175+wPos}" y="${y+19}" font-size="12" font-weight="700" fill="#3ecf8e" font-family="Syne,sans-serif">+${d.pos}</text>
       ${d.neg>0?`<rect x="${175+wPos+30}" y="${y+4}" width="${wNeg}" height="${bHp-8}" rx="5" fill="#f06868" opacity=".8"/>
@@ -5909,7 +6058,7 @@ window.renderEstadisticas = function(){
       <div style="display:flex;flex-direction:column;gap:6px">
         ${datosCat.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;font-size:13px">
           <div style="width:12px;height:12px;border-radius:3px;background:${COLORES[i%COLORES.length]};flex-shrink:0"></div>
-          <span style="color:var(--text);font-weight:600">${esc(d.n)}</span>
+          <span style="color:var(--text);font-weight:600">${esc(fmtNombre(d.n))}</span>
           <span style="color:var(--muted);margin-left:auto;padding-left:12px;font-weight:700">+${d.val}</span>
         </div>`).join('')}
       </div>
@@ -5923,7 +6072,7 @@ window.renderEstadisticas = function(){
     const no=t.filter(r=>r.estado==='no').length;
     const inc=t.filter(r=>r.estado==='inc').length;
     const pct=t.length?Math.round(si/t.length*100):null;
-    return{n:a.n.split(' ').slice(0,2).join(' '),si,no,inc,pct,total:t.length};
+    return{n:fmtNombre(a.n).split(' ').slice(0,2).join(' '),si,no,inc,pct,total:t.length};
   }).filter(d=>d.total>0).sort((a,b)=>b.pct-a.pct);
 
   // Inyectar todo en los contenedores
@@ -5940,7 +6089,7 @@ window.renderEstadisticas = function(){
     (datosTareas.length?`<table><thead><tr>
       <th>Alumno</th><th style="text-align:center">✓ Entregó</th><th style="text-align:center">✗ No entregó</th><th style="text-align:center">½ Incompleta</th><th style="text-align:center">% Cumplimiento</th>
     </tr></thead><tbody>${datosTareas.map(d=>`<tr>
-      <td style="font-weight:600">${esc(d.n)}</td>
+      <td style="font-weight:600">${esc(fmtNombre(d.n))}</td>
       <td style="text-align:center;color:var(--green);font-weight:700">${d.si}</td>
       <td style="text-align:center;color:var(--red);font-weight:700">${d.no}</td>
       <td style="text-align:center;color:var(--amber);font-weight:700">${d.inc}</td>
@@ -5968,7 +6117,7 @@ window.renderEstadisticas = function(){
   document.getElementById('stats-riesgo').innerHTML=enRiesgo.length
     ?enRiesgo.map(a=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)">
         <div class="av ${a.av}" style="margin:0;width:36px;height:36px;font-size:12px;flex-shrink:0">${initials(a.n)}</div>
-        <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(a.n)}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(fmtNombre(a.n))}</div>
         <div style="font-size:12px;color:var(--red)">${a.razones.join(' · ')}</div></div>
         <button onclick="abrirWAAlumno('${a.id}')" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:700;transition:all .22s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'">📲 WA</button>
       </div>`).join('')
@@ -5987,7 +6136,7 @@ window.renderEstadisticas = function(){
     ?top.map((a,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)">
         <span style="font-size:26px">${medallas[i]}</span>
         <div class="av ${a.av}" style="margin:0;width:36px;height:36px;font-size:12px;flex-shrink:0">${initials(a.n)}</div>
-        <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(a.n)}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600">${esc(fmtNombre(a.n))}</div>
         <div style="font-size:12px;color:var(--muted)">${a.grado||''} · +${a.pp} pts</div></div>
         <span style="font-size:22px;font-weight:800;font-family:var(--font-display);color:var(--green)">${a.avg}</span>
       </div>`).join('')
@@ -6150,7 +6299,7 @@ window.renderConcentrado=function(){
           <td style="font-weight:600;font-size:14px;padding:12px 14px">
             <div style="display:flex;align-items:center;gap:8px">
               <div class="av ${a.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(a.n)}</div>
-              ${esc(a.n)}
+              ${esc(fmtNombre(a.n))}
             </div>
           </td>
           ${asigs.map(asig=>{
@@ -6198,7 +6347,7 @@ window.renderConcentrado=function(){
         html+=`<tr>
           <td style="font-weight:600;padding:12px 14px">
             <div style="display:flex;align-items:center;gap:8px">
-              <div class="av ${a.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(a.n)}</div>${esc(a.n)}
+              <div class="av ${a.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(a.n)}</div>${esc(fmtNombre(a.n))}
             </div>
           </td>
           ${cols.map(v=>v===null?`<td style="text-align:center;color:var(--muted)">—</td>`:`<td style="text-align:center"><span style="font-weight:800;font-size:16px;color:${v>=7?'var(--green)':v>=5?'var(--amber)':'var(--red)'}">${v}</span></td>`).join('')}
@@ -6241,7 +6390,7 @@ window.renderConcentrado=function(){
       html2+=`<tr>
         <td style="font-weight:600;padding:12px 14px">
           <div style="display:flex;align-items:center;gap:8px">
-            <div class="av ${a.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(a.n)}</div>${esc(a.n)}
+            <div class="av ${a.av}" style="margin:0;width:30px;height:30px;font-size:10px;flex-shrink:0">${initials(a.n)}</div>${esc(fmtNombre(a.n))}
           </div>
         </td>
         ${vals2.map(v=>v===null?`<td style="text-align:center;color:var(--muted)">—</td>`:`<td style="text-align:center"><span style="font-weight:800;font-size:15px;color:${v>=7?'var(--green)':v>=5?'var(--amber)':'var(--red)'}">${v}</span></td>`).join('')}
@@ -6281,7 +6430,7 @@ window.imprimirConcentrado=function(){
       const rA=asistencias.filter(r=>r.alumno===a.id);
       const pctA=rA.length?Math.round(rA.filter(r=>r.estado==='A').length/rA.length*100):null;
       const nivel=avg===null?'—':avg>=9?'Excelente':avg>=8?'Muy Bien':avg>=7?'Bien':avg>=6?'Suficiente':'En proceso';
-      html+=`<tr><td style="font-weight:600">${esc(a.n)}</td>
+      html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td>
         ${asigs.map(asig=>{const v=pxa[asig];return`<td style="text-align:center">${v!==null?`<span class="${v>=7?'bv':v>=5?'ba':'br'}">${v}</span>`:'—'}</td>`;}).join('')}
         <td style="text-align:center;font-weight:700">${avg??'—'}</td>
         <td style="text-align:center">${pctA!==null?`<span class="${pctA>=80?'bv':pctA>=60?'ba':'br'}">${pctA}%</span>`:'—'}</td>
@@ -6322,6 +6471,39 @@ window.menuNav = function(t){
   showTab(t);
 };
 
+// ===== NAVEGACIÓN INTERNA — HISTORIAL =====
+let _navHistory = [];
+let _navCurrent = 'inicio';
+let _navGoingBack = false;
+
+function _updateNavBackBtn(){
+  const btn = document.getElementById('nav-back-btn');
+  if(!btn) return;
+  if(_navHistory.length > 0) btn.classList.add('can-go-back');
+  else btn.classList.remove('can-go-back');
+}
+
+window.navBack = function(){
+  if(_navHistory.length > 0){
+    const prev = _navHistory.pop();
+    _navGoingBack = true;
+    showTab(prev);
+    _navGoingBack = false;
+  }
+};
+
+window.addEventListener('popstate', function(e){
+  if(_navHistory.length > 0){
+    const prev = _navHistory.pop();
+    _navGoingBack = true;
+    showTab(prev);
+    _navGoingBack = false;
+  } else {
+    // Sin historial — devolver al estado actual para no salir de la app
+    history.pushState({gis:true, tab:_navCurrent||'inicio'}, '', location.href);
+  }
+});
+
 // ===== BOTTOM NAV — DOCENTE =====
 window.docNavTo = function(tab, btn){
   document.querySelectorAll('.doc-nav-btn').forEach(b=>b.classList.remove('active'));
@@ -6356,7 +6538,7 @@ function renderDirInicio(){
   const maestros=_maestrosNombres?Object.keys(_maestrosNombres).length:0;
   const vinculados=d.maestrosVinculados||maestros;
   const nombre=d.docente||d.nombre||'Director(a)';
-  const initials=n=>{const p=n.trim().split(/\s+/);return(p[0]?.[0]||'')+(p[1]?.[0]||'').toUpperCase()||'D'};
+  const initials=n=>{const p=fmtNombre(n).trim().split(/\s+/);return((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase()||'D'};
   el.innerHTML=`
     <!-- Hero stats card -->
     <div class="stats-hero" style="margin-bottom:1rem">
@@ -6574,7 +6756,7 @@ function renderInicio(){
     ${alumnosEnAlertaNeg.length>0?`<div style="background:rgba(254,242,242,.95);border:1.5px solid rgba(214,69,69,0.3);border-radius:var(--r);padding:12px 14px;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;cursor:pointer;backdrop-filter:blur(8px)" onclick="menuNav('puntos')">
       <span style="font-size:20px">🚨</span>
       <div><div style="font-weight:700;color:var(--red);font-size:13.5px">${alumnosEnAlertaNeg.length} alumno${alumnosEnAlertaNeg.length>1?'s':''} con ${umbralNegInicio}+ puntos negativos</div>
-      <div style="font-size:11px;color:var(--muted)">${alumnosEnAlertaNeg.slice(0,3).map(a=>a.n.split(' ')[0]).join(', ')}${alumnosEnAlertaNeg.length>3?' y más…':''} · Ver conducta →</div></div>
+      <div style="font-size:11px;color:var(--muted)">${alumnosEnAlertaNeg.slice(0,3).map(a=>primerNombre(a.n)).join(', ')}${alumnosEnAlertaNeg.length>3?' y más…':''} · Ver conducta →</div></div>
     </div>`:''}
     ${proxCumple?`<div style="background:rgba(220,252,231,.95);border:1.5px solid rgba(26,138,92,0.25);border-radius:var(--r);padding:12px 14px;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;cursor:pointer;backdrop-filter:blur(8px)" onclick="menuNav('cumpleanos')">
       <span style="font-size:20px">🎂</span>
@@ -6607,7 +6789,7 @@ function renderInicio(){
           return `<div onclick="verPerfil('${a.id}')" class="af-item">
             <div class="af-dot ${dotCls}"></div>
             <div class="af-body">
-              <div class="af-ttl">${esc(a.n)}</div>
+              <div class="af-ttl">${esc(fmtNombre(a.n))}</div>
               <div class="af-sub">${esc(a.grado||'')}${a.tutor?' · '+esc(a.tutor):''}</div>
             </div>
             ${pct!==null?`<span style="font-size:12px;font-weight:700;color:${pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">${pct}%</span>`:''}
@@ -6627,7 +6809,7 @@ function initWASelect(){
   ALUMNOS.forEach(a=>{
     const o=document.createElement('option');
     o.value=a.id;
-    o.textContent=a.n+(a.grado?' ('+a.grado+')':'');
+    o.textContent=fmtNombre(a.n)+(a.grado?' ('+a.grado+')':'');
     sel.appendChild(o);
   });
 }
@@ -6640,7 +6822,7 @@ function generarMensajeWA(alumnoId, tipo){
 
   if(tipo==='cumple'){
     const edad=a.fnac?edadActual(a.fnac)+1:null;
-    return `🎂 *¡Feliz cumpleaños, ${esc(a.n)}!*\n\nEn nombre del Prof. ${docente} y todos en ${escuela}, le deseamos un maravilloso día 🎉\n\n¡Que tenga un excelente cumpleaños! 🌟`;
+    return `🎂 *¡Feliz cumpleaños, ${esc(fmtNombre(a.n))}!*\n\nEn nombre del Prof. ${docente} y todos en ${escuela}, le deseamos un maravilloso día 🎉\n\n¡Que tenga un excelente cumpleaños! 🌟`;
   }
 
   const rA=asistencias.filter(r=>r.alumno===alumnoId);
@@ -6654,7 +6836,7 @@ function generarMensajeWA(alumnoId, tipo){
   const pp=puntosData.filter(r=>r.alumno===alumnoId&&r.tipo==='pos').reduce((s,r)=>s+(r.valor||0),0);
   const pn=puntosData.filter(r=>r.alumno===alumnoId&&r.tipo==='neg').reduce((s,r)=>s+(r.valor||0),0);
 
-  const header=`Hola, soy el Prof. *${docente}* de ${escuela}.\n\nLe comparto el reporte de *${esc(a.n)}* — ${a.grado||''}\n`;
+  const header=`Hola, soy el Prof. *${docente}* de ${escuela}.\n\nLe comparto el reporte de *${esc(fmtNombre(a.n))}* — ${a.grado||''}\n`;
   const footer=`\nCualquier duda estoy a sus órdenes. 🙏\n_Ciclo ${escuelaData?.ciclo||'2025-2026'}_`;
 
   if(tipo==='asistencia'){
@@ -6720,7 +6902,7 @@ function initConstanciaSelect(){
   ALUMNOS.forEach(a=>{
     const o=document.createElement('option');
     o.value=a.id;
-    o.textContent=a.n+(a.grado?' — '+a.grado:'');
+    o.textContent=fmtNombre(a.n)+(a.grado?' — '+a.grado:'');
     sel.appendChild(o);
   });
 }
@@ -6949,7 +7131,7 @@ window.timerReset=function(){timerPause();timerSeg=timerTotal;const es=document.
 // -- Aleatorio --
 function aleatInit(){
   const g=document.getElementById('aleat-grid');if(!g)return;
-  g.innerHTML=ALUMNOS.map(a=>`<div class="aleat-card" id="aleat-${a.id}" style="text-align:center"><div style="font-size:22px;margin-bottom:4px">${a.av||'🧑'}</div><div>${esc(a.n.split(' ')[0])}</div>${a.grado?`<div style="font-size:10px;color:var(--muted)">${esc(a.grado)}°</div>`:''}</div>`).join('');
+  g.innerHTML=ALUMNOS.map(a=>`<div class="aleat-card" id="aleat-${a.id}" style="text-align:center"><div style="font-size:22px;margin-bottom:4px">${a.av||'🧑'}</div><div>${esc(primerNombre(a.n))}</div>${a.grado?`<div style="font-size:10px;color:var(--muted)">${esc(a.grado)}°</div>`:''}</div>`).join('');
 }
 window.aleatSeleccionar=function(){
   const ids=ALUMNOS.map(a=>a.id);if(!ids.length)return;
@@ -6959,7 +7141,7 @@ window.aleatSeleccionar=function(){
   setTimeout(()=>{
     clearInterval(anim);
     document.querySelectorAll('.aleat-card').forEach(c=>{c.style.background='';const a=ALUMNOS.find(al=>c.id==='aleat-'+al.id);if(a)c.classList.add(a.id===ganador?'ganador':'descartado');});
-    const al=ALUMNOS.find(a=>a.id===ganador);if(al)herrHistorial(`🎲 ${al.n.split(' ')[0]} seleccionado`);
+    const al=ALUMNOS.find(a=>a.id===ganador);if(al)herrHistorial(`🎲 ${primerNombre(al.n)} seleccionado`);
   },1600);
 };
 // -- Equipos --
@@ -6969,7 +7151,7 @@ window.equiposGenerar=function(){
   if(!ALUMNOS.length){document.getElementById('equipos-result').innerHTML='<p style="color:var(--muted);font-size:13px">Sin alumnos</p>';return;}
   const mezc=[...ALUMNOS].sort(()=>Math.random()-.5),equipos=Array.from({length:n},()=>[]);
   mezc.forEach((a,i)=>equipos[i%n].push(a));
-  document.getElementById('equipos-result').innerHTML=equipos.map((eq,i)=>`<div class="equipo-card" style="background:${EQUIPO_COLS[i%EQUIPO_COLS.length]}22;border-left:4px solid ${EQUIPO_COLS[i%EQUIPO_COLS.length]}"><div style="font-weight:700;font-size:13px;margin-bottom:5px">Equipo ${i+1}</div>${eq.map(a=>`<div style="font-size:12px">• ${esc(a.n.split(' ').slice(0,2).join(' '))}${a.grado?' ('+esc(a.grado)+'°)':''}</div>`).join('')}</div>`).join('');
+  document.getElementById('equipos-result').innerHTML=equipos.map((eq,i)=>`<div class="equipo-card" style="background:${EQUIPO_COLS[i%EQUIPO_COLS.length]}22;border-left:4px solid ${EQUIPO_COLS[i%EQUIPO_COLS.length]}"><div style="font-weight:700;font-size:13px;margin-bottom:5px">Equipo ${i+1}</div>${eq.map(a=>`<div style="font-size:12px">• ${esc(fmtNombre(a.n).split(' ').slice(0,2).join(' '))}${a.grado?' ('+esc(a.grado)+'°)':''}</div>`).join('')}</div>`).join('');
   herrHistorial(`👥 ${n} equipos generados`);
 };
 // -- Instrucciones --
@@ -7006,7 +7188,7 @@ window.verPerfil=function(id){
   avEl.className='';
   avEl.style.cssText='width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;font-family:\'Syne\',sans-serif;background:rgba(255,255,255,.2);flex-shrink:0';
   avEl.textContent=initials(a.n);
-  document.getElementById('perfil-nombre').textContent=a.n;
+  document.getElementById('perfil-nombre').textContent=fmtNombre(a.n);
   document.getElementById('perfil-grado').textContent=(a.grado?a.grado+'° grado':'')+(a.beca?' · 🎓 Beca '+a.beca:'');
   // Métricas
   const rasist=asistencias.filter(r=>r.alumno===id);
@@ -7048,9 +7230,11 @@ window.verPerfil=function(id){
       ${tabBtn('datos','📋 Datos',true)}
       ${tabBtn('bitacora','📔 Bitácora',false)}
       ${tabBtn('diag','📊 Diagnóstico',false)}
+      ${tabBtn('portafolio','📁 Portafolio',false)}
     </div>
     <div id="ptab-datos">${datosHTML}</div>
     <div id="ptab-diag" style="display:none"></div>
+    <div id="ptab-portafolio" style="display:none"></div>
     <div id="ptab-bitacora" style="display:none">
       <div style="background:var(--surface2);border-radius:var(--rs);padding:12px;margin-bottom:12px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -7100,7 +7284,8 @@ window.showPerfilTab=function(tab,id){
   document.getElementById('ptab-datos').style.display=tab==='datos'?'':'none';
   document.getElementById('ptab-bitacora').style.display=tab==='bitacora'?'':'none';
   document.getElementById('ptab-diag').style.display=tab==='diag'?'':'none';
-  ['datos','bitacora','diag'].forEach(t=>{
+  const pp=document.getElementById('ptab-portafolio');if(pp)pp.style.display=tab==='portafolio'?'':'none';
+  ['datos','bitacora','diag','portafolio'].forEach(t=>{
     const btn=document.getElementById('ptab-btn-'+t);
     if(!btn)return;
     const active=t===tab;
@@ -7110,6 +7295,7 @@ window.showPerfilTab=function(tab,id){
   });
   if(tab==='bitacora'&&id)renderBitacoraLista(id);
   if(tab==='diag'&&id)renderDiagTab(id);
+  if(tab==='portafolio'&&id)renderPerfilPortafolio(id);
 };
 
 function renderDiagTab(alumnoId){
@@ -7249,7 +7435,7 @@ function renderCalSidebar(){
   const cumpleMes = ALUMNOS.filter(a => a.fnac && parseInt(a.fnac.split('-')[1]) === calMes+1);
   cumpleMes.forEach(a => {
     const f = `${calYear}-${String(calMes+1).padStart(2,'0')}-${a.fnac.split('-')[2]}`;
-    agregarIdx(f, {fecha:f, titulo:'🎂 '+a.n, tipo:'cumple'});
+    agregarIdx(f, {fecha:f, titulo:'🎂 '+fmtNombre(a.n), tipo:'cumple'});
   });
 
   // Grid
@@ -7434,7 +7620,7 @@ window.renderCumpleanos=function(){
       return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(249,115,22,.15)">
         <div class="av ${a.av}" style="margin:0;width:32px;height:32px;font-size:11px;flex-shrink:0">${initials(a.n)}</div>
         <div style="flex:1">
-          <div style="font-size:13px;font-weight:700;color:var(--text)">${esc(a.n)}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${esc(fmtNombre(a.n))}</div>
           <div style="font-size:11px;color:var(--muted)">${esc(a.grado||'')} · Cumple ${edad} años</div>
         </div>
         <div style="font-size:12px;font-weight:700;color:${dias===0?'var(--accent)':'var(--text)'}">
@@ -7486,7 +7672,7 @@ window.renderCumpleanos=function(){
             </div>
             <div class="av ${a.av}" style="margin:0;width:34px;height:34px;font-size:11px;flex-shrink:0">${initials(a.n)}</div>
             <div style="flex:1">
-              <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(a.n)} ${esHoy?'🎂':''}</div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)">${esc(fmtNombre(a.n))} ${esHoy?'🎂':''}</div>
               <div style="font-size:11px;color:var(--muted)">${esc(a.grado||'')} · ${edad!==null?edad+' años actualmente':''}</div>
             </div>
             <div style="text-align:right">
@@ -7511,7 +7697,7 @@ window.imprimirCumpleanos=function(){
   als.forEach(a=>{
     const [y,m,d]=a.fnac.split('-');
     const edad=edadActual(a.fnac);
-    html+=`<tr><td style="font-weight:600">${esc(a.n)}</td><td>${a.grado||''}</td><td>${d}/${m}/${y}</td><td>${edad!==null?edad+' años':'—'}</td><td>${MESES[parseInt(m)-1]}</td></tr>`;
+    html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${a.grado||''}</td><td>${d}/${m}/${y}</td><td>${edad!==null?edad+' años':'—'}</td><td>${MESES[parseInt(m)-1]}</td></tr>`;
   });
   html+=`</tbody></table>`;
   abrirVentanaImpresion('Lista de Cumpleaños',html);
@@ -7582,7 +7768,7 @@ window.imprimirAsistencia=function(){
     const fal=rA.filter(r=>r.estado==='F').length;
     const pct=rA.length?Math.round(asi/rA.length*100):null;
     const m={};rA.forEach(r=>m[r.fecha]=r.estado);
-    html+=`<tr><td style="font-weight:600">${esc(a.n)}</td><td>${a.grado||''}</td>${fechas.map(f=>{const e=m[f];if(!e)return'<td style="text-align:center;color:#ccc">—</td>';return`<td style="text-align:center"><span class="${e==='A'?'bv':e==='F'?'br':'ba'}">${e}</span></td>`;}).join('')}<td style="text-align:center;font-weight:700;color:#16a34a">${asi}</td><td style="text-align:center;font-weight:700;color:#dc2626">${fal}</td><td style="text-align:center;font-weight:700;color:${pct>=80?'#16a34a':pct>=60?'#d97706':'#dc2626'}">${pct!==null?pct+'%':'—'}</td></tr>`;
+    html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${a.grado||''}</td>${fechas.map(f=>{const e=m[f];if(!e)return'<td style="text-align:center;color:#ccc">—</td>';return`<td style="text-align:center"><span class="${e==='A'?'bv':e==='F'?'br':'ba'}">${e}</span></td>`;}).join('')}<td style="text-align:center;font-weight:700;color:#16a34a">${asi}</td><td style="text-align:center;font-weight:700;color:#dc2626">${fal}</td><td style="text-align:center;font-weight:700;color:${pct>=80?'#16a34a':pct>=60?'#d97706':'#dc2626'}">${pct!==null?pct+'%':'—'}</td></tr>`;
   });
   html+=`</tbody></table><p style="font-size:10px;color:#666;margin-top:4px">Leyenda: <span class="bv">A</span> Asistió &nbsp;<span class="br">F</span> Falta &nbsp;<span class="ba">J</span> Justificada</p>`;
   abrirVentanaImpresion('Lista de Asistencia',html);
@@ -7600,7 +7786,7 @@ window.imprimirCalificaciones=function(){
     const vals=Object.values(pxc).filter(v=>v!==null);
     const avg=vals.length?Math.round(vals.reduce((s,v)=>s+v,0)/vals.length*10)/10:null;
     const niv=avg===null?'—':avg>=9?'Excelente':avg>=8?'Muy bien':avg>=7?'Bien':avg>=6?'Suficiente':'En proceso';
-    html+=`<tr><td style="font-weight:600">${esc(a.n)}</td><td>${a.grado||''}</td>${CAMP.map(c=>{const v=pxc[c];if(v===null)return'<td style="text-align:center;color:#ccc">—</td>';return`<td style="text-align:center"><span class="${v>=7?'bv':v>=5?'ba':'br'}">${v}</span></td>`;}).join('')}<td style="text-align:center;font-weight:700;font-size:14px;color:${avg>=7?'#16a34a':avg>=5?'#d97706':'#dc2626'}">${avg??'—'}</td><td style="text-align:center;font-size:11px">${niv}</td></tr>`;
+    html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${a.grado||''}</td>${CAMP.map(c=>{const v=pxc[c];if(v===null)return'<td style="text-align:center;color:#ccc">—</td>';return`<td style="text-align:center"><span class="${v>=7?'bv':v>=5?'ba':'br'}">${v}</span></td>`;}).join('')}<td style="text-align:center;font-weight:700;font-size:14px;color:${avg>=7?'#16a34a':avg>=5?'#d97706':'#dc2626'}">${avg??'—'}</td><td style="text-align:center;font-size:11px">${niv}</td></tr>`;
   });
   html+=`</tbody></table>`;
   abrirVentanaImpresion('Boleta de Calificaciones',html);
@@ -7619,7 +7805,7 @@ window.imprimirPuntos=function(){
     pt.forEach(r=>{if(r.tipo==='pos')cp[r.cat]=(cp[r.cat]||0)+r.valor;else cn[r.cat]=(cn[r.cat]||0)+r.valor;});
     const tp=Object.entries(cp).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
     const tn=Object.entries(cn).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
-    html+=`<tr><td style="font-weight:600">${esc(a.n)}</td><td>${a.grado||''}</td><td style="text-align:center;font-weight:700;color:#16a34a">+${pos}</td><td style="text-align:center;font-weight:700;color:#dc2626">−${neg}</td><td style="text-align:center;font-weight:700;color:${bal>=0?'#16a34a':'#dc2626'}">${bal>=0?'+':''}${bal}</td><td style="font-size:11px">${tp}</td><td style="font-size:11px;color:${tn!=='—'?'#dc2626':'#666'}">${tn}</td></tr>`;
+    html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${a.grado||''}</td><td style="text-align:center;font-weight:700;color:#16a34a">+${pos}</td><td style="text-align:center;font-weight:700;color:#dc2626">−${neg}</td><td style="text-align:center;font-weight:700;color:${bal>=0?'#16a34a':'#dc2626'}">${bal>=0?'+':''}${bal}</td><td style="font-size:11px">${tp}</td><td style="font-size:11px;color:${tn!=='—'?'#dc2626':'#666'}">${tn}</td></tr>`;
   });
   html+=`</tbody></table>`;
   abrirVentanaImpresion('Reporte de Puntos y Conducta',html);
@@ -7638,7 +7824,7 @@ window.imprimirResumenGeneral=function(){
     const niv=avgE===null?'—':avgE>=9?'Excelente':avgE>=8?'Muy bien':avgE>=7?'Bien':avgE>=6?'Suficiente':'En proceso';
     const pAcls=pA===null?'':pA>=80?'bv':pA>=60?'ba':'br';
     const avgEcls=avgE===null?'':avgE>=7?'bv':avgE>=5?'ba':'br';
-    html+=`<tr><td style="font-weight:600">${esc(a.n)}</td><td>${a.grado||''}</td><td style="text-align:center">${pA!==null?`<span class="${pAcls}">${pA}%</span>`:'—'}</td><td style="text-align:center">${avgE!==null?`<span class="${avgEcls}">${avgE}</span>`:'—'}</td><td style="text-align:center;color:#16a34a;font-weight:700">+${pp}</td><td style="text-align:center;color:#dc2626;font-weight:700">−${pn}</td><td style="text-align:center;font-weight:700;color:${bal>=0?'#16a34a':'#dc2626'}">${bal>=0?'+':''}${bal}</td><td style="text-align:center;font-size:11px">${niv}</td></tr>`;
+    html+=`<tr><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${a.grado||''}</td><td style="text-align:center">${pA!==null?`<span class="${pAcls}">${pA}%</span>`:'—'}</td><td style="text-align:center">${avgE!==null?`<span class="${avgEcls}">${avgE}</span>`:'—'}</td><td style="text-align:center;color:#16a34a;font-weight:700">+${pp}</td><td style="text-align:center;color:#dc2626;font-weight:700">−${pn}</td><td style="text-align:center;font-weight:700;color:${bal>=0?'#16a34a':'#dc2626'}">${bal>=0?'+':''}${bal}</td><td style="text-align:center;font-size:11px">${niv}</td></tr>`;
   });
   html+=`</tbody></table>`;
   abrirVentanaImpresion('Resumen General del Grupo',html);
@@ -8883,6 +9069,474 @@ window.supGenerarReporte = function(){
   win.document.close();
   win.focus();
   setTimeout(()=>win.print(), 600);
+};
+
+// ===== GESTIÓN PEDAGÓGICA =====
+
+const GP_MATERIAS=['Lenguajes / Español','Matemáticas','Biología / Ciencias de la Vida','Física y Química','Historia','Geografía','Formación Cívica y Ética','Inglés Básico'];
+
+const GP_EMOJI={
+  'Lenguajes / Español':'📖',
+  'Matemáticas':'🔢',
+  'Biología / Ciencias de la Vida':'🌿',
+  'Física y Química':'⚗️',
+  'Historia':'🏛️',
+  'Geografía':'🗺️',
+  'Formación Cívica y Ética':'⚖️',
+  'Inglés Básico':'🇬🇧',
+};
+
+const GP_CAMPO={
+  'Lenguajes / Español':'LEN',
+  'Inglés Básico':'LEN',
+  'Matemáticas':'SPC',
+  'Biología / Ciencias de la Vida':'SPC',
+  'Física y Química':'SPC',
+  'Historia':'ENS',
+  'Geografía':'ENS',
+  'Formación Cívica y Ética':'ENS',
+};
+
+const PROPOSITOS={
+  'Lenguajes / Español':'Desarrollar comprensión lectora, expresión oral y escrita a través de textos funcionales y literarios.',
+  'Matemáticas':'Construir pensamiento lógico-matemático aplicado a problemas cotidianos y de la comunidad.',
+  'Biología / Ciencias de la Vida':'Comprender los seres vivos, sus procesos y su relación con la salud y el entorno.',
+  'Física y Química':'Introducir el método científico y los fenómenos físico-químicos básicos de forma experimental.',
+  'Historia':'Ubicar a México dentro de procesos históricos más amplios, de la prehistoria al mundo contemporáneo.',
+  'Geografía':'Comprender el espacio geográfico, sus recursos y la relación entre población y territorio.',
+  'Formación Cívica y Ética':'Formar criterio ético y ciudadano para la convivencia, los derechos y la participación.',
+  'Inglés Básico':'Desarrollar comunicación básica en inglés a través de módulos temáticos progresivos.',
+};
+
+const MAPA_MAESTRO={
+  'Lenguajes / Español':['Identidad y autobiografía','Descripción de personas y lugares','Estructura de la oración','Ortografía básica','Tipos de texto','Cuentos y leyendas','Noticias','Entrevista','Carta y correo','Instructivos','Reglamentos','Exposición oral','Debate','Poesía','Textos argumentativos','Investigación y fuentes'],
+  'Matemáticas':['Operaciones básicas','Números enteros','Fracciones','Decimales','Porcentajes','Proporcionalidad','Regla de tres','Potencias','Raíces','Álgebra básica','Ecuaciones','Perímetro y área','Cuerpos geométricos','Estadística','Gráficas','Probabilidad','Educación financiera'],
+  'Biología / Ciencias de la Vida':['Características de los seres vivos','La célula','Seres unicelulares y pluricelulares','Clasificación de los seres vivos','Reinos de los seres vivos','Bacterias','Protistas','Hongos','Plantas','Animales','Nutrición','Respiración','Reproducción','Ecosistemas','Cadenas alimentarias','Cuerpo humano','Aparatos y sistemas','Alimentación y salud','Genética básica'],
+  'Física y Química':['La ciencia y los experimentos','Medición y unidades','Materia','Estados de la materia','Sustancias y mezclas','Átomos y moléculas','Elementos y tabla periódica','Cambios físicos y químicos','Ácidos, bases y pH','Movimiento','Fuerzas','Máquinas simples','Energía','Calor y temperatura','Electricidad y magnetismo','Luz y sonido'],
+  'Historia':['Prehistoria','Primeros seres humanos','Revolución agrícola','Nacimiento de la escritura','Primeras civilizaciones','Egipto y Mesopotamia','Grecia','Roma','Pueblos originarios de América','Mesoamérica','Olmecas','Periodo Clásico','Toltecas','Mexicas','Fundación de México-Tenochtitlan','Llegada de los europeos a América','Conquista de México','Nueva España','Independencia de México','México durante el siglo XIX','Reforma','Porfiriato','Revolución Mexicana','México posrevolucionario','Primera Guerra Mundial','Segunda Guerra Mundial','Guerra Fría','México y el mundo contemporáneo'],
+  'Geografía':['Orientación','Mapas y coordenadas','Relieve y placas tectónicas','Clima','Agua','Población','Migración','Actividades económicas','Recursos naturales','México y Zacatecas','Continentes y países','Urbanización y medio ambiente'],
+  'Formación Cívica y Ética':['Identidad personal','Autoconocimiento','Emociones','Diversidad','Convivencia','Valores','Normas y reglas','Derechos humanos','Responsabilidades','Libertad','Toma de decisiones','Consecuencias de nuestros actos','Ética','Resolución de conflictos','Justicia','Igualdad','Democracia','Participación ciudadana','Comunidad','Cultura de paz'],
+  'Inglés Básico':["Hello! — saludos, despedidas, My name is…, please, thank you","About me — nombre, edad, lugar donde vive, gustos; I am… / I like… / I don't like…","Alphabet & Numbers — alfabeto, deletreo, números 1–100 y fechas","People & Pronouns — I, you, he, she, we, they; introducción al verbo TO BE","Describing People — adjetivos, características físicas y personales; He is… / She is… / He has… / She has…","My Family — miembros de la familia; This is my… / his / her","My Daily Routine — wake up, eat, go to school, study, play, sleep; introducción al presente simple","Time, Days & Dates — días, meses, fechas y hora; Today, tomorrow, yesterday","Food & Drinks — alimentos y bebidas; I like… / I don't like… / I want…","My House & Community — casa, escuela, tienda, parque, habitaciones y lugares; There is / There are; preposiciones básicas","What Can I Do? — Can / can't; habilidades y acciones","Let's Communicate — preguntas y respuestas básicas, presentaciones, descripciones, rutinas, gustos y pequeños diálogos"],
+};
+
+const MES_PERIODO={Septiembre:'P1',Octubre:'P1',Noviembre:'P1',Diciembre:'P1',Enero:'P2',Febrero:'P2',Marzo:'P2',Abril:'P3',Mayo:'P3',Junio:'P3'};
+const MESES_ORDEN=['Septiembre','Octubre','Noviembre','Diciembre','Enero','Febrero','Marzo','Abril','Mayo','Junio'];
+const MESES_DIST={
+  Septiembre:{Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Octubre:   {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Noviembre: {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Diciembre: {Leng:1,Mat:1,Bio:1,FyQ:2,Hist:2,Geo:1,FCyE:1,Ing:1},
+  Enero:     {Leng:2,Mat:2,Bio:2,FyQ:1,Hist:3,Geo:2,FCyE:2,Ing:2},
+  Febrero:   {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:3,Ing:1},
+  Marzo:     {Leng:2,Mat:2,Bio:2,FyQ:2,Hist:3,Geo:1,FCyE:2,Ing:1},
+  Abril:     {Leng:1,Mat:2,Bio:2,FyQ:1,Hist:3,Geo:2,FCyE:2,Ing:1},
+  Mayo:      {Leng:1,Mat:1,Bio:2,FyQ:1,Hist:3,Geo:1,FCyE:2,Ing:2},
+  Junio:     {Leng:1,Mat:1,Bio:2,FyQ:1,Hist:2,Geo:1,FCyE:2,Ing:1},
+};
+const ALIAS_MATERIA={
+  'Lenguajes / Español':'Leng','Matemáticas':'Mat','Biología / Ciencias de la Vida':'Bio',
+  'Física y Química':'FyQ','Historia':'Hist','Geografía':'Geo',
+  'Formación Cívica y Ética':'FCyE','Inglés Básico':'Ing',
+};
+
+function gpGenerarSeedDocs(){
+  const cursor={};
+  GP_MATERIAS.forEach(m=>cursor[m]=0);
+  const docs=[];
+  for(const mes of MESES_ORDEN){
+    const dist=MESES_DIST[mes];
+    const periodo=MES_PERIODO[mes];
+    for(const materia of GP_MATERIAS){
+      const alias=ALIAS_MATERIA[materia];
+      const count=dist[alias]||0;
+      const arr=MAPA_MAESTRO[materia];
+      for(let i=0;i<count;i++){
+        const idx=cursor[materia]++;
+        if(idx<arr.length){
+          docs.push({materia,nombre:arr[idx],orden:idx+1,mesSugerido:mes,periodo,plan:false,material:false,impartido:false,fecha:'',generaEvidencia:false,tareaId:null,temaGeneradorId:null});
+        }
+      }
+    }
+  }
+  return docs;
+}
+
+let _gpSeeding=false;
+async function gpSeedSiVacio(){
+  if(_todasContenidos.length>0)return;
+  if(_gpSeeding)return;
+  _gpSeeding=true;
+  const docs=gpGenerarSeedDocs();
+  for(const d of docs){
+    const id=await fsAdd('contenidos',d);
+    const ciclo=escuelaData?.cicloActivo||'';
+    _todasContenidos.push({id,...d,...(ciclo?{ciclo}:{})});
+  }
+  aplicarFiltrosCicloGrupo();
+  _gpSeeding=false;
+  toast('✅ Plan curricular cargado: 140 contenidos');
+}
+
+window.renderGestionPedagogica=function(){
+  gestionVistaDetalle=null;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov||!det)return;
+  det.style.display='none';
+  if(tmp)tmp.style.display='none';
+  ov.style.display='';
+  if(_todasContenidos.length===0){
+    ov.innerHTML='<div style="text-align:center;padding:2.5rem 1rem;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">📚</div><div style="font-size:14px;font-weight:600;margin-bottom:8px">Cargando plan curricular…</div><div style="font-size:12px">Esto solo ocurre la primera vez.</div></div>';
+    gpSeedSiVacio().then(()=>renderGestionOverview());
+    return;
+  }
+  renderGestionOverview();
+};
+
+function renderGestionOverview(){
+  gestionVistaDetalle=null;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov)return;
+  if(det)det.style.display='none';
+  if(tmp)tmp.style.display='none';
+  ov.style.display='';
+  const totalGlobal=contenidosData.length;
+  const impGlobal=contenidosData.filter(c=>c.impartido).length;
+  ov.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem">
+      <div>
+        <p class="sec-title" style="margin:0">📚 Gestión Pedagógica</p>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px;font-family:var(--font-mono)">${impGlobal} / ${totalGlobal} contenidos impartidos</div>
+      </div>
+      <button class="btn btn-sm" onclick="gpAbrirTemporal()" style="white-space:nowrap">🗓️ Vista Temporal</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:12px">
+      ${GP_MATERIAS.map(m=>{
+        const tot=(MAPA_MAESTRO[m]||[]).length;
+        const imp=contenidosData.filter(c=>c.materia===m&&c.impartido).length;
+        const pct=tot?Math.round(imp/tot*100):0;
+        const color=pct>=75?'var(--green)':pct>=40?'var(--amber)':'var(--accent)';
+        return '<div class="gp-card" onclick="gpAbrirDetalle(\''+esc(m)+'\')">'
+          +'<div style="font-size:28px;margin-bottom:8px;line-height:1">'+(GP_EMOJI[m]||'📖')+'</div>'
+          +'<div class="gp-card-nombre">'+esc(m)+'</div>'
+          +'<div class="gp-card-meta">'+imp+' / '+tot+' impartidos</div>'
+          +'<div style="height:5px;background:var(--surface2);border-radius:3px;margin-top:10px;overflow:hidden">'
+          +'<div style="width:'+pct+'%;height:100%;background:'+color+';border-radius:3px;transition:width .4s"></div></div>'
+          +'<div style="font-size:10.5px;color:var(--muted);margin-top:5px;font-family:var(--font-mono)">'+pct+'%</div>'
+          +'</div>';
+      }).join('')}
+    </div>`;
+}
+window.renderGestionOverview=renderGestionOverview;
+
+window.gpAbrirDetalle=function(materia){
+  gestionVistaDetalle=materia;
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  if(!ov||!det)return;
+  ov.style.display='none';
+  det.style.display='';
+  renderGestionDetalle(materia);
+};
+
+function renderGestionDetalle(materia){
+  const det=document.getElementById('gp-detalle');
+  if(!det)return;
+  const arr=MAPA_MAESTRO[materia]||[];
+  const conts=contenidosData.filter(c=>c.materia===materia).sort((a,b)=>a.orden-b.orden);
+  const imp=conts.filter(c=>c.impartido).length;
+  const prop=PROPOSITOS[materia]||'';
+  const emoji=GP_EMOJI[materia]||'📖';
+  let html='<div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">'
+    +'<button class="btn btn-sm" onclick="renderGestionOverview()">← Materias</button>'
+    +'<div><div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">'+emoji+' '+esc(materia)+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);margin-top:1px">'+imp+' / '+arr.length+' impartidos</div></div>'
+    +'</div>';
+  if(prop)html+='<div class="gp-propósito">'+esc(prop)+'</div>';
+  html+='<div style="border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)">';
+  if(conts.length===0)html+='<div class="empty" style="padding:2rem">Sin contenidos — recarga la página</div>';
+  else conts.forEach(c=>{html+=gpFilaCont(c);});
+  html+='</div>';
+  det.innerHTML=html;
+}
+
+function gpFilaCont(c){
+  const planCls=c.plan?'cont-ind on':'cont-ind';
+  const matCls=c.material?'cont-ind on':'cont-ind';
+  const impCls=c.impartido?'cont-ind on-green':'cont-ind';
+  const fecha=esc(c.fecha||'');
+  const cid=c.id;
+  const mesc=esc(c.materia);
+  const nesc=esc(c.nombre);
+  let btns='<button class="'+planCls+'" onclick="gpToggle(\''+cid+'\',\'plan\')" title="Plan listo">📋 Plan</button>'
+    +'<button class="'+matCls+'" onclick="gpToggle(\''+cid+'\',\'material\')" title="Material listo">📦 Mat.</button>'
+    +'<button class="'+impCls+'" onclick="gpToggle(\''+cid+'\',\'impartido\')" title="Impartido">✅ Imp.</button>'
+    +'<input type="text" value="'+fecha+'" placeholder="fecha" title="Fecha de impartición" '
+    +'style="width:58px;height:28px;font-size:11.5px;padding:0 6px;border:1.5px solid var(--border);border-radius:6px;background:#fff;font-family:var(--font-mono);color:var(--text);box-sizing:border-box" '
+    +'onblur="gpGuardarFecha(\''+cid+'\',this.value)" onkeydown="if(event.key===\'Enter\')this.blur()">';
+  if(c.generaEvidencia)btns+='<button onclick="gpCrearTarea(\''+cid+'\',\''+nesc+'\',\''+mesc+'\')" style="padding:3px 9px;border:1.5px solid var(--blue);border-radius:6px;background:rgba(37,99,235,0.07);color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">📝 Tarea</button>';
+  btns+='<button onclick="gpIrEval(\''+cid+'\')" style="padding:3px 9px;border:1.5px solid var(--amber);border-radius:6px;background:rgba(201,130,10,0.07);color:var(--amber);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">📊 Eval.</button>';
+  return '<div class="cont-row" id="cont-row-'+cid+'">'
+    +'<div style="font-size:11.5px;color:var(--muted);font-family:var(--font-mono);width:24px;flex-shrink:0;padding-top:2px">'+c.orden+'</div>'
+    +'<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--text);line-height:1.35">'+nesc+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(c.mesSugerido)+' · '+c.periodo+'</div></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;flex-shrink:0">'+btns+'</div>'
+    +'</div>';
+}
+
+window.gpToggle=async function(id,campo){
+  const c=contenidosData.find(x=>x.id===id);
+  if(!c)return;
+  const nuevo=!c[campo];
+  c[campo]=nuevo;
+  const mc=_todasContenidos.find(x=>x.id===id);
+  if(mc)mc[campo]=nuevo;
+  await fsUpdate('contenidos/'+id,{[campo]:nuevo});
+  const row=document.getElementById('cont-row-'+id);
+  if(row){
+    const btns=row.querySelectorAll('.cont-ind');
+    btns.forEach(b=>{
+      if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+campo+"'")){
+        if(campo==='impartido')b.className='cont-ind '+(nuevo?'on-green':'');
+        else b.className='cont-ind '+(nuevo?'on':'');
+      }
+    });
+  }
+  toast(campo==='impartido'?(nuevo?'✅ Marcado como impartido':'↩️ Desmarcado'):'✓ Guardado');
+};
+
+window.gpGuardarFecha=async function(id,val){
+  const c=contenidosData.find(x=>x.id===id);
+  if(!c||c.fecha===val)return;
+  c.fecha=val;
+  const mc=_todasContenidos.find(x=>x.id===id);
+  if(mc)mc.fecha=val;
+  await fsUpdate('contenidos/'+id,{fecha:val});
+};
+
+window.gpCrearTarea=function(contenidoId,nombre,materia){
+  window._gpContenidoId=contenidoId;
+  const campo=GP_CAMPO[materia]||'LEN';
+  menuNav('tareas');
+  setTimeout(function(){
+    const descEl=document.getElementById('desc-tarea');
+    const campoEl=document.getElementById('campo-tarea');
+    const fechaEl=document.getElementById('fecha-tarea');
+    if(descEl)descEl.value=nombre;
+    if(campoEl)campoEl.value=campo;
+    if(fechaEl&&!fechaEl.value)fechaEl.value=new Date().toISOString().slice(0,10);
+    toast('📝 Rellena la fecha y marca los alumnos, luego guarda');
+  },120);
+};
+
+window.gpIrEval=function(contenidoId){
+  const c=contenidosData.find(x=>x.id===contenidoId);
+  if(!c)return;
+  menuNav('evaluacion');
+  setTimeout(function(){
+    const periodoEl=document.getElementById('campo-eval');
+    const nombreEl=document.getElementById('nombre-eval');
+    const fechaEl=document.getElementById('fecha-eval');
+    if(periodoEl)periodoEl.value=c.periodo||'P1';
+    if(nombreEl)nombreEl.value=c.nombre;
+    if(fechaEl&&!fechaEl.value)fechaEl.value=new Date().toISOString().slice(0,10);
+    toast('📊 Selecciona tipo y alumnos, luego guarda');
+  },120);
+};
+
+// ===== VISTA TEMPORAL =====
+
+window.gpAbrirTemporal=function(){
+  const ov=document.getElementById('gp-overview');
+  const det=document.getElementById('gp-detalle');
+  const tmp=document.getElementById('gp-temporal');
+  if(!ov||!tmp)return;
+  ov.style.display='none';
+  if(det)det.style.display='none';
+  tmp.style.display='';
+  renderGestionTemporalidad();
+};
+
+function renderGestionTemporalidad(){
+  const tmp=document.getElementById('gp-temporal');
+  if(!tmp)return;
+
+  const now=new Date();
+  const MES_FECHA={
+    'Septiembre':{m:8,y:2026},'Octubre':{m:9,y:2026},
+    'Noviembre':{m:10,y:2026},'Diciembre':{m:11,y:2026},
+    'Enero':{m:0,y:2027},'Febrero':{m:1,y:2027},
+    'Marzo':{m:2,y:2027},'Abril':{m:3,y:2027},
+    'Mayo':{m:4,y:2027},'Junio':{m:5,y:2027}
+  };
+  const nowMes=new Date(now.getFullYear(),now.getMonth(),1);
+
+  const totalGlobal=contenidosData.length;
+  const impGlobal=contenidosData.filter(function(c){return c.impartido;}).length;
+  const pctGlobal=totalGlobal?Math.round(impGlobal/totalGlobal*100):0;
+
+  let html='<div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">'
+    +'<button class="btn btn-sm" onclick="renderGestionOverview()">← Materias</button>'
+    +'<div style="flex:1;min-width:0">'
+    +'<div style="font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--text)">🗓️ Temporalidad</div>'
+    +'<div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);margin-top:1px">'+impGlobal+' / '+totalGlobal+' impartidos en el ciclo ('+pctGlobal+'%)</div>'
+    +'</div></div>';
+
+  // Barra de progreso global
+  const gColor=pctGlobal>=75?'var(--green)':pctGlobal>=40?'var(--amber)':'var(--accent)';
+  html+='<div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:1.25rem;overflow:hidden">'
+    +'<div style="width:'+pctGlobal+'%;height:100%;background:'+gColor+';border-radius:3px;transition:width .4s"></div></div>';
+
+  for(var mi=0;mi<MESES_ORDEN.length;mi++){
+    var mes=MESES_ORDEN[mi];
+    var contsDelMes=contenidosData.filter(function(c){return c.mesSugerido===mes;}).slice().sort(function(a,b){
+      return GP_MATERIAS.indexOf(a.materia)-GP_MATERIAS.indexOf(b.materia)||a.orden-b.orden;
+    });
+    var total=contsDelMes.length;
+    if(!total)continue;
+
+    var imp=contsDelMes.filter(function(c){return c.impartido;}).length;
+    var pct=Math.round(imp/total*100);
+    var periodo=MES_PERIODO[mes]||'';
+
+    var estado='futuro';
+    var mf=MES_FECHA[mes];
+    if(mf){
+      var mesDate=new Date(mf.y,mf.m,1);
+      if(mesDate<nowMes)estado='pasado';
+      else if(mesDate.getTime()===nowMes.getTime())estado='actual';
+    }
+
+    var pendientesPasado=estado==='pasado'&&pct<100;
+    var barColor=pct===100?'var(--green)':pendientesPasado?'#ef4444':'var(--amber)';
+    var headerBg=estado==='actual'?'rgba(32,75,58,0.07)':pendientesPasado?'rgba(239,68,68,0.05)':'#f8faf9';
+    var cardBorder=estado==='actual'?'2px solid var(--accent)':pendientesPasado?'1.5px solid rgba(239,68,68,0.30)':'1.5px solid var(--border)';
+
+    html+='<div style="border:'+cardBorder+';border-radius:var(--r);margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)">';
+
+    // Header del mes
+    html+='<div style="padding:11px 14px;background:'+headerBg+';display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px">'
+      +'<span style="font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--text)">'+mes+'</span>'
+      +'<span style="font-size:10.5px;font-weight:700;color:var(--accent);background:rgba(32,75,58,0.10);border-radius:4px;padding:1px 7px">'+periodo+'</span>';
+
+    if(estado==='actual')html+='<span style="font-size:10.5px;font-weight:700;color:#fff;background:var(--accent);border-radius:4px;padding:1px 7px">◉ Mes actual</span>';
+    if(pendientesPasado)html+='<span style="font-size:10.5px;font-weight:700;color:#92400e;background:rgba(201,130,10,0.15);border-radius:4px;padding:1px 7px">⚠️ '+(total-imp)+' sin impartir</span>';
+    if(pct===100)html+='<span style="font-size:10.5px;font-weight:700;color:#166534;background:rgba(22,163,74,0.12);border-radius:4px;padding:1px 7px">✓ Completo</span>';
+
+    html+='</div>'
+      +'<div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)">'+imp+' / '+total+' impartidos</div>'
+      +'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:15px;font-weight:800;color:'+barColor+'">'+pct+'%</div>'
+      +'</div>';
+
+    // Barra de progreso del mes
+    html+='<div style="height:3px;background:var(--surface2)"><div style="width:'+pct+'%;height:100%;background:'+barColor+'"></div></div>';
+
+    // Contenidos agrupados por materia
+    html+='<div>';
+    for(var gi=0;gi<GP_MATERIAS.length;gi++){
+      var mat=GP_MATERIAS[gi];
+      var matsConts=contsDelMes.filter(function(c){return c.materia===mat;});
+      if(!matsConts.length)continue;
+      var emoji=GP_EMOJI[mat]||'📖';
+      var matCorto=mat.split('/')[0].trim();
+      var matImp=matsConts.filter(function(c){return c.impartido;}).length;
+
+      html+='<div style="padding:10px 14px;border-top:1px solid var(--surface2)">'
+        +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">'
+        +'<span style="font-size:17px">'+emoji+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:var(--text)">'+esc(matCorto)+'</span>'
+        +'<span style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">'+matImp+'/'+matsConts.length+'</span>'
+        +'</div><div style="display:flex;flex-direction:column;gap:4px">';
+
+      for(var ci=0;ci<matsConts.length;ci++){
+        var c=matsConts[ci];
+        var isImp=c.impartido;
+        var isPlan=c.plan;
+        var isMat=c.material;
+        var isMissed=!isImp&&estado==='pasado';
+
+        var rowBg=isImp?'rgba(22,163,74,0.06)':isMissed?'rgba(239,68,68,0.05)':'transparent';
+        var rowBorder=isImp?'rgba(22,163,74,0.20)':isMissed?'rgba(239,68,68,0.18)':'var(--surface2)';
+        var nameColor=isImp?'#166534':isMissed?'#dc2626':'var(--text)';
+
+        var planBadge=isPlan
+          ?'<span style="font-size:14px;color:var(--accent);background:rgba(32,75,58,0.10);border-radius:4px;padding:3px 7px;font-weight:700">📋</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">📋</span>';
+        var matBadge=isMat
+          ?'<span style="font-size:14px;color:var(--blue);background:rgba(37,99,235,0.09);border-radius:4px;padding:3px 7px;font-weight:700">📦</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">📦</span>';
+        var impBadge=isImp
+          ?'<span style="font-size:14px;color:#166534;background:rgba(22,163,74,0.14);border-radius:4px;padding:3px 7px;font-weight:700">✅</span>'
+          :'<span style="font-size:14px;color:var(--muted);background:var(--surface2);border-radius:4px;padding:3px 7px;opacity:0.45">✅</span>';
+
+        var cmat=c.materia;
+        html+='<div onclick="gpAbrirDetalle(\''+esc(cmat)+'\')" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;border:1px solid '+rowBorder+';background:'+rowBg+';cursor:pointer">'
+          +'<div style="flex:1;min-width:0;font-size:13px;font-weight:600;color:'+nameColor+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.nombre)+'</div>'
+          +'<div style="display:flex;gap:4px;flex-shrink:0">'+planBadge+matBadge+impBadge+'</div>'
+          +'</div>';
+      }
+
+      html+='</div></div>';
+    }
+
+    html+='</div></div>';
+  }
+
+  tmp.innerHTML=html;
+}
+window.renderGestionTemporalidad=renderGestionTemporalidad;
+
+// ===== PORTAFOLIO en perfil de alumno =====
+
+function renderPerfilPortafolio(alumnoId){
+  const cont=document.getElementById('ptab-portafolio');
+  if(!cont)return;
+  const tareas=tareasData.filter(function(t){return t.alumno===alumnoId;}).slice().sort(function(a,b){return(b.fecha||'').localeCompare(a.fecha||'');});
+  if(!tareas.length){cont.innerHTML='<div class="empty" style="padding:1.5rem;text-align:center">Sin tareas registradas</div>';return;}
+  const conEv=tareas.filter(function(t){return t.contenidoId;});
+  const pendArchiv=conEv.filter(function(t){return t.estado==='si'&&!t.evidenciaFisica;}).length;
+  let html='';
+  if(pendArchiv>0)html+='<div style="background:rgba(201,130,10,0.10);border:1.5px solid rgba(201,130,10,0.30);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:#92400e">⚠️ '+pendArchiv+' '+(pendArchiv===1?'tarea entregada pendiente':'tareas entregadas pendientes')+' de archivar</div>';
+  tareas.forEach(function(t){
+    const contenido=t.contenidoId?contenidosData.find(function(c){return c.id===t.contenidoId;}):null;
+    const pendienteArch=t.estado==='si'&&!t.evidenciaFisica;
+    const estClass=t.estado==='si'?'bg':t.estado==='no'?'br':'bo';
+    const estLabel=t.estado==='si'?'Entregó':t.estado==='no'?'No entregó':'Incompleta';
+    html+='<div style="padding:10px 12px;border:1.5px solid '+(pendienteArch?'rgba(201,130,10,0.35)':'var(--border)')+';border-radius:var(--rs);margin-bottom:8px;background:'+(pendienteArch?'rgba(201,130,10,0.04)':'#fff')+'">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:13.5px;font-weight:600;color:var(--text)">'+esc(contenido?contenido.nombre:t.desc)+'</div>'
+      +(contenido?'<div style="font-size:11px;color:var(--accent);margin-top:2px">'+(GP_EMOJI[contenido.materia]||'📖')+' '+esc(contenido.materia)+' · '+esc(contenido.mesSugerido)+'</div>':'')
+      +(!contenido?'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(t.desc||'')+'</div>':'')
+      +'<div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--font-mono)">'+fmt(t.fecha)+'</div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
+      +'<span class="badge '+estClass+'">'+estLabel+'</span>'
+      +(pendienteArch?'<span style="font-size:10px;font-weight:700;color:#92400e">⚠️ Sin archivar</span>':'')
+      +(t.evidenciaFisica?'<span style="font-size:10px;font-weight:600;color:var(--green)">✓ Archivada</span>':'')
+      +'</div></div>'
+      +(pendienteArch?'<button onclick="gpMarcarArchivada(\''+t.id+'\')" style="margin-top:8px;padding:4px 11px;background:rgba(201,130,10,0.10);border:1.5px solid rgba(201,130,10,0.30);border-radius:6px;font-size:12px;color:#92400e;cursor:pointer;font-family:var(--font);font-weight:600;display:block">📁 Marcar como archivada</button>':'')
+      +(t.evidenciaFisica&&t.ubicacion?'<div style="font-size:11px;color:var(--muted);margin-top:6px">📍 '+esc(t.ubicacion)+'</div>':'')
+      +'</div>';
+  });
+  cont.innerHTML=html;
+}
+window.renderPerfilPortafolio=renderPerfilPortafolio;
+
+window.gpMarcarArchivada=async function(tareaId){
+  await fsUpdate('tareas/'+tareaId,{evidenciaFisica:true});
+  const t=_todasTareas.find(function(x){return x.id===tareaId;});
+  if(t)t.evidenciaFisica=true;
+  aplicarFiltrosCicloGrupo();
+  const modal=document.getElementById('perfil-modal');
+  if(modal&&modal._alumnoId)renderPerfilPortafolio(modal._alumnoId);
+  toast('📁 Evidencia archivada');
 };
 
 </script>
