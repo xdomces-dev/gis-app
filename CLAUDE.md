@@ -41,6 +41,11 @@ Leer siempre `DESIGN.md` antes de cualquier decisión visual. Resumen:
 ```
 Regla crítica: opacidades mínimas 0.70. Serif italic rechazada.
 
+### Sistema por grado (colores + orden de lista) — aplicar en TODA pantalla nueva
+- **Colores**: 1° azul `#2563eb`, 2° ámbar `#c9820a`, 3° morado `#7c3aed` (`GRADE_COLORS`, `gradeColorOf(g)`; `gradeColorNum('1')` para claves numéricas).
+- **Orden de lista**: `ALUMNOS` ya viene ordenado desde `aplicarFiltrosCicloGrupo` (grado y luego apellido, vía `ordenLista`). No reordenar alfabéticamente por nombre.
+- **Helpers**: `gridPorGrado(card,{wrap,cls})` tarjetas con encabezado por grado · `filaGrado(g,cols)` fila de grado en tablas · `gradoChip(g)` etiqueta de color junto al nombre · `subtabsGradoHTML` subpestañas Multigrado | 1° | 2° | 3° · `renderHistorial` historiales agrupados por día/semana con "Ver más".
+
 ### Firestore paths
 ```
 /users/{uid}/perfil/datos     → escuelaData, cicloActivo, ciclos[]
