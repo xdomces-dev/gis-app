@@ -317,6 +317,28 @@ td.num,td.fecha,.mono{font-family:var(--font-mono);font-size:12.5px;color:var(--
 .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
 .sec-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--text);margin-bottom:.85rem;letter-spacing:-.01em}
 .empty{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
+
+/* Subpestañas por grado (Configuración > Alumnos y listados de Historial) */
+.subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.subtab{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-display);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.subtab:hover{border-color:var(--gc);color:var(--gc)}
+.subtab.on{background:var(--gc);border-color:var(--gc);color:#fff}
+.subtab-n{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:1px 6px;border-radius:3px;background:rgba(0,0,0,0.06)}
+.subtab.on .subtab-n{background:rgba(255,255,255,0.22)}
+.grado-chip{display:inline-block;min-width:24px;text-align:center;padding:1px 5px;margin-right:7px;border-radius:3px;background:var(--gc);color:#fff;font-family:var(--font-display);font-size:10.5px;font-weight:800;vertical-align:1px}
+/* Historial agrupado por día/semana */
+.hist-wrap{margin-top:8px}
+.hist-grupo{border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;background:var(--surface)}
+.hist-grupo-head{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;user-select:none;background:rgba(32,75,58,0.05);flex-wrap:wrap}
+.hist-grupo-head:hover{background:rgba(32,75,58,0.09)}
+.hist-grupo-arrow{color:var(--muted);font-size:12px;transition:transform .15s}
+.hist-grupo.cerrado .hist-grupo-arrow{transform:rotate(-90deg)}
+.hist-grupo-titulo{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text)}
+.hist-grupo-resumen{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
+.hist-grupo-body{overflow-x:auto;border-top:1px solid var(--border)}
+.hist-grupo.cerrado .hist-grupo-body{display:none}
+.hist-vermas{display:block;width:100%;padding:10px;margin-top:4px;border:1.5px dashed var(--border);border-radius:var(--r);background:transparent;color:var(--accent);font-family:var(--font-display);font-size:12.5px;font-weight:700;cursor:pointer}
+.hist-vermas:hover{background:rgba(32,75,58,0.05);border-color:var(--accent)}
 .filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
 .del-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:4px 8px;border-radius:6px;transition:all .18s}
 .del-btn:hover{background:rgba(214,69,69,0.10);color:var(--red)}
@@ -1157,7 +1179,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div><label>Alumno</label><select id="fa-a"><option value="">Todos</option></select></div>
         <button class="btn btn-sm" onclick="renderTablaAsist()">Filtrar</button>
       </div>
-      <div class="table-wrap" id="tabla-asist"><div class="empty">Sin registros aún</div></div>
+      <div class="hist-wrap" id="tabla-asist"><div class="empty">Sin registros aún</div></div>
     </div>
 
     <!-- SEMANA -->
@@ -1236,7 +1258,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div><label>Estado</label><select id="ft-e"><option value="">Todos</option><option value="si">Entregó</option><option value="no">No entregó</option><option value="inc">Incompleta</option></select></div>
         <button class="btn btn-sm" onclick="renderTablaTareas()">Filtrar</button>
       </div>
-      <div class="table-wrap" id="tabla-tareas"><div class="empty">Sin registros aún</div></div>
+      <div class="hist-wrap" id="tabla-tareas"><div class="empty">Sin registros aún</div></div>
     </div>
 
     <!-- LISTAS -->
@@ -1350,7 +1372,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div><label>Tipo</label><select id="fe-t"><option value="">Todos</option><option value="tarea">Tarea</option><option value="examen">Examen</option><option value="proyecto">Proyecto</option><option value="oral">Oral</option><option value="participacion">Participación</option><option value="diagnostico">Diagnóstico</option><option value="boleta">Boleta</option></select></div>
         <button class="btn btn-sm" onclick="renderTablaEval()">Filtrar</button>
       </div>
-      <div class="table-wrap" id="tabla-eval"><div class="empty">Sin registros aún</div></div>
+      <div class="hist-wrap" id="tabla-eval"><div class="empty">Sin registros aún</div></div>
     </div>
 
 
@@ -1404,7 +1426,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="btn btn-sm" onclick="renderTablaPuntos()">Filtrar</button>
         <button class="btn btn-sm" style="background:var(--red);border-color:var(--red);color:#fff" onclick="abrirGeneradorReporte()">📄 Generar reporte</button>
       </div>
-      <div class="table-wrap" id="tabla-puntos"><div class="empty">Sin registros aún</div></div>
+      <div class="hist-wrap" id="tabla-puntos"><div class="empty">Sin registros aún</div></div>
 
       <!-- MODAL GENERADOR DE REPORTE -->
       <div id="modal-reporte" style="display:none;position:fixed;inset:0;z-index:1600;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)">
@@ -2975,6 +2997,89 @@ const fmt=d=>d?d.split('-').reverse().join('/'):'';
 // Reordena "Apellido1 Apellido2 Nombre(s)" → "Nombre(s) Apellido1 Apellido2"
 const fmtNombre=n=>{const p=(n||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return n||'';if(p.length<=2)return[...p].reverse().join(' ');return[...p.slice(2),...p.slice(0,2)].join(' ');};
 const primerNombre=n=>fmtNombre(n).split(' ')[0];
+
+// ===== SUBPESTAÑAS POR GRADO + HISTORIAL AGRUPADO =====
+// Color por grado: azul, ámbar, morado (mismo orden que Configuración y vistas previas)
+const GRADE_COLORS=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545','#0891b2'];
+const gradosNivel=()=>GRADOS[escuelaData?.nivel||'secundaria'];
+function gradeColorOf(g){const i=gradosNivel().indexOf(g);return i<0?'#9ca3af':GRADE_COLORS[i%GRADE_COLORS.length];}
+const gradoChip=g=>g?`<span class="grado-chip" style="--gc:${gradeColorOf(g)}">${esc(g)}</span>`:'';
+// Botones Multigrado | 1° | 2° | 3° — onclick llama window[fn](key, grado)
+function subtabsGradoHTML(key,grados,activo,counts,total,fn){
+  const btn=(g,label,n)=>`<button type="button" class="subtab${activo===g?' on':''}" style="--gc:${g?gradeColorOf(g):'var(--accent)'}" onclick="${fn}('${key}','${g}')">${esc(label)}<span class="subtab-n">${n}</span></button>`;
+  return `<div class="subtabs">${btn('','Multigrado',total)}${grados.map(g=>btn(g,g,counts[g]||0)).join('')}</div>`;
+}
+
+const _MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const _DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const _fechaD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+const _isoD=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function inicioSemana(s){const d=_fechaD(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return _isoD(d);}
+function tituloDia(s){
+  if(!s)return 'Sin fecha';
+  const d=_fechaD(s),anio=d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():'';
+  return `${_DIAS[d.getDay()]} ${d.getDate()} ${_MESES[d.getMonth()]}${anio}`;
+}
+function tituloSemana(lunes){
+  const a=_fechaD(lunes),b=_fechaD(lunes);b.setDate(b.getDate()+4);
+  const anio=b.getFullYear()!==new Date().getFullYear()?' '+b.getFullYear():'';
+  return a.getMonth()===b.getMonth()
+    ?`Semana del ${a.getDate()} al ${b.getDate()} ${_MESES[b.getMonth()]}${anio}`
+    :`Semana del ${a.getDate()} ${_MESES[a.getMonth()]} al ${b.getDate()} ${_MESES[b.getMonth()]}${anio}`;
+}
+
+// Estado por listado: grado activo, cuántos grupos (días/semanas) se muestran y cuáles están abiertos
+const HIST={};
+const histState=key=>HIST[key]||(HIST[key]={grado:'',max:0,abiertos:null});
+const _histRender=key=>window['renderTabla'+key]?.();
+window.histSetGrado=function(key,g){Object.assign(histState(key),{grado:g,max:0,abiertos:null});_histRender(key);};
+window.histVerMas=function(key,paso){histState(key).max+=paso;_histRender(key);};
+window.histToggle=function(key,k,head){
+  const s=histState(key),box=head.closest('.hist-grupo');
+  box.classList.toggle('cerrado');
+  if(box.classList.contains('cerrado'))s.abiertos.delete(k);else s.abiertos.add(k);
+};
+
+// o: {key, el, data (filtrada y ordenada desc), agrupar:'dia'|'semana', thead(conFecha), row(r,al,conFecha), resumen(recs)}
+function renderHistorial(o){
+  const s=histState(o.key);
+  const alMap=new Map(ALUMNOS.map(a=>[a.id,a]));
+  const set=new Set(ALUMNOS.map(a=>a.grado));
+  const grados=gradosNivel().filter(g=>set.has(g));
+  if(s.grado&&!grados.includes(s.grado))s.grado='';
+  const counts={};o.data.forEach(r=>{const g=alMap.get(r.alumno)?.grado||'';counts[g]=(counts[g]||0)+1;});
+  let html=grados.length>1?subtabsGradoHTML(o.key,grados,s.grado,counts,o.data.length,'histSetGrado'):'';
+  const data=s.grado?o.data.filter(r=>alMap.get(r.alumno)?.grado===s.grado):o.data;
+  if(!data.length){o.el.innerHTML=html+'<div class="empty">Sin registros</div>';return;}
+
+  const porDia=o.agrupar==='dia',paso=porDia?7:4;
+  const grupos=[],idx={};
+  data.forEach(r=>{
+    const k=porDia?(r.fecha||''):inicioSemana(r.fecha);
+    if(!(k in idx)){idx[k]=grupos.length;grupos.push({k,recs:[]});}
+    grupos[idx[k]].recs.push(r);
+  });
+  if(!s.max)s.max=paso;
+  if(!s.abiertos)s.abiertos=new Set([grupos[0].k]);
+  const conFecha=!porDia;
+  html+=grupos.slice(0,s.max).map(g=>`
+    <div class="hist-grupo${s.abiertos.has(g.k)?'':' cerrado'}">
+      <div class="hist-grupo-head" onclick="histToggle('${o.key}','${g.k}',this)">
+        <span class="hist-grupo-arrow">▾</span>
+        <span class="hist-grupo-titulo">${porDia?tituloDia(g.k):tituloSemana(g.k)}</span>
+        <span class="hist-grupo-resumen">${o.resumen(g.recs)}</span>
+      </div>
+      <div class="hist-grupo-body"><table><thead>${o.thead(conFecha)}</thead><tbody>${g.recs.map(r=>o.row(r,alMap.get(r.alumno),conFecha)).join('')}</tbody></table></div>
+    </div>`).join('');
+  const resto=grupos.length-Math.min(s.max,grupos.length);
+  if(resto>0){
+    const u=porDia?(resto===1?'día':'días'):(resto===1?'semana':'semanas');
+    html+=`<button type="button" class="hist-vermas" onclick="histVerMas('${o.key}',${paso})">Ver más · ${resto} ${u} anteriores</button>`;
+  }
+  o.el.innerHTML=html;
+}
+const _cnt=(n,color,label)=>n?`<span style="color:${color};font-weight:600">${n} ${label}</span>`:'';
+const _nombreCelda=(al,id)=>al?`${gradoChip(al.grado)}${esc(fmtNombre(al.n))}`:esc(id);
 const initials=n=>{const p=fmtNombre(n).trim().split(/\s+/);return((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase();};
 const uid=()=>currentUser.uid;
 
@@ -4643,13 +4748,14 @@ window.eliminarDiaSinClase=async function(){
 function renderTablaAsist(){
   const fa=document.getElementById('fa-a').value;
   const data=asistencias.filter(r=>!fa||r.alumno===fa).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
-  if(!data.length){document.getElementById('tabla-asist').innerHTML='<div class="empty">Sin registros</div>';return;}
-  document.getElementById('tabla-asist').innerHTML=`<table><thead><tr><th>Fecha</th><th>Alumno</th><th>Grado</th><th>Estado</th><th></th></tr></thead><tbody>`+
-    data.map(r=>{
-      const al=ALUMNOS.find(a=>a.id===r.alumno);
+  renderHistorial({key:'Asist',el:document.getElementById('tabla-asist'),data,agrupar:'dia',
+    thead:f=>`<tr>${f?'<th>Fecha</th>':''}<th>Alumno</th><th>Estado</th><th></th></tr>`,
+    row:(r,al,f)=>{
       const est=r.estado==='A'?'<span class="badge bg">Asistió</span>':r.estado==='F'?'<span class="badge br">Falta</span>':'<span class="badge bo">Justificada</span>';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td>${al?.grado||'—'}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('asist','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delAsist('${r.id}')">✕</button></td></tr>`;
-    }).join('')+'</tbody></table>';
+      return `<tr>${f?`<td>${fmt(r.fecha)}</td>`:''}<td>${_nombreCelda(al,r.alumno)}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('asist','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delAsist('${r.id}')">✕</button></td></tr>`;
+    },
+    resumen:recs=>{const c=e=>recs.filter(r=>r.estado===e).length;return _cnt(c('A'),'#1a8a5c','A')+_cnt(c('F'),'#d64545','F')+_cnt(c('J'),'#c9820a','J');}
+  });
 }
 window.renderTablaAsist=renderTablaAsist;
 
@@ -4702,13 +4808,14 @@ window.guardarTareas=async function(){
 function renderTablaTareas(){
   const fa=document.getElementById('ft-a').value,fe=document.getElementById('ft-e').value;
   const data=tareasData.filter(r=>(!fa||r.alumno===fa)&&(!fe||r.estado===fe)).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
-  if(!data.length){document.getElementById('tabla-tareas').innerHTML='<div class="empty">Sin registros</div>';return;}
-  document.getElementById('tabla-tareas').innerHTML=`<table><thead><tr><th>Fecha</th><th>Alumno</th><th>Campo</th><th>Tarea</th><th>Estado</th><th></th></tr></thead><tbody>`+
-    data.map(r=>{
-      const al=ALUMNOS.find(a=>a.id===r.alumno);
+  renderHistorial({key:'Tareas',el:document.getElementById('tabla-tareas'),data,agrupar:'dia',
+    thead:f=>`<tr>${f?'<th>Fecha</th>':''}<th>Alumno</th><th>Campo</th><th>Tarea</th><th>Estado</th><th></th></tr>`,
+    row:(r,al,f)=>{
       const est=r.estado==='si'?'<span class="badge bg">Entregó</span>':r.estado==='no'?'<span class="badge br">No entregó</span>':'<span class="badge bo">Incompleta</span>';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td><span class="badge bp">${CAMPOS[r.campo]||r.campo}</span></td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc)}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('tarea','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delTarea('${r.id}')">✕</button></td></tr>`;
-    }).join('')+'</tbody></table>';
+      return `<tr>${f?`<td>${fmt(r.fecha)}</td>`:''}<td>${_nombreCelda(al,r.alumno)}</td><td><span class="badge bp">${CAMPOS[r.campo]||r.campo}</span></td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.desc)}</td><td>${est}</td><td style="display:flex;gap:3px"><button class="del-btn" onclick="abrirEdit('tarea','${r.id}','${r.estado}')">✏️</button><button class="del-btn" onclick="delTarea('${r.id}')">✕</button></td></tr>`;
+    },
+    resumen:recs=>{const c=e=>recs.filter(r=>r.estado===e).length;return _cnt(c('si'),'#1a8a5c','entregó')+_cnt(c('no'),'#d64545','no')+_cnt(recs.length-c('si')-c('no'),'#c9820a','incomp.');}
+  });
 }
 window.renderTablaTareas=renderTablaTareas;
 
@@ -4965,16 +5072,22 @@ window.guardarEval=async function(){
 function renderTablaEval(){
   const fa=document.getElementById('fe-a').value,fc=document.getElementById('fe-c').value,ft=document.getElementById('fe-t')?.value||'';
   const data=evaluaciones.filter(r=>(!fa||r.alumno===fa)&&(!fc||r.campo===fc)&&(!ft||r.tipo===ft)).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
-  if(!data.length){document.getElementById('tabla-eval').innerHTML='<div class="empty">Sin registros</div>';return;}
   const PERIODOS={P1:'1er Periodo',P2:'2do Periodo',P3:'3er Periodo'};
-  document.getElementById('tabla-eval').innerHTML=`<table><thead><tr><th>Fecha</th><th>Alumno</th><th>Periodo</th><th>Tipo</th><th>Asignatura / Actividad</th><th>Cal.</th><th></th></tr></thead><tbody>`+
-    data.map(r=>{
-      const al=ALUMNOS.find(a=>a.id===r.alumno),cc=r.cal>=7?'bg':r.cal>=5?'bo':'br';
+  renderHistorial({key:'Eval',el:document.getElementById('tabla-eval'),data,agrupar:'semana',
+    thead:f=>`<tr>${f?'<th>Fecha</th>':''}<th>Alumno</th><th>Periodo</th><th>Tipo</th><th>Asignatura / Actividad</th><th>Cal.</th><th></th></tr>`,
+    row:(r,al,f)=>{
+      const cc=r.cal>=7?'bg':r.cal>=5?'bo':'br';
       const periodoLabel=PERIODOS[r.campo]||r.campo;
       const tipoLabel=r.tipo==='boleta'?'Boleta':(TIPOS[r.tipo]||r.tipo);
       const barColor=r.cal>=7?'#1a8a5c':r.cal>=5?'#c9820a':'#d64545';
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td><span class="badge bp">${periodoLabel}</span></td><td><span class="badge bb">${tipoLabel}</span></td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.nombre)}</td><td><div style="display:flex;align-items:center;gap:6px"><span class="badge ${cc}" style="font-family:var(--font-mono);font-size:12px">${r.cal}</span><div style="width:30px;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;flex-shrink:0"><div style="width:${(r.cal||0)*10}%;height:100%;border-radius:2px;background:${barColor}"></div></div></div></td><td><button class="del-btn" onclick="delEval('${r.id}')">✕</button></td></tr>`;
-    }).join('')+'</tbody></table>';
+      return `<tr>${f?`<td>${fmt(r.fecha)}</td>`:''}<td>${_nombreCelda(al,r.alumno)}</td><td><span class="badge bp">${periodoLabel}</span></td><td><span class="badge bb">${tipoLabel}</span></td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.nombre)}</td><td><div style="display:flex;align-items:center;gap:6px"><span class="badge ${cc}" style="font-family:var(--font-mono);font-size:12px">${r.cal}</span><div style="width:30px;height:4px;border-radius:2px;background:var(--surface2);overflow:hidden;flex-shrink:0"><div style="width:${(r.cal||0)*10}%;height:100%;border-radius:2px;background:${barColor}"></div></div></div></td><td><button class="del-btn" onclick="delEval('${r.id}')">✕</button></td></tr>`;
+    },
+    resumen:recs=>{
+      const cals=recs.map(r=>Number(r.cal)).filter(n=>!isNaN(n));
+      const prom=cals.length?(cals.reduce((a,b)=>a+b,0)/cals.length).toFixed(1):null;
+      return `<span>${recs.length} registro${recs.length!==1?'s':''}</span>`+(prom?`<span style="color:${prom>=7?'#1a8a5c':prom>=5?'#c9820a':'#d64545'};font-weight:600">prom. ${prom}</span>`:'');
+    }
+  });
 }
 window.renderTablaEval=renderTablaEval;
 
@@ -5028,13 +5141,17 @@ window.guardarPuntos=async function(){
 function renderTablaPuntos(){
   const fa=document.getElementById('fp-a').value,ft=document.getElementById('fp-t').value;
   const data=puntosData.filter(r=>(!fa||r.alumno===fa)&&(!ft||r.tipo===ft)).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
-  if(!data.length){document.getElementById('tabla-puntos').innerHTML='<div class="empty">Sin registros</div>';return;}
-  document.getElementById('tabla-puntos').innerHTML=`<table><thead><tr><th>Fecha</th><th>Alumno</th><th>Categoría</th><th></th></tr></thead><tbody>`+
-    data.map(r=>{
-      const al=ALUMNOS.find(a=>a.id===r.alumno);
+  renderHistorial({key:'Puntos',el:document.getElementById('tabla-puntos'),data,agrupar:'semana',
+    thead:f=>`<tr>${f?'<th>Fecha</th>':''}<th>Alumno</th><th>Categoría</th><th></th></tr>`,
+    row:(r,al,f)=>{
       const b=r.tipo==='pos'?`<span class="badge bg" style="font-family:var(--font-mono)">+${r.valor} ${esc(r.cat)}</span>`:`<span class="badge br" style="font-family:var(--font-mono)">−${r.valor} ${esc(r.cat)}</span>`;
-      return `<tr><td>${fmt(r.fecha)}</td><td>${al?esc(fmtNombre(al.n)):r.alumno}</td><td>${b}</td><td><button class="del-btn" onclick="delPunto('${r.id}')">✕</button></td></tr>`;
-    }).join('')+'</tbody></table>';
+      return `<tr>${f?`<td>${fmt(r.fecha)}</td>`:''}<td>${_nombreCelda(al,r.alumno)}</td><td>${b}</td><td><button class="del-btn" onclick="delPunto('${r.id}')">✕</button></td></tr>`;
+    },
+    resumen:recs=>{
+      const s=t=>recs.filter(r=>r.tipo===t).reduce((a,r)=>a+(Number(r.valor)||0),0);
+      return _cnt(s('pos')&&'+'+s('pos'),'#1a8a5c','pts')+_cnt(s('neg')&&'−'+s('neg'),'#d64545','pts');
+    }
+  });
 }
 window.renderTablaPuntos=renderTablaPuntos;
 
@@ -5459,9 +5576,7 @@ function renderCfgAlumnos(){
 function _renderCfgList(){
   const grados=GRADOS[escuelaData?.nivel||'secundaria'];
   const gradeOrder={};grados.forEach((g,i)=>gradeOrder[g]=i);
-  // Color por grado: azul, ámbar, morado
-  const GRADE_COLORS=['#2563eb','#c9820a','#7c3aed','#1a8a5c','#d64545','#0891b2'];
-  const gradeColor=(g)=>GRADE_COLORS[gradeOrder[g]??GRADE_COLORS.length-1]||'#9ca3af';
+  const gradeColor=gradeColorOf;
 
   // Ordenar: por grado (1°, 2°, 3°) luego alfabético
   window.cfgAlumnos.sort((a,b)=>{
@@ -5474,13 +5589,15 @@ function _renderCfgList(){
   const gradeCounts={};
   window.cfgAlumnos.forEach(a=>{const g=a.grado||'';gradeCounts[g]=(gradeCounts[g]||0)+1;});
 
-  // Resumen total al inicio
-  const resumen=grados.filter(g=>gradeCounts[g]).map(g=>{const c=gradeColor(g);return `<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${c};display:inline-block"></span>${g}: ${gradeCounts[g]}</span>`;}).join('<span style="color:var(--border);margin:0 4px">|</span>');
-  let html=window.cfgAlumnos.length?`<div style="font-size:12px;color:var(--muted);margin-bottom:16px;padding:10px 14px;background:rgba(32,75,58,0.05);border-radius:10px;font-weight:600;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span>${window.cfgAlumnos.length} alumnos total</span><span style="color:var(--border)">|</span>${resumen}</div>`:'';
+  // Subpestañas: Multigrado (todos) | 1° | 2° | 3°
+  const tab=grados.includes(window.cfgGradoTab)?window.cfgGradoTab:'';
+  let html=subtabsGradoHTML('cfg',grados,tab,gradeCounts,window.cfgAlumnos.length,'cfgSetGrado');
+  if(tab&&!gradeCounts[tab])html+=`<div class="empty" style="padding:1.5rem">Sin alumnos en ${esc(tab)} — usa “Agregar alumno” para registrar uno en este grado</div>`;
 
   let lastGrade=null;
   window.cfgAlumnos.forEach((a,i)=>{
     const g=a.grado||'';
+    if(tab&&g!==tab)return;
     const gc=gradeColor(g);
     if(g!==lastGrade){
       if(lastGrade!==null)html+=`<div style="height:24px"></div>`;
@@ -5533,10 +5650,13 @@ function _renderCfgList(){
   document.getElementById('cfg-alumnos-list').innerHTML=html;
 }
 window._renderCfgList=_renderCfgList;
+window.cfgGradoTab='';
+window.cfgSetGrado=function(_key,g){window.cfgGradoTab=g;_renderCfgList();};
 
 window.addAlumnoCfg=function(){
   const grados=GRADOS[escuelaData?.nivel||'secundaria'];
-  window.cfgAlumnos.push({id:'al'+Date.now(),n:'',grado:grados[0],tel:'',av:AV[window.cfgAlumnos.length%5]});
+  const grado=grados.includes(window.cfgGradoTab)?window.cfgGradoTab:grados[0];
+  window.cfgAlumnos.push({id:'al'+Date.now(),n:'',grado,tel:'',av:AV[window.cfgAlumnos.length%5]});
   _renderCfgList();
 };
 
