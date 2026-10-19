@@ -69,9 +69,9 @@ Regla crítica: opacidades mínimas 0.70. Serif italic rechazada.
 3. Ajustes y bugs que surjan en el ciclo escolar real 2026-2027
 4. **Respaldos automáticos** de Firestore (datos sensibles de menores: CURP, médicos, NEE). Hoy solo existe "Exportar datos" manual. — siguiente en la lista (2026-09-25)
 5. **Limpiar código comercial sin uso** (planes/trial/candados, panel directivo, app supervisor): ~230 referencias.
+6. A futuro: separar CSS/JS del `index.html` (~9,800 líneas) y agregar pruebas básicas.
 7. **Rol observador / supervisor (solo lectura)** — ligado a la Alternativa 4 de la tesis y al piloto del Cap. IV: usuario que ve datos sin editar, reglas de Firestore que lo garanticen y nombres anonimizados. Pendiente.
 8. **Cuenta demo con datos ficticios** para mostrar la app al asesor / colegas sin exponer menores. Pendiente.
-6. A futuro: separar CSS/JS del `index.html` (~9,800 líneas) y agregar pruebas básicas.
 
 ### Modo privado (ojito 👁️)
 Botón en la barra superior (`toggleModoAnon`). Muestra alumnos como "Alumno 01…" (número de lista) y oculta tutores, teléfonos, CURP, dirección, notas médicas y NEE. Solo cambia la vista; no toca Firestore. Preferencia por dispositivo en `localStorage['gis-anon']`. En Configuración > Alumnos bloquea la edición mientras está activo.
