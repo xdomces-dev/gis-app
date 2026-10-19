@@ -1,7 +1,13 @@
 ## Proyecto: GIS — Sistema de Registro Docente
 
 ### Qué es
-GIS (antes DocenteApp) es una herramienta personal del maestro César para gestionar su aula de Telesecundaria multigrado (1°, 2° y 3°) en la escuela Teocalli. No es un SaaS ni un producto comercial — es un expediente docente digital de uso exclusivamente personal.
+GIS (antes DocenteApp) es una herramienta personal del maestro César para gestionar su aula de Telesecundaria multigrado (1°, 2° y 3°) en la escuela Teocalli. Hoy es de uso personal (ciclo 2026-2027), pero es además el **objeto de estudio de su tesis doctoral** (Doctorado en Gestión Educativa, CINADE; investigación-acción) y a futuro se busca venderla. La retroalimentación del piloto de la tesis guía el producto.
+
+### Tesis doctoral (contexto)
+- Pregunta: ¿en qué medida GIS flexibiliza los procesos administrativos de una telesecundaria multigrado rural, y en qué casos solo digitaliza su rigidez?
+- Cap. I (Diagnóstico + FODA) entregado y calificado 100/100 (2026-10-18). Asesor: Dr. Jaime Domínguez Muñoz. Recomendaciones: portada CINADE y **anonimizar nombres de menores en capturas**.
+- Alternativas de la tesis que tocan la app: 1) registro único con varias salidas; 2) planeación por Temas Generadores ligada a evaluación; 3) asistencia con motivo y recuperación; 4) **panel de director y vista de supervisión**; 5) continuidad (manual, respaldo, protección de datos).
+- Datos de menores: nunca dar acceso a la cuenta real a terceros; usar el modo privado (👁️) o datos ficticios.
 
 **Deploy**: https://docenteappd.web.app
 **Deploy cmd**: `firebase deploy --only hosting`
@@ -63,7 +69,13 @@ Regla crítica: opacidades mínimas 0.70. Serif italic rechazada.
 3. Ajustes y bugs que surjan en el ciclo escolar real 2026-2027
 4. **Respaldos automáticos** de Firestore (datos sensibles de menores: CURP, médicos, NEE). Hoy solo existe "Exportar datos" manual. — siguiente en la lista (2026-09-25)
 5. **Limpiar código comercial sin uso** (planes/trial/candados, panel directivo, app supervisor): ~230 referencias.
+7. **Rol observador / supervisor (solo lectura)** — ligado a la Alternativa 4 de la tesis y al piloto del Cap. IV: usuario que ve datos sin editar, reglas de Firestore que lo garanticen y nombres anonimizados. Pendiente.
+8. **Cuenta demo con datos ficticios** para mostrar la app al asesor / colegas sin exponer menores. Pendiente.
 6. A futuro: separar CSS/JS del `index.html` (~9,800 líneas) y agregar pruebas básicas.
+
+### Modo privado (ojito 👁️)
+Botón en la barra superior (`toggleModoAnon`). Muestra alumnos como "Alumno 01…" (número de lista) y oculta tutores, teléfonos, CURP, dirección, notas médicas y NEE. Solo cambia la vista; no toca Firestore. Preferencia por dispositivo en `localStorage['gis-anon']`. En Configuración > Alumnos bloquea la edición mientras está activo.
+**En pantallas nuevas**: mostrar nombres siempre con `fmtNombre(n)` / `nomV(n)` / `initials(n)` y datos sensibles con `datoV(v)`; nunca `a.n` directo. Si la pantalla se dibuja una vez y se guarda, agregar su render a `toggleModoAnon`.
 
 ### Nota técnica
 Funciones llamadas desde `onclick`/`onchange` en el HTML deben ser globales: definirlas como `window.fn=function…` o agregarlas al `Object.assign(window,{…})` al final del `<script type="module">`. Si no, fallan con ReferenceError.

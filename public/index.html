@@ -866,6 +866,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .act-student-row.falta-row{background:var(--surface2)}
 .pend-mini-btn{background:none;border:1.5px dashed var(--amber);border-radius:var(--rs);padding:5px 12px;font-size:12px;font-weight:700;color:var(--amber);cursor:pointer;font-family:var(--font)}
 .pend-mini-btn:hover{background:rgba(201,130,10,0.10)}
+#btn-ojo{width:36px;height:36px;border:1.5px solid var(--border);border-radius:10px;background:none;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+#btn-ojo:hover{border-color:var(--accent)}
+#btn-ojo.on{background:var(--accent);border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1146,6 +1149,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <span id="nav-seccion-label" style="font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Inicio</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <button id="btn-ojo" onclick="toggleModoAnon()" title="Ocultar nombres y datos personales">👁️</button>
       <button id="trial-badge" onclick="mostrarUpgrade()"></button>
       <button class="btn-pantalla" onclick="abrirPantalla()" style="font-size:12px;padding:6px 10px">▶</button>
     </div>
@@ -3035,8 +3039,41 @@ const GRADOS={preescolar:['1° Preescolar','2° Preescolar','3° Preescolar'],pr
 const today=()=>new Date().toISOString().split('T')[0];
 const fmt=d=>d?d.split('-').reverse().join('/'):'';
 // Reordena "Apellido1 Apellido2 Nombre(s)" → "Nombre(s) Apellido1 Apellido2"
-const fmtNombre=n=>{const p=(n||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return n||'';if(p.length<=2)return[...p].reverse().join(' ');return[...p.slice(2),...p.slice(0,2)].join(' ');};
-const primerNombre=n=>fmtNombre(n).split(' ')[0];
+const _fmtNombreReal=n=>{const p=(n||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return n||'';if(p.length<=2)return[...p].reverse().join(' ');return[...p.slice(2),...p.slice(0,2)].join(' ');};
+// ===== MODO PRIVADO (ojito 👁️) =====
+// Oculta en pantalla nombres de alumnos ("Alumno 01" = número de lista), teléfonos, tutores, CURP, etc.
+// Solo cambia lo que se MUESTRA: los datos en Firestore no se tocan. Preferencia guardada por dispositivo.
+let MODO_ANON=false;try{MODO_ANON=localStorage.getItem('gis-anon')==='1';}catch(e){}
+let _anonMap=new Map();
+function _anonRebuild(){
+  _anonMap=new Map();
+  [...ALUMNOS_CICLO,...ordenLista(_todosAlumnos)].forEach(a=>{if(a.n&&!_anonMap.has(a.n))_anonMap.set(a.n,String(_anonMap.size+1).padStart(2,'0'));});
+}
+const anonNum=n=>MODO_ANON?(_anonMap.get(n)||null):null;
+const nomV=n=>{const k=anonNum(n);return k?'Alumno '+k:n;};
+const datoV=v=>MODO_ANON&&v?'••••••':v;
+const fmtNombre=n=>{const k=anonNum(n);return k?'Alumno '+k:_fmtNombreReal(n);};
+const primerNombre=n=>anonNum(n)?fmtNombre(n):fmtNombre(n).split(' ')[0];
+function _anonUI(){
+  const b=document.getElementById('btn-ojo');
+  if(b){b.textContent=MODO_ANON?'🙈':'👁️';b.classList.toggle('on',MODO_ANON);b.title=MODO_ANON?'Datos ocultos — clic para mostrar':'Ocultar nombres y datos personales';}
+  document.body.classList.toggle('modo-anon',MODO_ANON);
+}
+window.toggleModoAnon=function(){
+  MODO_ANON=!MODO_ANON;
+  try{localStorage.setItem('gis-anon',MODO_ANON?'1':'0');}catch(e){}
+  _anonUI();
+  if(typeof cerrarPerfil==='function')try{cerrarPerfil();}catch(e){}
+  // Redibujar todas las pantallas y listas (no solo la visible), igual que al cambiar de grupo
+  initSelects();renderListaAsist();renderTablaAsist();
+  renderListaTareas();renderTablaTareas();
+  renderListaEval();renderTablaEval();
+  renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
+  renderInicio();renderListaListas();
+  _navGoingBack=true;try{showTab(_navCurrent);}finally{_navGoingBack=false;}
+  toast(MODO_ANON?'🙈 Datos personales ocultos':'👁️ Datos visibles');
+};
+_anonUI();
 
 // ===== SUBPESTAÑAS POR GRADO + HISTORIAL AGRUPADO =====
 // Color por grado: azul, ámbar, morado (mismo orden que Configuración y vistas previas)
@@ -3148,7 +3185,7 @@ function renderHistorial(o){
 }
 const _cnt=(n,color,label)=>n?`<span style="color:${color};font-weight:600">${n} ${label}</span>`:'';
 const _nombreCelda=(al,id)=>al?`${gradoChip(al.grado)}${esc(fmtNombre(al.n))}`:esc(id);
-const initials=n=>{const p=fmtNombre(n).trim().split(/\s+/);return((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase();};
+const initials=n=>{const k=anonNum(n);if(k)return k;const p=fmtNombre(n).trim().split(/\s+/);return((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase();};
 const uid=()=>currentUser.uid;
 
 // Sanitización XSS — escapa HTML en datos del usuario
@@ -3448,6 +3485,7 @@ function aplicarFiltrosCicloGrupo(){
   ALUMNOS_CICLO=als; // todos los grupos del ciclo activo (roster para listas "Todos los grupos")
   if(grupoActivo) als=als.filter(a=>a.grado===grupoActivo);
   ALUMNOS=als;
+  _anonRebuild();
   const ids=new Set(ALUMNOS.map(a=>a.id));
   const byCiclo=r=>!ciclo||!r.ciclo||r.ciclo===ciclo;
   const byAlumno=r=>!ids.size||ids.has(r.alumno)||!r.alumno;
@@ -5814,6 +5852,7 @@ function renderCfgAlumnos(){
 }
 
 function _renderCfgList(){
+  if(MODO_ANON){document.getElementById('cfg-alumnos-list').innerHTML='<div style="padding:14px;border:1.5px dashed var(--border);border-radius:var(--rs);font-size:13px;color:var(--muted)">🙈 Los datos de los alumnos están ocultos. Toca el ojito 👁️ de arriba para mostrarlos y poder editarlos.</div>';return;}
   const grados=GRADOS[escuelaData?.nivel||'secundaria'];
   const gradeOrder={};grados.forEach((g,i)=>gradeOrder[g]=i);
   const gradeColor=gradeColorOf;
@@ -5901,6 +5940,7 @@ window.addAlumnoCfg=function(){
 };
 
 window.guardarAlumnosCfg=async function(){
+  if(MODO_ANON)return mostrarCel('🙈','Datos ocultos','Toca el ojito 👁️ para mostrarlos y poder editar alumnos');
   const validos=window.cfgAlumnos.filter(a=>a.n.trim());
   if(!validos.length)return mostrarCel('⚠️','Sin alumnos','Necesitas al menos un alumno');
   setSyncing();
@@ -6295,7 +6335,7 @@ window.imprimirReporte=function(){
         </div>
       </div>
       <div style="margin-bottom:6px;font-size:15px">Nombre del Alumno (a)</div>
-      <div style="border-bottom:1.5px solid #000;margin-bottom:4px;padding-bottom:2px;font-size:15px;font-weight:bold">${esc(alumno.n)}</div>
+      <div style="border-bottom:1.5px solid #000;margin-bottom:4px;padding-bottom:2px;font-size:15px;font-weight:bold">${esc(nomV(alumno.n))}</div>
       <div style="font-size:14px;margin-bottom:16px">Grado y grupo: <strong>${grado}</strong></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin-bottom:16px">
         ${MOTIVOS_REPORTE.map(m=>`
@@ -7193,7 +7233,7 @@ function renderInicio(){
     </div>`:''}
     ${proxCumple?`<div style="background:rgba(220,252,231,.95);border:1.5px solid rgba(26,138,92,0.25);border-radius:var(--r);padding:12px 14px;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;cursor:pointer;backdrop-filter:blur(8px)" onclick="menuNav('cumpleanos')">
       <span style="font-size:20px">🎂</span>
-      <div><div style="font-weight:700;color:var(--green);font-size:13.5px">${esc(proxCumple.n)} — ${proxCumple.dias===0?'¡Hoy!':'En '+proxCumple.dias+' día'+(proxCumple.dias>1?'s':'')}</div>
+      <div><div style="font-weight:700;color:var(--green);font-size:13.5px">${esc(nomV(proxCumple.n))} — ${proxCumple.dias===0?'¡Hoy!':'En '+proxCumple.dias+' día'+(proxCumple.dias>1?'s':'')}</div>
       <div style="font-size:11px;color:var(--muted)">Ver cumpleaños →</div></div>
     </div>`:''}
     ${diagSummary.length?`<div class="feed-section" onclick="menuNav('estadisticas')" style="cursor:pointer">
@@ -7382,11 +7422,11 @@ window.generarConstancia=function(){
   const conductaBuena=pp-pn>=0;
 
   const textos={
-    estudios:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, ubicada en <strong>${e2(d.municipio)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(a.n)}</strong> se encuentra inscrito(a) y cursando el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, en el ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, modalidad <strong>${e2(d.modalidad)}</strong>.<br><br>La presente constancia se expide a petición del interesado para los fines que le convengan.`,
-    calificaciones:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(a.n)}</strong>, del <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, ha obtenido las siguientes calificaciones correspondientes al <strong>${periodoTexto}</strong>:`,
-    conducta:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(a.n)}</strong>, del <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, ha demostrado durante el presente periodo una conducta <strong>${conductaBuena?'satisfactoria y participativa':'que se encuentra en proceso de mejora'}</strong>, con una asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>La presente se expide a petición del interesado.`,
-    traslado:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(a.n)}</strong> ha cursado el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong> en esta institución durante el ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, con un promedio de <strong>${promGeneral??'—'}</strong> y una asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>Se expide la presente para efectos de <strong>traslado a otra institución educativa</strong>.`,
-    beca:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(a.n)}</strong> se encuentra inscrito(a) en el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, con promedio de <strong>${promGeneral??'—'}</strong> y asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>Se expide para efectos de <strong>solicitud de beca o apoyo educativo</strong>.`,
+    estudios:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, ubicada en <strong>${e2(d.municipio)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(nomV(a.n))}</strong> se encuentra inscrito(a) y cursando el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, en el ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, modalidad <strong>${e2(d.modalidad)}</strong>.<br><br>La presente constancia se expide a petición del interesado para los fines que le convengan.`,
+    calificaciones:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(nomV(a.n))}</strong>, del <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, ha obtenido las siguientes calificaciones correspondientes al <strong>${periodoTexto}</strong>:`,
+    conducta:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(nomV(a.n))}</strong>, del <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, ha demostrado durante el presente periodo una conducta <strong>${conductaBuena?'satisfactoria y participativa':'que se encuentra en proceso de mejora'}</strong>, con una asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>La presente se expide a petición del interesado.`,
+    traslado:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(nomV(a.n))}</strong> ha cursado el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong> en esta institución durante el ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, con un promedio de <strong>${promGeneral??'—'}</strong> y una asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>Se expide la presente para efectos de <strong>traslado a otra institución educativa</strong>.`,
+    beca:`El que suscribe, Director(a) de la <strong>${e2(d.escuela)}</strong>, con C.C.T. <strong>${e2(d.cct)}</strong>, hace constar que el(la) alumno(a) <strong>${e2(nomV(a.n))}</strong> se encuentra inscrito(a) en el <strong>${gradoTexto} grado</strong> de <strong>${nivelTexto}</strong>, ciclo escolar <strong>${e2(d.ciclo||'2025-2026')}</strong>, con promedio de <strong>${promGeneral??'—'}</strong> y asistencia del <strong>${pctA!==null?pctA+'%':'—'}</strong>.<br><br>Se expide para efectos de <strong>solicitud de beca o apoyo educativo</strong>.`,
   };
 
   const tablaCals=tipo==='calificaciones'&&calsTable.length?`
@@ -7423,7 +7463,7 @@ window.generarConstancia=function(){
     @media print{.no-print{display:none}.page{margin:0;padding:1.5cm 2cm}@page{size:letter;margin:0}}
   </style></head><body>
   <div class="no-print">
-    <span style="font-size:14px;font-weight:700">📄 ${tipoTitulo[tipo]} — ${e2(a.n)}</span>
+    <span style="font-size:14px;font-weight:700">📄 ${tipoTitulo[tipo]} — ${e2(nomV(a.n))}</span>
     <button onclick="window.print()" style="background:#fff;color:#f97316">Imprimir / Guardar PDF</button>
     <button onclick="window.close()" style="background:rgba(255,255,255,.2);color:#fff">✕ Cerrar</button>
   </div>
@@ -7649,20 +7689,20 @@ window.verPerfil=function(id){
   const fila=(label,val,icon='')=>val?`<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px;width:22px;text-align:center">${icon}</span><div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600">${label}</div><div style="font-size:14px;font-weight:500;color:var(--text);margin-top:1px">${esc(val)}</div></div></div>`:'';
   const edad=a.fnac?edadActual(a.fnac):null;
   const datosHTML=`
-    ${a.curp?`<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px;width:22px;text-align:center">🪪</span><div style="flex:1"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600">CURP</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px"><span id="curp-val-display" style="font-size:13px;font-weight:500;color:var(--text);font-family:monospace;letter-spacing:.5px">${maskCurp(a.curp)}</span><button onclick="toggleCurp('${esc(a.curp)}')" style="background:none;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--muted);cursor:pointer" title="Ver CURP completo (se oculta en 10 seg)">👁️</button></div></div></div>`:''}
-    ${fila('Fecha de nacimiento',a.fnac?formatFecha(a.fnac)+(edad?' ('+edad+' años)':''):'','🎂')}
-    ${fila('Tutor / Padre o madre',a.tutor,'👤')}
-    ${fila('Teléfono del tutor',a.tel,'📱')}
-    ${fila('Tel. de emergencia',a.tel2,'🚨')}
-    ${fila('Dirección / Localidad',a.dir,'📍')}
+    ${a.curp&&MODO_ANON?fila('CURP','••••••','🪪'):''}${a.curp&&!MODO_ANON?`<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px;width:22px;text-align:center">🪪</span><div style="flex:1"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600">CURP</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px"><span id="curp-val-display" style="font-size:13px;font-weight:500;color:var(--text);font-family:monospace;letter-spacing:.5px">${maskCurp(a.curp)}</span><button onclick="toggleCurp('${esc(a.curp)}')" style="background:none;border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--muted);cursor:pointer" title="Ver CURP completo (se oculta en 10 seg)">👁️</button></div></div></div>`:''}
+    ${fila('Fecha de nacimiento',MODO_ANON&&a.fnac?'••••••'+(edadActual(a.fnac)?' ('+edadActual(a.fnac)+' años)':''):a.fnac?formatFecha(a.fnac)+(edad?' ('+edad+' años)':''):'','🎂')}
+    ${fila('Tutor / Padre o madre',datoV(a.tutor),'👤')}
+    ${fila('Teléfono del tutor',datoV(a.tel),'📱')}
+    ${fila('Tel. de emergencia',datoV(a.tel2),'🚨')}
+    ${fila('Dirección / Localidad',datoV(a.dir),'📍')}
     ${fila('Beca',a.beca,'🎓')}
-    ${fila('Notas médicas',a.notas,'🏥')}
+    ${fila('Notas médicas',datoV(a.notas),'🏥')}
     ${(a.padre||a.madre||a.telPadre||a.telMadre||a.nee)?`<div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px">Familia</div>`:''}
-    ${fila('Padre',a.padre,'👨')}
-    ${fila('Tel. del padre',a.telPadre,'📱')}
-    ${fila('Madre',a.madre,'👩')}
-    ${fila('Tel. de la madre',a.telMadre,'📱')}
-    ${fila('NEE',a.nee,'♿')}
+    ${fila('Padre',datoV(a.padre),'👨')}
+    ${fila('Tel. del padre',datoV(a.telPadre),'📱')}
+    ${fila('Madre',datoV(a.madre),'👩')}
+    ${fila('Tel. de la madre',datoV(a.telMadre),'📱')}
+    ${fila('NEE',datoV(a.nee),'♿')}
     ${!a.curp&&!a.tutor&&!a.dir&&!a.padre&&!a.madre&&!a.nee?'<p style="font-size:13px;color:var(--muted);text-align:center;padding:1rem">Sin datos adicionales. Ve a ⚙️ Configuración → Alumnos para completar el perfil.</p>':''}
   `;
   const tabBtn=(tid,label,active)=>`<button id="ptab-btn-${tid}" onclick="showPerfilTab('${tid}','${id}')" style="padding:8px 16px;background:none;border:none;border-bottom:2.5px solid ${active?'var(--accent)':'transparent'};margin-bottom:-2px;font-size:13px;font-weight:${active?700:600};color:${active?'var(--accent)':'var(--muted)'};cursor:pointer;font-family:var(--font);transition:all .15s">${label}</button>`;
