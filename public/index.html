@@ -866,6 +866,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .act-student-row.falta-row{background:var(--surface2)}
 .pend-mini-btn{background:none;border:1.5px dashed var(--amber);border-radius:var(--rs);padding:5px 12px;font-size:12px;font-weight:700;color:var(--amber);cursor:pointer;font-family:var(--font)}
 .pend-mini-btn:hover{background:rgba(201,130,10,0.10)}
+/* Calificación con decimales: número editable entre los botones − / + */
+.cal-in{width:50px;height:30px;border:1.5px solid transparent;border-radius:6px;background:transparent;text-align:center;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--muted);padding:0;-moz-appearance:textfield;appearance:textfield}
+.cal-in::-webkit-outer-spin-button,.cal-in::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cal-in:hover{border-color:var(--border)}
+.cal-in:focus{border-color:var(--accent);background:#fff;outline:none}
+.cal-in::placeholder{color:var(--muted)}
+/* Modo Evaluación (calificación provisional del periodo) */
+.me-pesos{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:.75rem}
+.me-pesos input{width:64px;height:34px;text-align:center;font-family:var(--font-mono);font-weight:700}
+.me-nota{font-size:12px;color:var(--muted);margin:.25rem 0 .75rem;line-height:1.5}
+.me-tabla td,.me-tabla th{text-align:center;white-space:nowrap}
+.me-tabla td:nth-child(2),.me-tabla th:nth-child(2){text-align:left;white-space:normal}
+.me-sub{display:block;font-size:10px;color:var(--muted);font-weight:500}
+.me-prov{font-family:var(--font-mono);font-size:15px;font-weight:800}
 #btn-ojo{width:36px;height:36px;border:1.5px solid var(--border);border-radius:10px;background:none;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 #btn-ojo:hover{border-color:var(--accent)}
 #btn-ojo.on{background:var(--accent);border-color:var(--accent)}
@@ -1336,8 +1350,33 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <!-- EVALUACIÓN -->
     <div id="sec-evaluacion" class="sec">
 
-      <!-- Captura rápida por alumno (boleta) -->
+      <!-- Modo Evaluación: calificación provisional del periodo con lo registrado -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <p class="sec-title" style="margin:0">🎯 Modo Evaluación</p>
+          <button class="btn btn-sm" id="me-toggle" onclick="toggleModoEval()">Abrir</button>
+        </div>
+        <div id="me-panel" style="display:none;margin-top:1rem">
+          <div class="me-pesos">
+            <div><label>Periodo</label>
+              <select id="me-periodo" onchange="renderModoEval()">
+                <option value="P1">1er Periodo (sep–dic)</option>
+                <option value="P2">2do Periodo (ene–mar)</option>
+                <option value="P3">3er Periodo (abr–jun)</option>
+              </select>
+            </div>
+            <div><label>Asistencia %</label><input type="number" id="me-p-asist" min="0" max="100" step="5" onchange="guardarPesosEval()"></div>
+            <div><label>Tareas %</label><input type="number" id="me-p-tareas" min="0" max="100" step="5" onchange="guardarPesosEval()"></div>
+            <div><label>Actividades %</label><input type="number" id="me-p-act" min="0" max="100" step="5" onchange="guardarPesosEval()"></div>
+            <button class="btn btn-sm" onclick="imprimirModoEval()">Imprimir</button>
+          </div>
+          <p class="me-nota" id="me-nota"></p>
+          <div id="me-tabla" class="table-wrap"></div>
+        </div>
+      </div>
+
+      <!-- Captura rápida por alumno (boleta) -->
+      <div id="eval-boleta-card" style="background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)">
         <p class="sec-title" style="margin-bottom:1rem">Captura de calificaciones</p>
         <div class="row" style="margin-bottom:1rem">
           <div>
@@ -2972,7 +3011,7 @@ window.renderEvalBoleta=function(){
           <div style="font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600">${a}</div>
           <div style="display:flex;align-items:center;gap:6px">
             <button class="btn-p minus" style="width:30px;height:30px" onclick="stepBoletaCal('${a}',-1)">−</button>
-            <span id="bc-${a.replace(/\s/g,'_')}" style="font-size:18px;font-weight:800;font-family:var(--font-display);min-width:24px;text-align:center;color:${existing[a]>=7?'var(--green)':existing[a]>=5?'var(--amber)':existing[a]?'var(--red)':'var(--muted)'}">${existing[a]??'—'}</span>
+            <input class="cal-in" type="number" inputmode="decimal" min="0" max="10" step="0.1" placeholder="—" id="bc-${a.replace(/\s/g,'_')}" value="${existing[a]??''}" style="font-size:18px;color:${calColor(existing[a])}" onchange="setBoletaCal('${a}',this.value)">
             <button class="btn-p plus" style="width:30px;height:30px" onclick="stepBoletaCal('${a}',1)">+</button>
             <span style="font-size:10px;color:var(--muted)">/10</span>
           </div>
@@ -2983,13 +3022,31 @@ window.renderEvalBoleta=function(){
   evalBoletaData.cals=Object.fromEntries(asigs.map(a=>[a,existing[a]??undefined]));
 };
 
+// Calificaciones con decimales: botones de 0.5 en 0.5, o se escribe el número (se redondea a 1 decimal)
+const CAL_PASO=0.5;
+const redCal=v=>Math.round(v*10)/10;
+const calColor=v=>v===undefined||v===null||v===''?'var(--muted)':v>=7?'var(--green)':v>=5?'var(--amber)':'var(--red)';
+// Lee lo escrito: '' → undefined, fuera de 0–10 → se ajusta al límite
+function leerCal(txt){
+  const s=String(txt??'').trim().replace(',','.');
+  if(s==='')return undefined;
+  const n=Number(s);
+  return isNaN(n)?undefined:redCal(Math.max(0,Math.min(10,n)));
+}
+function pintarCal(el,v){if(el){el.value=v??'';el.style.color=calColor(v);}}
+
 window.stepBoletaCal=function(asig,dir){
   if(!evalBoletaData.cals)return;
   const cur=evalBoletaData.cals[asig]??5;
-  const nv=Math.max(1,Math.min(10,cur+dir));
+  const nv=redCal(Math.max(1,Math.min(10,cur+dir*CAL_PASO)));
   evalBoletaData.cals[asig]=nv;
-  const el=document.getElementById('bc-'+asig.replace(/\s/g,'_'));
-  if(el){el.textContent=nv;el.style.color=nv>=7?'var(--green)':nv>=5?'var(--amber)':'var(--red)';}
+  pintarCal(document.getElementById('bc-'+asig.replace(/\s/g,'_')),nv);
+};
+window.setBoletaCal=function(asig,txt){
+  if(!evalBoletaData.cals)return;
+  const v=leerCal(txt);
+  evalBoletaData.cals[asig]=v;
+  pintarCal(document.getElementById('bc-'+asig.replace(/\s/g,'_')),v);
 };
 
 window.guardarEvalBoleta=async function(){
@@ -3030,6 +3087,119 @@ window.guardarEvalBoleta=async function(){
     actualizarResumen();
   }catch(e){setSyncError();mostrarCel('❌','Error al guardar',e.message||'Intenta de nuevo');}
 };
+// ===== MODO EVALUACIÓN =====
+// Calificación provisional del periodo (trimestre) con lo ya registrado: asistencia, tareas y actividades.
+// Solo calcula en pantalla; no guarda nada hasta que se pasa a la boleta y se da "Guardar calificaciones".
+const PESOS_EVAL_DEF={asist:10,tareas:30,act:60};
+// sep–dic = P1 · ene–mar = P2 · abr–ago = P3 (igual que MES_PERIODO)
+const periodoDeFecha=f=>{const m=Number((f||'').slice(5,7));return !m?null:m>=9?'P1':m<=3?'P2':'P3';};
+function getPesosEval(){
+  try{const p=JSON.parse(localStorage.getItem('gis-eval-pesos')||'null');if(p&&['asist','tareas','act'].every(k=>typeof p[k]==='number'))return p;}catch(e){}
+  return {...PESOS_EVAL_DEF};
+}
+window.guardarPesosEval=function(){
+  const v=id=>Math.max(0,Math.min(100,Number(document.getElementById(id).value)||0));
+  const p={asist:v('me-p-asist'),tareas:v('me-p-tareas'),act:v('me-p-act')};
+  try{localStorage.setItem('gis-eval-pesos',JSON.stringify(p));}catch(e){}
+  renderModoEval();
+};
+window.toggleModoEval=function(){
+  const panel=document.getElementById('me-panel'),btn=document.getElementById('me-toggle');
+  const abrir=panel.style.display==='none';
+  panel.style.display=abrir?'block':'none';
+  btn.textContent=abrir?'Cerrar':'Abrir';
+  if(abrir){
+    const sel=document.getElementById('me-periodo');
+    if(!sel.dataset.init){sel.value=periodoDeFecha(today())||'P1';sel.dataset.init='1';}
+    renderModoEval();
+  }
+};
+// Desglose de un alumno en un periodo; cada parte es null si no hay registros
+function calcEvalAlumno(alumnoId,periodo,pesos){
+  const asis=asistencias.filter(r=>r.alumno===alumnoId&&periodoDeFecha(r.fecha)===periodo);
+  // Justificadas (J) no cuentan a favor ni en contra
+  const asisCont=asis.filter(r=>r.estado!=='J');
+  const pres=asisCont.filter(r=>r.estado==='A'||r.estado==='R').length;
+  const asist=asisCont.length?{val:redCal(pres/asisCont.length*10),raw:pres/asisCont.length*10,pct:Math.round(pres/asisCont.length*100),n:asisCont.length,faltas:asisCont.length-pres}:null;
+
+  const tar=tareasData.filter(r=>r.alumno===alumnoId&&periodoDeFecha(r.fecha)===periodo);
+  const ptsT={si:10,inc:5,no:0};
+  const tarCont=tar.filter(r=>r.estado in ptsT);
+  const tareas=tarCont.length?{val:redCal(tarCont.reduce((s,r)=>s+ptsT[r.estado],0)/tarCont.length),raw:tarCont.reduce((s,r)=>s+ptsT[r.estado],0)/tarCont.length,si:tarCont.filter(r=>r.estado==='si').length,n:tarCont.length}:null;
+
+  const evs=evaluaciones.filter(r=>r.alumno===alumnoId&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico');
+  const cal=evs.filter(r=>!r.pendiente&&typeof r.cal==='number');
+  const act=cal.length?{val:redCal(cal.reduce((s,r)=>s+r.cal,0)/cal.length),raw:cal.reduce((s,r)=>s+r.cal,0)/cal.length,n:cal.length,pend:evs.length-cal.length}:(evs.length?{val:null,n:0,pend:evs.length}:null);
+
+  // Si una parte no tiene datos, su peso se reparte entre las que sí tienen
+  const partes=[[asist,pesos.asist],[tareas,pesos.tareas],[act,pesos.act]].filter(([p,w])=>p&&p.val!==null&&w>0);
+  const wTot=partes.reduce((s,[,w])=>s+w,0);
+  const prov=wTot?redCal(partes.reduce((s,[p,w])=>s+p.raw*w,0)/wTot):null;
+  return {asist,tareas,act,prov,incompleto:partes.length<[pesos.asist,pesos.tareas,pesos.act].filter(w=>w>0).length};
+}
+let _modoEvalRes={};
+window.renderModoEval=function(){
+  const cont=document.getElementById('me-tabla');
+  if(!cont||document.getElementById('me-panel').style.display==='none')return;
+  const periodo=document.getElementById('me-periodo').value;
+  const pesos=getPesosEval();
+  document.getElementById('me-p-asist').value=pesos.asist;
+  document.getElementById('me-p-tareas').value=pesos.tareas;
+  document.getElementById('me-p-act').value=pesos.act;
+  const suma=pesos.asist+pesos.tareas+pesos.act;
+  document.getElementById('me-nota').innerHTML=
+    `Calcula con lo registrado en el ${esc(CAMPOS[periodo].toLowerCase())} hasta hoy. Asistencia: A y R cuentan, J no cuenta ni a favor ni en contra. Tareas: entregó = 10, incompleta = 5, no entregó = 0. Actividades: promedio de tareas, exámenes, proyectos, orales y participación (sin diagnósticos ni pendientes). Si a un alumno le falta una parte, se reparte su peso entre las demás (marcado con *).`
+    +(suma!==100?` <strong style="color:var(--amber)">Los pesos suman ${suma}%; se usan en proporción.</strong>`:'');
+  if(!ALUMNOS.length){cont.innerHTML='<div class="empty">Sin alumnos</div>';return;}
+  _modoEvalRes={};
+  const cel=(p,txt)=>p&&p.val!==null?`<span style="font-family:var(--font-mono);font-weight:700;color:${calColor(p.val)}">${p.val}</span><span class="me-sub">${txt}</span>`:'<span style="color:var(--muted)">—</span>'+(p&&p.pend?`<span class="me-sub">${p.pend} pend.</span>`:'');
+  let html=`<table class="big-table me-tabla"><thead><tr><th>#</th><th>Alumno</th><th>Asistencia</th><th>Tareas</th><th>Actividades</th><th>Provisional</th><th></th></tr></thead><tbody>`;
+  let last=null,i=0;
+  const multi=new Set(ALUMNOS.map(a=>a.grado||'')).size>1;
+  ALUMNOS.forEach(a=>{
+    if(multi&&a.grado!==last){html+=filaGrado(a.grado,7);last=a.grado;}
+    const r=calcEvalAlumno(a.id,periodo,pesos);
+    _modoEvalRes[a.id]=r;
+    html+=`<tr><td>${++i}</td><td style="font-weight:600">${esc(fmtNombre(a.n))}</td>
+      <td>${cel(r.asist,r.asist?`${r.asist.pct}% · ${r.asist.faltas} falta${r.asist.faltas!==1?'s':''}`:'')}</td>
+      <td>${cel(r.tareas,r.tareas?`${r.tareas.si}/${r.tareas.n} entregadas`:'')}</td>
+      <td>${cel(r.act,r.act?`${r.act.n} calif.${r.act.pend?` · ${r.act.pend} pend.`:''}`:'')}</td>
+      <td><span class="me-prov" style="color:${calColor(r.prov)}">${r.prov??'—'}${r.prov!==null&&r.incompleto?'*':''}</span></td>
+      <td>${r.prov!==null?`<button class="btn btn-sm" onclick="pasarABoleta('${a.id}')" title="Precargar en la captura de boleta">→ Boleta</button>`:''}</td></tr>`;
+  });
+  cont.innerHTML=html+'</tbody></table>';
+};
+// Precarga la calificación provisional en las asignaturas vacías de la boleta del alumno (no guarda)
+window.pasarABoleta=function(alumnoId){
+  const r=_modoEvalRes[alumnoId];if(!r||r.prov===null)return;
+  const periodo=document.getElementById('me-periodo').value;
+  document.getElementById('eval-periodo').value=periodo;
+  document.getElementById('eval-alumno-sel').value=alumnoId;
+  renderEvalBoleta();
+  let n=0;
+  (evalBoletaData.asigs||[]).forEach(asig=>{
+    if(evalBoletaData.cals[asig]!==undefined)return;
+    evalBoletaData.cals[asig]=r.prov;
+    pintarCal(document.getElementById('bc-'+asig.replace(/\s/g,'_')),r.prov);
+    n++;
+  });
+  document.getElementById('eval-boleta-card').scrollIntoView({behavior:'smooth',block:'start'});
+  toast(n?`${r.prov} precargado en ${n} asignatura${n!==1?'s':''} · revisa y da Guardar`:'La boleta ya tenía calificaciones; no se cambió nada');
+};
+window.imprimirModoEval=function(){
+  const periodo=document.getElementById('me-periodo').value,pesos=getPesosEval();
+  const v=p=>p&&p.val!==null?p.val:'—';
+  let html=`<p style="font-size:11px">Ponderación: asistencia ${pesos.asist}% · tareas ${pesos.tareas}% · actividades ${pesos.act}%. Calificación provisional calculada al ${fmt(today())}.</p>
+    <table><thead><tr><th>#</th><th>Alumno</th><th>Grado</th><th style="text-align:center">Asist.</th><th style="text-align:center">Tareas</th><th style="text-align:center">Activ.</th><th style="text-align:center">Provisional</th></tr></thead><tbody>`;
+  ALUMNOS.forEach((a,i)=>{
+    const r=calcEvalAlumno(a.id,periodo,pesos);
+    html+=`<tr><td>${i+1}</td><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${esc(a.grado||'')}</td>
+      <td style="text-align:center">${v(r.asist)}${r.asist?` (${r.asist.pct}%)`:''}</td><td style="text-align:center">${v(r.tareas)}</td><td style="text-align:center">${v(r.act)}</td>
+      <td style="text-align:center;font-weight:700">${r.prov??'—'}${r.prov!==null&&r.incompleto?'*':''}</td></tr>`;
+  });
+  html+=`</tbody></table><p style="font-size:10px">* Le falta alguna parte; su peso se repartió entre las demás.</p>`;
+  abrirVentanaImpresion('Modo Evaluación — '+CAMPOS[periodo],html);
+};
 const TIPOS={tarea:'Tarea',examen:'Examen',proyecto:'Cuadernillo',oral:'Oral',participacion:'Participación'};
 const CATS_POS=['Participación','Puntualidad','Apoya compañeros','Trabajo en equipo','Tarea completa','Orden','Iniciativa','Creatividad'];
 const CATS_NEG=['Distracción','Sin tarea','Conducta','Impuntualidad','Sin material','Irrespeto','Incompleto','Celular'];
@@ -3067,7 +3237,7 @@ window.toggleModoAnon=function(){
   // Redibujar todas las pantallas y listas (no solo la visible), igual que al cambiar de grupo
   initSelects();renderListaAsist();renderTablaAsist();
   renderListaTareas();renderTablaTareas();
-  renderListaEval();renderTablaEval();
+  renderListaEval();renderTablaEval();renderModoEval();
   renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
   renderInicio();renderListaListas();
   _navGoingBack=true;try{showTab(_navCurrent);}finally{_navGoingBack=false;}
@@ -3540,7 +3710,7 @@ window.cambiarGrupo=function(grupo){
   aplicarFiltrosCicloGrupo();
   initSelects();renderListaAsist();renderTablaAsist();
   renderListaTareas();renderTablaTareas();
-  renderListaEval();renderTablaEval();
+  renderListaEval();renderTablaEval();renderModoEval();
   initCatChips();initUmbrals();renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
   renderInicio();renderListaListas();
   toast('Grupo: '+(grupo||'Todos'));
@@ -3933,10 +4103,11 @@ function iniciarApp(){
   document.getElementById('ov-title').textContent=escuelaData?.escuela||'Telesecundaria';
   document.getElementById('ov-sub').textContent=(escuelaData?.docente||'')+' · '+(escuelaData?.ciclo||'');
   ['fecha-asist','fecha-eval','fecha-pto','fecha-tarea'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});
+  ['eval-periodo','campo-eval'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=periodoDeFecha(today())||'P1';});
   initSelects();
   renderListaAsist();renderTablaAsist();
   renderListaTareas();renderTablaTareas();
-  renderListaEval();renderTablaEval();
+  renderListaEval();renderTablaEval();renderModoEval();
   initCatChips();initUmbrals();renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
   cargarConfig();
   setSynced();
@@ -4663,7 +4834,7 @@ window.showTab=function(t){
   if(t==='cumpleanos')renderCumpleanos();
   if(t==='semana')renderSemana();
   if(t==='gestion')renderGestionPedagogica();
-  if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();}
+  if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();renderModoEval();}
   if(t==='listas'){volverListas();}
 };
 
@@ -5133,7 +5304,7 @@ function renderListaEval(){
       <div class="an">${esc(fmtNombre(a.n))}</div><div class="ag">${a.grado||''}</div>
       <div style="display:flex;align-items:center;gap:4px;justify-content:center;margin-top:4px">
         <button class="btn-p minus" onclick="stepCal('${a.id}',-1)">−</button>
-        <span id="cal-${a.id}" style="font-size:14px;font-weight:700;font-family:var(--font-mono);min-width:24px;text-align:center;color:var(--muted)">—</span>
+        <input class="cal-in" type="number" inputmode="decimal" min="0" max="10" step="0.1" placeholder="—" id="cal-${a.id}" onchange="setCal('${a.id}',this.value)">
         <button class="btn-p plus" onclick="stepCal('${a.id}',1)">+</button>
       </div>
       <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px">/10</div>
@@ -5148,10 +5319,19 @@ window.stepCal=function(id,d){
     if(btn)btn.classList.remove('pend-on');
   }
   if(evalData[id]===undefined)evalData[id]=5;
-  evalData[id]=Math.max(0,Math.min(10,evalData[id]+d));
+  evalData[id]=redCal(Math.max(0,Math.min(10,evalData[id]+d*CAL_PASO)));
   if(isNaN(evalData[id]))evalData[id]=5;
-  const el=document.getElementById('cal-'+id);
-  if(el){el.textContent=evalData[id];el.style.color=evalData[id]>=7?'var(--green)':evalData[id]>=5?'var(--amber)':'var(--red)';}
+  pintarCal(document.getElementById('cal-'+id),evalData[id]);
+};
+window.setCal=function(id,txt){
+  if(evalPending[id]){
+    evalPending[id]=false;
+    const btn=document.getElementById('pend-'+id);
+    if(btn)btn.classList.remove('pend-on');
+  }
+  const v=leerCal(txt);
+  if(v===undefined)delete evalData[id];else evalData[id]=v;
+  pintarCal(document.getElementById('cal-'+id),v);
 };
 
 window.togglePending=function(id){
@@ -5162,10 +5342,10 @@ window.togglePending=function(id){
     btn.classList.add('pend-on');
     // Limpiar calificación si se marca pendiente
     delete evalData[id];
-    if(calEl){calEl.textContent='P';calEl.style.color='var(--amber)';}
+    if(calEl){calEl.value='';calEl.placeholder='P';calEl.style.color='var(--amber)';}
   } else {
     btn.classList.remove('pend-on');
-    if(calEl){calEl.textContent='—';calEl.style.color='var(--muted)';}
+    if(calEl){calEl.value='';calEl.placeholder='—';calEl.style.color='var(--muted)';}
   }
 };
 
@@ -5193,7 +5373,7 @@ window.guardarEval=async function(){
   });
   if(!proms.length)return mostrarCel('⚠️','Sin registros','Califica al menos un alumno o márcalos como pendientes');
   await Promise.all(proms);
-  renderListaEval();renderTablaEval();
+  renderListaEval();renderTablaEval();renderModoEval();
   document.getElementById('nombre-eval').value='';
   const msg=pend>0?`${cnt} calificados · ${pend} pendiente${pend>1?'s':''}`:`${cnt} calificaciones`;
   mostrarCel('📊','¡Evaluación guardada!',msg);
@@ -5276,7 +5456,7 @@ function renderTablaEval(){
       html+=`<label>Fecha entrega</label>`;
       html+=`<input type="date" id="eif-fecha-${r.id}" value="${isPend?today:(r.fecha||today)}">`;
       html+=`<label>Calificación</label>`;
-      html+=`<input type="number" id="eif-cal-${r.id}" min="0" max="10" step="1" value="${isPend?'':r.cal}" placeholder="0–10">`;
+      html+=`<input type="number" id="eif-cal-${r.id}" min="0" max="10" step="0.1" inputmode="decimal" value="${isPend?'':r.cal}" placeholder="0–10">`;
       html+=`<button class="reg-btn" onclick="confirmarEditEval('${r.id}')">Guardar</button>`;
       html+=`<button class="del-btn" style="font-size:12px" onclick="toggleEvalInline('${r.id}')">Cancelar</button>`;
       html+=`</div>`;
@@ -5298,7 +5478,7 @@ function renderTablaEval(){
         html+=`</div>`;
         html+=`<div class="eval-inline-form" id="eif-n-${fid}" style="display:none">`;
         html+=`<label>Fecha entrega</label><input type="date" id="eif-fecha-n-${fid}" value="${today}">`;
-        html+=`<label>Calificación</label><input type="number" id="eif-cal-n-${fid}" min="0" max="10" step="1" placeholder="0–10">`;
+        html+=`<label>Calificación</label><input type="number" id="eif-cal-n-${fid}" min="0" max="10" step="0.1" inputmode="decimal" placeholder="0–10">`;
         html+=`<button class="reg-btn" onclick="agregarEvalAlumno('${gid}','${a.id}',false)">Guardar</button>`;
         html+=`<button class="del-btn" style="font-size:12px" onclick="toggleEvalInline('n-${fid}')">Cancelar</button>`;
         html+=`</div>`;
@@ -5325,7 +5505,7 @@ window.agregarEvalAlumno=async function(gid,alumnoId,pendiente){
   if(!pendiente){
     const fechaEl=document.getElementById('eif-fecha-'+fid),calEl=document.getElementById('eif-cal-'+fid);
     if(!fechaEl||!calEl)return;
-    fecha=fechaEl.value;cal=Number(calEl.value);
+    fecha=fechaEl.value;cal=redCal(Number(calEl.value));
     if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona la fecha de entrega');
     if(isNaN(cal)||cal<0||cal>10||!calEl.value.trim())return mostrarCel('⚠️','Cal. inválida','Ingresa un número entre 0 y 10');
   } else fecha=g.fecha||fecha;
@@ -5361,7 +5541,7 @@ window.confirmarEditEval=async function(id){
   const calEl=document.getElementById('eif-cal-'+id);
   if(!fechaEl||!calEl)return;
   const fecha=fechaEl.value;
-  const cal=Number(calEl.value);
+  const cal=redCal(Number(calEl.value));
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona la fecha de entrega');
   if(isNaN(cal)||cal<0||cal>10||!calEl.value.trim())return mostrarCel('⚠️','Cal. inválida','Ingresa un número entre 0 y 10');
   await fsUpdate(`evaluaciones/${id}`,{fecha,cal,pendiente:false});
