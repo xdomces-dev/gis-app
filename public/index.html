@@ -1382,9 +1382,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div>
             <label>Periodo</label>
             <select id="eval-periodo">
-              <option value="P1">1er Periodo</option>
+              <option value="P1" selected>1er Periodo</option>
               <option value="P2">2do Periodo</option>
-              <option value="P3" selected>3er Periodo</option>
+              <option value="P3">3er Periodo</option>
             </select>
           </div>
           <div>
@@ -1408,14 +1408,17 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
       <!-- Registro individual por actividad -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)">
-        <p class="sec-title" style="margin-bottom:.75rem">Registro por actividad</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+          <p class="sec-title" style="margin:0">Registro por actividad</p>
+          <span id="periodo-banner" style="font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:4px 12px;border-radius:999px;border:1.5px solid var(--accent)"></span>
+        </div>
         <div class="row">
           <div><label>Fecha</label><input type="date" id="fecha-eval"></div>
           <div><label>Periodo</label>
             <select id="campo-eval">
-              <option value="P1">1er Periodo</option>
+              <option value="P1" selected>1er Periodo</option>
               <option value="P2">2do Periodo</option>
-              <option value="P3" selected>3er Periodo</option>
+              <option value="P3">3er Periodo</option>
             </select>
           </div>
           <div style="flex:1"><label>Actividad / Evidencia</label><input type="text" id="nombre-eval" placeholder="Ej: Examen de Español" style="width:100%"></div>
@@ -3093,6 +3096,33 @@ window.guardarEvalBoleta=async function(){
 const PESOS_EVAL_DEF={asist:10,tareas:30,act:60};
 // sep–dic = P1 · ene–mar = P2 · abr–ago = P3 (igual que MES_PERIODO)
 const periodoDeFecha=f=>{const m=Number((f||'').slice(5,7));return !m?null:m>=9?'P1':m<=3?'P2':'P3';};
+const PERIODO_INFO={P1:{label:'1er Periodo',rango:'sep – dic'},P2:{label:'2do Periodo',rango:'ene – mar'},P3:{label:'3er Periodo',rango:'abr – jun'}};
+function periodoActualAuto(){return periodoDeFecha(today())||'P1';}
+function resetPeriodoEval(){
+  const p=periodoActualAuto();
+  ['eval-periodo','campo-eval'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=p;});
+  const sel=document.getElementById('fe-c');if(sel)sel.value=p;
+  const info=PERIODO_INFO[p];
+  const banner=document.getElementById('periodo-banner');
+  if(banner&&info)banner.textContent=`📍 ${info.label} (${info.rango})`;
+}
+
+// Migración única: registros mal guardados como P3 se mueven a P1 (usando array en memoria)
+async function migrarP3aP1(){
+  if(localStorage.getItem('gis-migP3P1-done'))return;
+  if(!currentUser)return;
+  const afectados=evaluaciones.filter(r=>r.campo==='P3');
+  if(!afectados.length){localStorage.setItem('gis-migP3P1-done','1');return;}
+  try{
+    const batch=writeBatch(db);
+    afectados.forEach(r=>batch.update(doc(db,`users/${currentUser.uid}/evaluaciones/${r.id}`),{campo:'P1'}));
+    await batch.commit();
+    afectados.forEach(r=>r.campo='P1');
+    renderTablaEval();
+    localStorage.setItem('gis-migP3P1-done','1');
+    mostrarCel('✅','Periodos corregidos',`${afectados.length} evaluaciones movidas al 1er Periodo`);
+  }catch(e){console.error('migrarP3aP1',e);}
+}
 function getPesosEval(){
   try{const p=JSON.parse(localStorage.getItem('gis-eval-pesos')||'null');if(p&&['asist','tareas','act'].every(k=>typeof p[k]==='number'))return p;}catch(e){}
   return {...PESOS_EVAL_DEF};
@@ -4103,11 +4133,12 @@ function iniciarApp(){
   document.getElementById('ov-title').textContent=escuelaData?.escuela||'Telesecundaria';
   document.getElementById('ov-sub').textContent=(escuelaData?.docente||'')+' · '+(escuelaData?.ciclo||'');
   ['fecha-asist','fecha-eval','fecha-pto','fecha-tarea'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today();});
-  ['eval-periodo','campo-eval'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=periodoDeFecha(today())||'P1';});
+  resetPeriodoEval();
   initSelects();
   renderListaAsist();renderTablaAsist();
   renderListaTareas();renderTablaTareas();
   renderListaEval();renderTablaEval();renderModoEval();
+  migrarP3aP1();
   initCatChips();initUmbrals();renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
   cargarConfig();
   setSynced();
@@ -4834,7 +4865,7 @@ window.showTab=function(t){
   if(t==='cumpleanos')renderCumpleanos();
   if(t==='semana')renderSemana();
   if(t==='gestion')renderGestionPedagogica();
-  if(t==='evaluacion'){renderListaEval();initEvalAlumnoSel();renderModoEval();}
+  if(t==='evaluacion'){resetPeriodoEval();renderListaEval();renderTablaEval();initEvalAlumnoSel();renderModoEval();}
   if(t==='listas'){volverListas();}
 };
 
