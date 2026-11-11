@@ -5349,6 +5349,21 @@ window.togglePending=function(id){
   }
 };
 
+window.togglePending=function(id){
+  evalPending[id]=!evalPending[id];
+  const btn=document.getElementById('pend-'+id);
+  const calEl=document.getElementById('cal-'+id);
+  if(evalPending[id]){
+    btn.classList.add('pend-on');
+    // Limpiar calificación si se marca pendiente
+    delete evalData[id];
+    if(calEl){calEl.textContent='P';calEl.style.color='var(--amber)';}
+  } else {
+    btn.classList.remove('pend-on');
+    if(calEl){calEl.textContent='—';calEl.style.color='var(--muted)';}
+  }
+};
+
 window.guardarEval=async function(){
   const fecha=document.getElementById('fecha-eval').value,campo=document.getElementById('campo-eval').value,nombre=document.getElementById('nombre-eval').value.trim()||'Sin nombre';
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
@@ -5542,6 +5557,36 @@ window.confirmarEditEval=async function(id){
   if(!fechaEl||!calEl)return;
   const fecha=fechaEl.value;
   const cal=redCal(Number(calEl.value));
+  if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona la fecha de entrega');
+  if(isNaN(cal)||cal<0||cal>10||!calEl.value.trim())return mostrarCel('⚠️','Cal. inválida','Ingresa un número entre 0 y 10');
+  await fsUpdate(`evaluaciones/${id}`,{fecha,cal,pendiente:false});
+  const r=evaluaciones.find(x=>x.id===id);
+  if(r){r.fecha=fecha;r.cal=cal;r.pendiente=false;}
+  renderTablaEval();
+  mostrarCel('📊','¡Guardado!','Calificación actualizada');
+};
+
+window.toggleActGroup=function(gid){
+  const body=document.getElementById(gid);
+  const chev=document.getElementById('chev-'+gid);
+  if(!body)return;
+  body.classList.toggle('open');
+  if(chev)chev.style.transform=body.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
+};
+
+window.toggleEvalInline=function(id){
+  const el=document.getElementById('eif-'+id);
+  if(!el)return;
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'flex';
+};
+
+window.confirmarEditEval=async function(id){
+  const fechaEl=document.getElementById('eif-fecha-'+id);
+  const calEl=document.getElementById('eif-cal-'+id);
+  if(!fechaEl||!calEl)return;
+  const fecha=fechaEl.value;
+  const cal=Number(calEl.value);
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona la fecha de entrega');
   if(isNaN(cal)||cal<0||cal>10||!calEl.value.trim())return mostrarCel('⚠️','Cal. inválida','Ingresa un número entre 0 y 10');
   await fsUpdate(`evaluaciones/${id}`,{fecha,cal,pendiente:false});
