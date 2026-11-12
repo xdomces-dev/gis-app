@@ -1428,6 +1428,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             </select>
           </div>
           <div style="flex:1"><label>Actividad / Evidencia</label><input type="text" id="nombre-eval" placeholder="Ej: Examen de Español" style="width:100%"></div>
+          <div style="min-width:160px"><label>Materia</label>
+            <select id="eval-materia" style="width:100%;height:34px;font-size:13px;padding:0 8px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:var(--font)">
+              <option value="">Sin clasificar</option>
+              <option value="Lenguajes / Español">Español</option>
+              <option value="Matemáticas">Matemáticas</option>
+              <option value="Biología / Ciencias de la Vida">Biología</option>
+              <option value="Física y Química">Física / Química</option>
+              <option value="Historia">Historia</option>
+              <option value="Geografía">Geografía</option>
+              <option value="Formación Cívica y Ética">F.C.E.</option>
+              <option value="Inglés Básico">Inglés</option>
+            </select>
+          </div>
         </div>
         <div class="subtabs">
           <span class="stab active" onclick="setTipo('tarea',this)">Tarea</span>
@@ -2961,8 +2974,13 @@ const ASIG_A_MATERIA={
   'Biología':'Biología / Ciencias de la Vida','Física':'Física y Química','Química':'Física y Química',
   'Historia':'Historia','Geografía':'Geografía','Form. Cívica y Ética':'Formación Cívica y Ética',
 };
-// Busca la materia GP de una evaluación por su nombre en contenidosData
-function getMateriaDeEval(ev){const c=contenidosData.find(x=>x.nombre===ev.nombre);return c?c.materia:null;}
+// Busca la materia GP de una evaluación: primero por campo materia guardado, luego por nombre en MAPA_MAESTRO (case-insensitive)
+function getMateriaDeEval(ev){
+  if(ev.materia)return ev.materia;
+  const nom=(ev.nombre||'').toLowerCase().trim();
+  for(const[mat,arr]of Object.entries(MAPA_MAESTRO)){if(arr.some(n=>n.toLowerCase()===nom))return mat;}
+  return null;
+}
 // Promedio de actividades de una materia para un alumno/periodo con denominador del grupo
 function actPorMateria(alumnoId,periodo,materia,maxN){
   const cal=evaluaciones.filter(r=>r.alumno===alumnoId&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number'&&getMateriaDeEval(r)===materia);
@@ -5458,6 +5476,7 @@ window.togglePending=function(id){
 window.guardarEval=async function(){
   const fecha=document.getElementById('fecha-eval').value,campo=document.getElementById('campo-eval').value,nombre=document.getElementById('nombre-eval').value.trim()||'Sin nombre';
   if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
+  const materia=document.getElementById('eval-materia')?.value||'';
   let subtipo=null;
   if(evalTipo==='diagnostico'){
     const sel=document.getElementById('eval-subtipo');
@@ -5470,10 +5489,10 @@ window.guardarEval=async function(){
   let cnt=0,pend=0;const proms=[];
   ALUMNOS.forEach(a=>{
     if(evalData[a.id]!==undefined){
-      const r={fecha,campo,alumno:a.id,tipo:evalTipo,nombre,cal:evalData[a.id],pendiente:false,...(subtipo?{subtipo}:{})};
+      const r={fecha,campo,alumno:a.id,tipo:evalTipo,nombre,cal:evalData[a.id],pendiente:false,...(subtipo?{subtipo}:{}),...(materia?{materia}:{})};
       proms.push(fsAdd('evaluaciones',r).then(id=>{evaluaciones.unshift({id,...r});cnt++;}));
     } else if(evalPending[a.id]){
-      const r={fecha,campo,alumno:a.id,tipo:evalTipo,nombre,cal:null,pendiente:true,...(subtipo?{subtipo}:{})};
+      const r={fecha,campo,alumno:a.id,tipo:evalTipo,nombre,cal:null,pendiente:true,...(subtipo?{subtipo}:{}),...(materia?{materia}:{})};
       proms.push(fsAdd('evaluaciones',r).then(id=>{evaluaciones.unshift({id,...r});pend++;}));
     }
   });
@@ -10176,9 +10195,11 @@ window.gpIrEval=function(contenidoId){
     const periodoEl=document.getElementById('campo-eval');
     const nombreEl=document.getElementById('nombre-eval');
     const fechaEl=document.getElementById('fecha-eval');
+    const materiaEl=document.getElementById('eval-materia');
     if(periodoEl)periodoEl.value=c.periodo||'P1';
     if(nombreEl)nombreEl.value=c.nombre;
     if(fechaEl&&!fechaEl.value)fechaEl.value=new Date().toISOString().slice(0,10);
+    if(materiaEl&&c.materia)materiaEl.value=c.materia;
     toast('📊 Selecciona tipo y alumnos, luego guarda');
   },120);
 };
