@@ -1184,6 +1184,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <button class="grupo-pill" id="gp-2" onclick="cambiarGrupo('2°')">2°</button>
     <button class="grupo-pill" id="gp-3" onclick="cambiarGrupo('3°')">3°</button>
     <div style="flex:1"></div>
+    <select id="periodo-activo-sel" title="Período activo" onchange="cambiarPeriodoActivo(this.value)" style="height:26px;font-size:11px;font-weight:700;border:1.5px solid var(--accent);border-radius:999px;padding:0 10px 0 8px;background:var(--accent-light);color:var(--accent);font-family:var(--font);cursor:pointer;flex-shrink:0">
+      <option value="P1">📍 1er Período</option>
+      <option value="P2">📍 2do Período</option>
+      <option value="P3">📍 3er Período</option>
+    </select>
     <span id="ciclo-badge" class="ciclo-badge" onclick="showTab('config')" title="Cambiar ciclo"></span>
   </div>
 
@@ -1321,6 +1326,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="filtros">
         <div><label>Alumno</label><select id="ft-a"><option value="">Todos</option></select></div>
         <div><label>Estado</label><select id="ft-e"><option value="">Todos</option><option value="si">Entregó</option><option value="no">No entregó</option><option value="inc">Incompleta</option></select></div>
+        <div><label>Periodo</label><select id="ft-p"><option value="">Todos</option><option value="P1">1er Periodo</option><option value="P2">2do Periodo</option><option value="P3">3er Periodo</option></select></div>
         <button class="btn btn-sm" onclick="renderTablaTareas()">Filtrar</button>
       </div>
       <div class="hist-wrap" id="tabla-tareas"><div class="empty">Sin registros aún</div></div>
@@ -1411,7 +1417,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           </div>
         </div>
         <div id="eval-boleta"></div>
-        <button class="btn btn-save" onclick="guardarEvalBoleta()" style="margin-top:10px">Guardar calificaciones</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center">
+          <button class="btn btn-save" onclick="guardarEvalBoleta()">Guardar calificaciones</button>
+          <button class="del-btn" onclick="limpiarBoletaAlumno()" title="Borrar boleta de este alumno en este período">🗑 Limpiar alumno</button>
+          <button class="del-btn" onclick="limpiarBoletaTodos()" title="Borrar boleta de TODOS los alumnos en este período" style="background:rgba(214,69,69,0.12)">🗑 Limpiar todo el período</button>
+        </div>
       </div>
 
       <!-- Registro individual por actividad -->
@@ -1494,7 +1504,16 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <p class="sec-title" style="margin-bottom:.3rem">Categoría negativa</p>
       <div class="cat-chips" id="cats-neg-chips"></div>
       <div id="puntos-grid"></div>
-      <button class="btn btn-save" onclick="guardarPuntos()">Guardar puntos</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center">
+        <button class="btn btn-save" onclick="guardarPuntos()">Guardar puntos</button>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none">
+          <input type="checkbox" id="pts-ocasional-toggle" style="width:15px;height:15px;accent-color:var(--amber)">
+          <span>🌟 Sesión especial</span>
+        </label>
+      </div>
+      <div id="pts-sesion-info" style="display:none;margin-top:8px;padding:8px 12px;background:rgba(201,130,10,0.10);border:1.5px solid rgba(201,130,10,0.25);border-radius:var(--rs);font-size:12px;color:var(--amber);font-weight:600">
+        Los puntos se guardarán como <strong>sesión especial</strong> — puedes borrarlos independientemente del trimestre.
+      </div>
 
       <!-- RANKING DE CONDUCTA -->
       <div class="divider"></div>
@@ -1514,16 +1533,24 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             </div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
           <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Periodo:</span>
           <select id="pts-bimestre-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 8px;font-family:var(--font)" onchange="window.ptosBimestre=this.value;renderRankingPuntos()">
             <option value="">Todo el ciclo</option>
-            <option value="1">1er Bimestre</option>
-            <option value="2">2do Bimestre</option>
-            <option value="3">3er Bimestre</option>
-            <option value="4">4to Bimestre</option>
-            <option value="5">5to Bimestre</option>
+            <option value="P1">1er Periodo (sep–dic)</option>
+            <option value="P2">2do Periodo (ene–mar)</option>
+            <option value="P3">3er Periodo (abr–jun)</option>
           </select>
+          <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-left:8px">Ver:</span>
+          <select id="pts-tipo-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 8px;font-family:var(--font)" onchange="renderRankingPuntos()">
+            <option value="">Todos</option>
+            <option value="trimestral">Solo trimestral</option>
+            <option value="especial">Solo sesión especial</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <button class="del-btn" style="font-size:11px;padding:4px 10px" onclick="limpiarPuntosOcasionales()">🗑 Limpiar sesión especial</button>
+          <button class="del-btn" style="font-size:11px;padding:4px 10px;background:rgba(214,69,69,0.12)" onclick="limpiarPuntosDelPeriodo()">🗑 Limpiar todo el período</button>
         </div>
         <div id="pts-ranking-lista"><div class="empty">Registra puntos para ver el ranking</div></div>
       </div>
@@ -3045,7 +3072,6 @@ function initEvalAlumnoSel(){
 
 window.renderEvalBoleta=function(){
   const alumnoId=document.getElementById('eval-alumno-sel').value;
-  const gradoSel=document.getElementById('eval-grado-sel').value;
   const periodo=document.getElementById('eval-periodo').value;
   const container=document.getElementById('eval-boleta');
 
@@ -3053,6 +3079,9 @@ window.renderEvalBoleta=function(){
 
   const alumno=ALUMNOS.find(a=>a.id===alumnoId);
   const gradoNum=(alumno?.grado||'1').replace(/[°\s]/g,'').charAt(0);
+  // Sync grado selector to match student
+  const gradoSel2=document.getElementById('eval-grado-sel');
+  if(gradoSel2)gradoSel2.value=gradoNum;
   const asigs=getAsignaturas(gradoNum);
 
   // Buscar calificaciones ya existentes
@@ -3113,6 +3142,8 @@ window.guardarEvalBoleta=async function(){
   if(!evalBoletaData.alumnoId)return mostrarCel('⚠️','Sin selección','Selecciona un alumno');
   const {alumnoId,periodo,asigs,cals}=evalBoletaData;
   if(!cals||Object.values(cals).every(v=>v===undefined))return mostrarCel('⚠️','Sin calificaciones','Ingresa al menos una calificación');
+  const _al=ALUMNOS.find(a=>a.id===alumnoId);
+  if(!confirm(`¿Guardar boleta de ${fmtNombre(_al?.n||'este alumno')} para el ${CAMPOS[periodo]}?\n\nSe reemplazarán los registros previos de este período.`))return;
 
   setSyncing();
   try{
@@ -3146,6 +3177,37 @@ window.guardarEvalBoleta=async function(){
     mostrarCel('📊','¡Calificaciones guardadas!',`${cnt} asignaturas · ${CAMPOS[periodo]}`);
     actualizarResumen();
   }catch(e){setSyncError();mostrarCel('❌','Error al guardar',e.message||'Intenta de nuevo');}
+};
+window.limpiarBoletaAlumno=async function(){
+  const alumnoId=document.getElementById('eval-alumno-sel').value;
+  const periodo=document.getElementById('eval-periodo').value;
+  if(!alumnoId)return mostrarCel('⚠️','Sin alumno','Selecciona un alumno');
+  const al=ALUMNOS.find(a=>a.id===alumnoId);
+  const nombre=fmtNombre(al?.n||'este alumno');
+  const afectados=evaluaciones.filter(r=>r.alumno===alumnoId&&r.campo===periodo&&r.tipo==='boleta');
+  if(!afectados.length)return mostrarCel('ℹ️','Sin registros',`${nombre} no tiene boleta guardada en ${CAMPOS[periodo]}`);
+  if(!confirm(`¿Borrar la boleta de ${nombre} del ${CAMPOS[periodo]}?\n\n${afectados.length} registros serán eliminados permanentemente.`))return;
+  setSyncing();
+  try{
+    for(const r of afectados)await fsDel(`evaluaciones/${r.id}`);
+    evaluaciones=evaluaciones.filter(r=>!(r.alumno===alumnoId&&r.campo===periodo&&r.tipo==='boleta'));
+    setSynced();renderEvalBoleta();renderTablaEval();
+    mostrarCel('🗑️','Boleta borrada',`Boleta de ${nombre} eliminada del ${CAMPOS[periodo]}`);
+  }catch(e){setSyncError();mostrarCel('❌','Error',e.message||'Intenta de nuevo');}
+};
+window.limpiarBoletaTodos=async function(){
+  const periodo=document.getElementById('eval-periodo').value;
+  const afectados=evaluaciones.filter(r=>r.campo===periodo&&r.tipo==='boleta');
+  if(!afectados.length)return mostrarCel('ℹ️','Sin registros',`No hay registros de boleta en ${CAMPOS[periodo]}`);
+  const nalumnos=new Set(afectados.map(r=>r.alumno)).size;
+  if(!confirm(`⚠️ ¿Borrar TODA la boleta del ${CAMPOS[periodo]}?\n\n${afectados.length} registros de ${nalumnos} alumnos serán eliminados permanentemente.`))return;
+  setSyncing();
+  try{
+    for(const r of afectados)await fsDel(`evaluaciones/${r.id}`);
+    evaluaciones=evaluaciones.filter(r=>!(r.campo===periodo&&r.tipo==='boleta'));
+    setSynced();renderEvalBoleta();renderTablaEval();
+    mostrarCel('🗑️','Boleta limpiada',`${afectados.length} registros eliminados del ${CAMPOS[periodo]}`);
+  }catch(e){setSyncError();mostrarCel('❌','Error',e.message||'Intenta de nuevo');}
 };
 // ===== MODO EVALUACIÓN =====
 // Calificación provisional del periodo (trimestre) con lo ya registrado: asistencia, tareas y actividades.
@@ -4236,6 +4298,7 @@ function iniciarApp(){
   renderListaEval();renderTablaEval();renderModoEval();
   migrarP3aP1();
   initCatChips();initUmbrals();renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
+  initPeriodoActivoSel();
   cargarConfig();
   setSynced();
   checkCumpleAlertas();
@@ -5211,8 +5274,8 @@ window.guardarTareas=async function(){
 };
 
 function renderTablaTareas(){
-  const fa=document.getElementById('ft-a').value,fe=document.getElementById('ft-e').value;
-  const data=tareasData.filter(r=>(!fa||r.alumno===fa)&&(!fe||r.estado===fe)).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
+  const fa=document.getElementById('ft-a').value,fe=document.getElementById('ft-e').value,fp=document.getElementById('ft-p')?.value||'';
+  const data=tareasData.filter(r=>(!fa||r.alumno===fa)&&(!fe||r.estado===fe)&&(!fp||periodoDeFecha(r.fecha)===fp)).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
   renderHistorial({key:'Tareas',el:document.getElementById('tabla-tareas'),data,agrupar:'dia',
     thead:f=>`<tr>${f?'<th>Fecha</th>':''}<th>Alumno</th><th>Campo</th><th>Tarea</th><th>Estado</th><th></th></tr>`,
     row:(r,al,f)=>{
@@ -5773,6 +5836,11 @@ window.delEval=async function(id){
 function initCatChips(){
   document.getElementById('cats-pos-chips').innerHTML=CATS_POS.map(c=>`<span class="cat-chip cat-pos-chip${c===catSelPos?' sel':''}" onclick="selCat('pos','${c}',this)">${c}</span>`).join('');
   document.getElementById('cats-neg-chips').innerHTML=CATS_NEG.map(c=>`<span class="cat-chip cat-neg-chip${c===catSelNeg?' sel':''}" onclick="selCat('neg','${c}',this)">${c}</span>`).join('');
+  const tog=document.getElementById('pts-ocasional-toggle');
+  if(tog)tog.addEventListener('change',function(){
+    const info=document.getElementById('pts-sesion-info');
+    if(info)info.style.display=this.checked?'block':'none';
+  });
 }
 
 window.selCat=function(t,cat,el){
@@ -5797,15 +5865,44 @@ window.addPunto=function(id,t){
 
 window.guardarPuntos=async function(){
   const fecha=document.getElementById('fecha-pto').value;if(!fecha)return mostrarCel('⚠️','Sin fecha','Selecciona una fecha');
+  const esOcasional=document.getElementById('pts-ocasional-toggle')?.checked||false;
   let cnt=0;const proms=[];
   ALUMNOS.forEach(a=>{
-    if(ptosTemp[a.id]?.pos>0){const r={fecha,alumno:a.id,tipo:'pos',cat:catSelPos,valor:ptosTemp[a.id].pos};proms.push(fsAdd('puntos',r).then(id=>{puntosData.unshift({id,...r});cnt++;}));}
-    if(ptosTemp[a.id]?.neg>0){const r={fecha,alumno:a.id,tipo:'neg',cat:catSelNeg,valor:ptosTemp[a.id].neg};proms.push(fsAdd('puntos',r).then(id=>{puntosData.unshift({id,...r});cnt++;}));}
+    if(ptosTemp[a.id]?.pos>0){const r={fecha,alumno:a.id,tipo:'pos',cat:catSelPos,valor:ptosTemp[a.id].pos,...(esOcasional?{ocasional:true}:{})};proms.push(fsAdd('puntos',r).then(id=>{puntosData.unshift({id,...r});cnt++;}));}
+    if(ptosTemp[a.id]?.neg>0){const r={fecha,alumno:a.id,tipo:'neg',cat:catSelNeg,valor:ptosTemp[a.id].neg,...(esOcasional?{ocasional:true}:{})};proms.push(fsAdd('puntos',r).then(id=>{puntosData.unshift({id,...r});cnt++;}));}
   });
   if(!proms.length)return mostrarCel('⚠️','Sin puntos','No se registraron puntos');
   await Promise.all(proms);
   renderPuntosGrid();renderTablaPuntos();renderRankingPuntos();
-  mostrarCel('⭐','¡Puntos guardados!',`${cnt} registros`);
+  const lbl=esOcasional?'🌟 Puntos de sesión especial guardados':'⭐ Puntos guardados';
+  mostrarCel(esOcasional?'🌟':'⭐',lbl,`${cnt} registros`);
+};
+window.limpiarPuntosOcasionales=async function(){
+  const afectados=puntosData.filter(r=>r.ocasional);
+  if(!afectados.length)return mostrarCel('ℹ️','Sin sesión especial','No hay puntos de sesión especial registrados');
+  if(!confirm(`¿Borrar los ${afectados.length} puntos de sesión especial?\n\nLos puntos trimestrales no se tocarán.`))return;
+  setSyncing();
+  try{
+    for(const r of afectados)await fsDel(`puntos/${r.id}`);
+    puntosData=puntosData.filter(r=>!r.ocasional);
+    setSynced();renderRankingPuntos();renderTablaPuntos();
+    mostrarCel('🗑️','Sesión especial limpiada',`${afectados.length} registros eliminados`);
+  }catch(e){setSyncError();mostrarCel('❌','Error',e.message||'Intenta de nuevo');}
+};
+window.limpiarPuntosDelPeriodo=async function(){
+  const perSel=window.ptosBimestre||document.getElementById('pts-bimestre-sel')?.value||'';
+  if(!perSel)return mostrarCel('⚠️','Sin período seleccionado','Elige un período en el filtro antes de limpiar');
+  const label=CAMPOS[perSel]||perSel;
+  const afectados=puntosData.filter(r=>periodoDeFecha(r.fecha)===perSel);
+  if(!afectados.length)return mostrarCel('ℹ️','Sin registros',`No hay puntos en ${label}`);
+  if(!confirm(`⚠️ ¿Borrar TODOS los puntos del ${label}?\n\n${afectados.length} registros de ${new Set(afectados.map(r=>r.alumno)).size} alumnos serán eliminados permanentemente.`))return;
+  setSyncing();
+  try{
+    for(const r of afectados)await fsDel(`puntos/${r.id}`);
+    puntosData=puntosData.filter(r=>periodoDeFecha(r.fecha)!==perSel);
+    setSynced();renderRankingPuntos();renderTablaPuntos();
+    mostrarCel('🗑️','Período limpiado',`${afectados.length} registros eliminados del ${label}`);
+  }catch(e){setSyncError();mostrarCel('❌','Error',e.message||'Intenta de nuevo');}
 };
 
 function renderTablaPuntos(){
@@ -5832,6 +5929,27 @@ window.delPunto=async function(id){
 };
 
 window.ptosBimestre='';
+
+// ===== PERÍODO ACTIVO GLOBAL =====
+let periodoActivo=localStorage.getItem('gis-periodo-activo')||'';
+function _periodoActivoEfectivo(){return periodoActivo||periodoActualAuto()||'P1';}
+function initPeriodoActivoSel(){
+  const sel=document.getElementById('periodo-activo-sel');
+  if(!sel)return;
+  const p=_periodoActivoEfectivo();
+  sel.value=p;
+}
+window.cambiarPeriodoActivo=function(p){
+  periodoActivo=p;
+  try{localStorage.setItem('gis-periodo-activo',p);}catch(e){}
+  // Sincronizar selectores en evaluaciones y puntos
+  ['campo-eval','eval-periodo','me-periodo','pts-bimestre-sel'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value=p;
+  });
+  window.ptosBimestre=p;
+  renderModoEval();renderRankingPuntos();
+};
+
 function getBimRango(num){
   if(!num)return null;
   const ciclo=escuelaData?.cicloActivo||'';
@@ -5863,9 +5981,11 @@ function renderRankingPuntos(){
   if(!el)return;
   const umbralPos=parseInt(localStorage.getItem('pts_umbral_pos'))||parseInt(document.getElementById('umbral-pos')?.value)||10;
   const umbralNeg=parseInt(localStorage.getItem('pts_umbral_neg'))||parseInt(document.getElementById('umbral-neg')?.value)||3;
-  const bimSel=window.ptosBimestre||document.getElementById('pts-bimestre-sel')?.value||'';
-  const bimR=getBimRango(bimSel);
-  const ptsFilt=bimR?puntosData.filter(r=>r.fecha&&r.fecha>=bimR[0]&&r.fecha<=bimR[1]):puntosData;
+  const perSel=window.ptosBimestre||document.getElementById('pts-bimestre-sel')?.value||'';
+  const tipoSel=document.getElementById('pts-tipo-sel')?.value||'';
+  let ptsFilt=perSel?puntosData.filter(r=>periodoDeFecha(r.fecha)===perSel):puntosData;
+  if(tipoSel==='trimestral')ptsFilt=ptsFilt.filter(r=>!r.ocasional);
+  else if(tipoSel==='especial')ptsFilt=ptsFilt.filter(r=>r.ocasional);
   const datos=ALUMNOS.map(a=>{
     const pos=ptsFilt.filter(r=>r.alumno===a.id&&r.tipo==='pos').reduce((s,r)=>s+(r.valor||0),0);
     const neg=ptsFilt.filter(r=>r.alumno===a.id&&r.tipo==='neg').reduce((s,r)=>s+(r.valor||0),0);
