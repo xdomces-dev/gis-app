@@ -2955,6 +2955,33 @@ const ASIGNATURAS={
 const ASIGNATURAS_PRIM=['Español','Matemáticas','Ciencias Naturales','Historia','Geografía','Form. Cívica y Ética','Educ. Artística','Educ. Física'];
 const ASIGNATURAS_PRESC=['Lenguaje y comunicación','Pensamiento matemático','Exploración y conocimiento','Desarrollo personal y social','Expresión y apreciación artística','Desafíos y aventuras'];
 
+// Mapeo asignatura boleta → materia GP (para provisional por materia)
+const ASIG_A_MATERIA={
+  'Español':'Lenguajes / Español','Inglés':'Inglés Básico','Matemáticas':'Matemáticas',
+  'Biología':'Biología / Ciencias de la Vida','Física':'Física y Química','Química':'Física y Química',
+  'Historia':'Historia','Geografía':'Geografía','Form. Cívica y Ética':'Formación Cívica y Ética',
+};
+// Busca la materia GP de una evaluación por su nombre en contenidosData
+function getMateriaDeEval(ev){const c=contenidosData.find(x=>x.nombre===ev.nombre);return c?c.materia:null;}
+// Promedio de actividades de una materia para un alumno/periodo con denominador del grupo
+function actPorMateria(alumnoId,periodo,materia,maxN){
+  const cal=evaluaciones.filter(r=>r.alumno===alumnoId&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number'&&getMateriaDeEval(r)===materia);
+  const n=Math.max(cal.length,maxN||0);
+  return n?redCal(cal.reduce((s,r)=>s+r.cal,0)/n):null;
+}
+// Denominador compartido por materia en el grupo para un periodo
+function maxNPorMateria(periodo){
+  const counts={};
+  evaluaciones.filter(r=>r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number').forEach(ev=>{
+    const mat=getMateriaDeEval(ev);if(!mat)return;
+    if(!counts[mat])counts[mat]={};
+    counts[mat][ev.alumno]=(counts[mat][ev.alumno]||0)+1;
+  });
+  const res={};
+  Object.keys(counts).forEach(mat=>{res[mat]=Math.max(0,...Object.values(counts[mat]));});
+  return res;
+}
+
 // T2/T7: Template constants — module scope, templateKey field for identity
 const TEMPLATES_ORGANIZACION=[
   {key:'guardia_semanal',nombre:'Guardia semanal',tipo:'rol',temporalidad:'semanal',rotacionManual:true},
@@ -3197,6 +3224,7 @@ window.renderModoEval=function(){
   const _ptsT_={si:1,inc:1,no:1};
   const maxTarN=ALUMNOS.reduce((m,a)=>Math.max(m,tareasData.filter(r=>r.alumno===a.id&&periodoDeFecha(r.fecha)===periodo&&r.estado in _ptsT_).length),0);
   const maxActN=ALUMNOS.reduce((m,a)=>Math.max(m,evaluaciones.filter(r=>r.alumno===a.id&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number').length),0);
+  const maxMP=maxNPorMateria(periodo);
   const cel=(p,txt)=>p&&p.val!==null?`<span style="font-family:var(--font-mono);font-weight:700;color:${calColor(p.val)}">${p.val}</span><span class="me-sub">${txt}</span>`:'<span style="color:var(--muted)">—</span>'+(p&&p.pend?`<span class="me-sub">${p.pend} pend.</span>`:'');
   let html=`<table class="big-table me-tabla"><thead><tr><th>#</th><th>Alumno</th><th>Asistencia</th><th>Tareas</th><th>Actividades</th><th>Provisional</th><th></th></tr></thead><tbody>`;
   let last=null,i=0;
@@ -3205,31 +3233,45 @@ window.renderModoEval=function(){
     if(multi&&a.grado!==last){html+=filaGrado(a.grado,7);last=a.grado;}
     const r=calcEvalAlumno(a.id,periodo,pesos,maxTarN,maxActN);
     _modoEvalRes[a.id]=r;
+    // Desglose por materia para esta fila
+    const materiasConDatos=Object.keys(maxMP).filter(mat=>maxMP[mat]>0);
+    const desgloseHTML=materiasConDatos.map(mat=>{
+      const v=actPorMateria(a.id,periodo,mat,maxMP[mat]);
+      const label=mat.replace('Lenguajes / ','').replace(' Básico','').replace('Biología / Ciencias de la Vida','Biología').replace('Física y Química','Fís/Quím').replace('Formación Cívica y Ética','F.C.E.');
+      return `<span style="white-space:nowrap"><span style="font-size:10px;color:var(--muted)">${esc(label)}</span> <span style="font-family:var(--font-mono);font-weight:700;font-size:12px;color:${calColor(v??0)}">${v??'0'}</span></span>`;
+    }).join('<span style="color:var(--border);margin:0 4px">·</span>');
     html+=`<tr><td>${++i}</td><td style="font-weight:600">${esc(fmtNombre(a.n))}</td>
       <td>${cel(r.asist,r.asist?`${r.asist.pct}% · ${r.asist.faltas} falta${r.asist.faltas!==1?'s':''}`:'')}</td>
       <td>${cel(r.tareas,r.tareas?`${r.tareas.si}/${r.tareas.n} entregadas`:'')}</td>
       <td>${cel(r.act,r.act?`${r.act.n} calif.${r.act.pend?` · ${r.act.pend} pend.`:''}`:'')}</td>
       <td><span class="me-prov" style="color:${calColor(r.prov)}">${r.prov??'—'}${r.prov!==null&&r.incompleto?'*':''}</span></td>
       <td>${r.prov!==null?`<button class="btn btn-sm" onclick="pasarABoleta('${a.id}')" title="Precargar en la captura de boleta">→ Boleta</button>`:''}</td></tr>`;
+    if(desgloseHTML){
+      html+=`<tr><td colspan="7" style="padding:4px 12px 8px 44px;background:var(--surface2);font-size:12px"><span style="font-size:10px;font-weight:700;color:var(--muted);margin-right:8px;text-transform:uppercase;letter-spacing:.04em">Por materia</span>${desgloseHTML}</td></tr>`;
+    }
   });
   cont.innerHTML=html+'</tbody></table>';
 };
-// Precarga la calificación provisional en las asignaturas vacías de la boleta del alumno (no guarda)
+// Precarga la calificación provisional por materia en las asignaturas vacías de la boleta (no guarda)
 window.pasarABoleta=function(alumnoId){
   const r=_modoEvalRes[alumnoId];if(!r||r.prov===null)return;
   const periodo=document.getElementById('me-periodo').value;
   document.getElementById('eval-periodo').value=periodo;
   document.getElementById('eval-alumno-sel').value=alumnoId;
   renderEvalBoleta();
+  const maxMP=maxNPorMateria(periodo);
   let n=0;
   (evalBoletaData.asigs||[]).forEach(asig=>{
     if(evalBoletaData.cals[asig]!==undefined)return;
-    evalBoletaData.cals[asig]=r.prov;
-    pintarCal(document.getElementById('bc-'+asig.replace(/\s/g,'_')),r.prov);
+    const mat=ASIG_A_MATERIA[asig];
+    // Si hay actividades registradas para esta materia → usarlas; si no → provisional global
+    const val=mat?( actPorMateria(alumnoId,periodo,mat,maxMP[mat]||0)??r.prov ):r.prov;
+    evalBoletaData.cals[asig]=val;
+    pintarCal(document.getElementById('bc-'+asig.replace(/\s/g,'_')),val);
     n++;
   });
   document.getElementById('eval-boleta-card').scrollIntoView({behavior:'smooth',block:'start'});
-  toast(n?`${r.prov} precargado en ${n} asignatura${n!==1?'s':''} · revisa y da Guardar`:'La boleta ya tenía calificaciones; no se cambió nada');
+  toast(n?`Provisional precargado en ${n} asignatura${n!==1?'s':''} por materia · revisa y da Guardar`:'La boleta ya tenía calificaciones; no se cambió nada');
 };
 window.imprimirModoEval=function(){
   const periodo=document.getElementById('me-periodo').value,pesos=getPesosEval();
