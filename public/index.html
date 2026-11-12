@@ -281,6 +281,7 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.6px;font-weight:600;font-family:var(--font)}
 select,input[type=date],input[type=text],input[type=number]{font-size:14px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--rs);background:rgba(255,255,255,0.80);color:var(--text);height:42px;outline:none;transition:border .15s,background .15s;font-family:var(--font)}
 select:focus,input:focus{border-color:var(--accent);background:#fff}
+.hdr-sel{height:34px;font-size:12.5px;padding:0 8px;min-width:max-content}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
 .btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:var(--rs);background:rgba(255,255,255,0.80);color:var(--text);font-size:13.5px;cursor:pointer;height:42px;transition:background .18s cubic-bezier(.4,0,.2,1),border-color .18s cubic-bezier(.4,0,.2,1),box-shadow .18s cubic-bezier(.4,0,.2,1),transform .15s cubic-bezier(.4,0,.2,1);font-family:var(--font);font-weight:500}
 .btn:hover{background:rgba(255,255,255,0.92);border-color:rgba(32,75,58,0.28)}
@@ -1115,7 +1116,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <!-- Menu header -->
     <div style="padding:24px 20px 16px;background:var(--accent);flex-shrink:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-family:var(--font-display);font-weight:800;font-size:16px;color:#fff;letter-spacing:1px">DOCENTE<span style="opacity:.7">APP</span></span>
+        <span style="font-family:var(--font-display);font-weight:800;font-size:16px;color:#fff;letter-spacing:3px">GIS</span>
         <button onclick="cerrarMenu()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
       <div id="menu-escuela-nombre" style="font-family:var(--font-display);font-size:15px;font-weight:700;color:#fff;margin-bottom:3px"></div>
@@ -1719,7 +1720,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:.75rem">
         <p class="sec-title" style="margin:0">Concentrado</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <select id="conc-bimestre" onchange="renderConcentrado()" style="height:34px">
+          <select id="conc-bimestre" onchange="renderConcentrado()" class="hdr-sel">
             <option value="todo">Todos los periodos</option>
             <option value="P1">1er Periodo</option>
             <option value="P2">2do Periodo</option>
@@ -1746,7 +1747,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
         <p class="sec-title" style="margin:0">Cumpleaños del grupo</p>
         <div style="display:flex;gap:8px">
-          <select id="cumple-mes" onchange="renderCumpleanos()" style="height:34px">
+          <select id="cumple-mes" onchange="renderCumpleanos()" class="hdr-sel">
             <option value="">Todos los meses</option>
             <option value="1">Enero</option><option value="2">Febrero</option>
             <option value="3">Marzo</option><option value="4">Abril</option>
