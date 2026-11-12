@@ -3151,8 +3151,8 @@ window.toggleModoEval=function(){
   }
 };
 // Desglose de un alumno en un periodo; cada parte es null si no hay registros
-// maxTarN: total de tareas registradas en el grupo para el periodo (denominador compartido)
-function calcEvalAlumno(alumnoId,periodo,pesos,maxTarN=0){
+// maxTarN/maxActN: máximo registrado en el grupo → denominador compartido; faltantes = 0
+function calcEvalAlumno(alumnoId,periodo,pesos,maxTarN=0,maxActN=0){
   const asis=asistencias.filter(r=>r.alumno===alumnoId&&periodoDeFecha(r.fecha)===periodo);
   // Justificadas (J) no cuentan a favor ni en contra
   const asisCont=asis.filter(r=>r.estado!=='J');
@@ -3169,7 +3169,9 @@ function calcEvalAlumno(alumnoId,periodo,pesos,maxTarN=0){
 
   const evs=evaluaciones.filter(r=>r.alumno===alumnoId&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico');
   const cal=evs.filter(r=>!r.pendiente&&typeof r.cal==='number');
-  const act=cal.length?{val:redCal(cal.reduce((s,r)=>s+r.cal,0)/cal.length),raw:cal.reduce((s,r)=>s+r.cal,0)/cal.length,n:cal.length,pend:evs.length-cal.length}:(evs.length?{val:null,n:0,pend:evs.length}:null);
+  const actN=Math.max(cal.length,maxActN);
+  const actSum=cal.reduce((s,r)=>s+r.cal,0);
+  const act=actN?{val:redCal(actSum/actN),raw:actSum/actN,n:actN,pend:evs.length-cal.length}:(evs.length?{val:null,n:0,pend:evs.length}:null);
 
   // Si una parte no tiene datos, su peso se reparte entre las que sí tienen
   const partes=[[asist,pesos.asist],[tareas,pesos.tareas],[act,pesos.act]].filter(([p,w])=>p&&p.val!==null&&w>0);
@@ -3194,13 +3196,14 @@ window.renderModoEval=function(){
   _modoEvalRes={};
   const _ptsT_={si:1,inc:1,no:1};
   const maxTarN=ALUMNOS.reduce((m,a)=>Math.max(m,tareasData.filter(r=>r.alumno===a.id&&periodoDeFecha(r.fecha)===periodo&&r.estado in _ptsT_).length),0);
+  const maxActN=ALUMNOS.reduce((m,a)=>Math.max(m,evaluaciones.filter(r=>r.alumno===a.id&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number').length),0);
   const cel=(p,txt)=>p&&p.val!==null?`<span style="font-family:var(--font-mono);font-weight:700;color:${calColor(p.val)}">${p.val}</span><span class="me-sub">${txt}</span>`:'<span style="color:var(--muted)">—</span>'+(p&&p.pend?`<span class="me-sub">${p.pend} pend.</span>`:'');
   let html=`<table class="big-table me-tabla"><thead><tr><th>#</th><th>Alumno</th><th>Asistencia</th><th>Tareas</th><th>Actividades</th><th>Provisional</th><th></th></tr></thead><tbody>`;
   let last=null,i=0;
   const multi=new Set(ALUMNOS.map(a=>a.grado||'')).size>1;
   ALUMNOS.forEach(a=>{
     if(multi&&a.grado!==last){html+=filaGrado(a.grado,7);last=a.grado;}
-    const r=calcEvalAlumno(a.id,periodo,pesos,maxTarN);
+    const r=calcEvalAlumno(a.id,periodo,pesos,maxTarN,maxActN);
     _modoEvalRes[a.id]=r;
     html+=`<tr><td>${++i}</td><td style="font-weight:600">${esc(fmtNombre(a.n))}</td>
       <td>${cel(r.asist,r.asist?`${r.asist.pct}% · ${r.asist.faltas} falta${r.asist.faltas!==1?'s':''}`:'')}</td>
@@ -3233,10 +3236,11 @@ window.imprimirModoEval=function(){
   const v=p=>p&&p.val!==null?p.val:'—';
   const _ptsT2_={si:1,inc:1,no:1};
   const maxTarN2=ALUMNOS.reduce((m,a)=>Math.max(m,tareasData.filter(r=>r.alumno===a.id&&periodoDeFecha(r.fecha)===periodo&&r.estado in _ptsT2_).length),0);
+  const maxActN2=ALUMNOS.reduce((m,a)=>Math.max(m,evaluaciones.filter(r=>r.alumno===a.id&&r.campo===periodo&&r.tipo!=='boleta'&&r.tipo!=='diagnostico'&&!r.pendiente&&typeof r.cal==='number').length),0);
   let html=`<p style="font-size:11px">Ponderación: asistencia ${pesos.asist}% · tareas ${pesos.tareas}% · actividades ${pesos.act}%. Calificación provisional calculada al ${fmt(today())}.</p>
     <table><thead><tr><th>#</th><th>Alumno</th><th>Grado</th><th style="text-align:center">Asist.</th><th style="text-align:center">Tareas</th><th style="text-align:center">Activ.</th><th style="text-align:center">Provisional</th></tr></thead><tbody>`;
   ALUMNOS.forEach((a,i)=>{
-    const r=calcEvalAlumno(a.id,periodo,pesos,maxTarN2);
+    const r=calcEvalAlumno(a.id,periodo,pesos,maxTarN2,maxActN2);
     html+=`<tr><td>${i+1}</td><td style="font-weight:600">${esc(fmtNombre(a.n))}</td><td>${esc(a.grado||'')}</td>
       <td style="text-align:center">${v(r.asist)}${r.asist?` (${r.asist.pct}%)`:''}</td><td style="text-align:center">${v(r.tareas)}</td><td style="text-align:center">${v(r.act)}</td>
       <td style="text-align:center;font-weight:700">${r.prov??'—'}${r.prov!==null&&r.incompleto?'*':''}</td></tr>`;
