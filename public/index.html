@@ -5940,6 +5940,14 @@ function initPeriodoActivoSel(){
   if(!sel)return;
   const p=_periodoActivoEfectivo();
   sel.value=p;
+  // If a period was explicitly saved, cascade to subordinate selectors and re-render
+  if(periodoActivo){
+    window.ptosBimestre=p;
+    ['campo-eval','eval-periodo','me-periodo','pts-bimestre-sel'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.value=p;
+    });
+    renderModoEval();renderRankingPuntos();
+  }
 }
 window.cambiarPeriodoActivo=function(p){
   periodoActivo=p;
