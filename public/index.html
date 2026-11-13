@@ -280,9 +280,11 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 
 label{font-size:11px;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.6px;font-weight:600;font-family:var(--font)}
 select,input[type=date],input[type=text],input[type=number]{font-size:14px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--rs);background:rgba(255,255,255,0.80);color:var(--text);height:42px;outline:none;transition:border .15s,background .15s;font-family:var(--font)}
+select{padding-right:2.5rem}
 select:focus,input:focus{border-color:var(--accent);background:#fff}
-.hdr-sel{height:34px;font-size:12.5px;padding:0 8px;min-width:max-content}
+.hdr-sel{height:34px;font-size:12.5px;padding:0 1.5rem 0 8px;min-width:max-content}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.row div select,.row div input[type=text],.row div input[type=date]{width:100%}
 .btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:var(--rs);background:rgba(255,255,255,0.80);color:var(--text);font-size:13.5px;cursor:pointer;height:42px;transition:background .18s cubic-bezier(.4,0,.2,1),border-color .18s cubic-bezier(.4,0,.2,1),box-shadow .18s cubic-bezier(.4,0,.2,1),transform .15s cubic-bezier(.4,0,.2,1);font-family:var(--font);font-weight:500}
 .btn:hover{background:rgba(255,255,255,0.92);border-color:rgba(32,75,58,0.28)}
 .btn-save{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(32,75,58,0.28)}
@@ -815,7 +817,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   .filtros{flex-direction:column;gap:8px}
   .filtros>div{width:100%}
   .filtros select,.filtros input[type=date],.filtros input[type=text]{width:100%}
-  .row>div{flex:1 1 140px}
+  .row>div{flex:1 1 160px}
 
   /* Subtabs scrollable */
   .subtabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%}
@@ -1184,7 +1186,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <button class="grupo-pill" id="gp-2" onclick="cambiarGrupo('2°')">2°</button>
     <button class="grupo-pill" id="gp-3" onclick="cambiarGrupo('3°')">3°</button>
     <div style="flex:1"></div>
-    <select id="periodo-activo-sel" title="Período activo" onchange="cambiarPeriodoActivo(this.value)" style="height:26px;font-size:11px;font-weight:700;border:1.5px solid var(--accent);border-radius:999px;padding:0 10px 0 8px;background:var(--accent-light);color:var(--accent);font-family:var(--font);cursor:pointer;flex-shrink:0">
+    <select id="periodo-activo-sel" title="Período activo" onchange="cambiarPeriodoActivo(this.value)" style="height:30px;font-size:11px;font-weight:700;border:1.5px solid var(--accent);border-radius:999px;padding:0 1.75rem 0 10px;background:var(--accent-light);color:var(--accent);font-family:var(--font);cursor:pointer;flex-shrink:0;min-width:max-content">
       <option value="P1">📍 1er Período</option>
       <option value="P2">📍 2do Período</option>
       <option value="P3">📍 3er Período</option>
@@ -1441,7 +1443,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           </div>
           <div style="flex:1"><label>Actividad / Evidencia</label><input type="text" id="nombre-eval" placeholder="Ej: Examen de Español" style="width:100%"></div>
           <div style="min-width:160px"><label>Materia</label>
-            <select id="eval-materia" style="width:100%;height:34px;font-size:13px;padding:0 8px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:var(--font)">
+            <select id="eval-materia" style="width:100%;height:34px;font-size:13px;padding:0 1.75rem 0 8px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:var(--font)">
               <option value="">Sin clasificar</option>
               <option value="Lenguajes / Español">Español</option>
               <option value="Matemáticas">Matemáticas</option>
@@ -1535,14 +1537,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
           <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Periodo:</span>
-          <select id="pts-bimestre-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 8px;font-family:var(--font)" onchange="window.ptosBimestre=this.value;renderRankingPuntos()">
+          <select id="pts-bimestre-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 1.75rem 0 8px;font-family:var(--font)" onchange="window.ptosBimestre=this.value;renderRankingPuntos()">
             <option value="">Todo el ciclo</option>
             <option value="P1">1er Periodo (sep–dic)</option>
             <option value="P2">2do Periodo (ene–mar)</option>
             <option value="P3">3er Periodo (abr–jun)</option>
           </select>
           <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-left:8px">Ver:</span>
-          <select id="pts-tipo-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 8px;font-family:var(--font)" onchange="renderRankingPuntos()">
+          <select id="pts-tipo-sel" style="height:30px;font-size:12px;border:1.5px solid var(--border);border-radius:var(--rs);padding:0 1.75rem 0 8px;font-family:var(--font)" onchange="renderRankingPuntos()">
             <option value="">Todos</option>
             <option value="trimestral">Solo trimestral</option>
             <option value="especial">Solo sesión especial</option>
