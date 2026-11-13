@@ -311,6 +311,9 @@ select:focus,input:focus{border-color:var(--accent);background:#fff}
 .lista-card-nombre{font-size:14px;font-weight:600;color:var(--text)}
 .lista-card-meta{font-size:11.5px;color:var(--muted)}
 .table-wrap{overflow-x:auto;margin-top:8px;border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
+.tabla-scroll-wrap{position:relative}
+@media(max-width:640px){.tabla-scroll-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(255,255,255,.9));pointer-events:none;border-radius:0 var(--r) var(--r) 0}.scroll-hint{text-align:center;font-size:10.5px;color:var(--muted);padding:4px 0;font-weight:700;letter-spacing:.3px}}
+@media(min-width:641px){.scroll-hint{display:none}}
 table{width:100%;border-collapse:collapse;font-size:14px;min-width:380px;background:rgba(255,255,255,0.84)}
 th{text-align:left;padding:11px 14px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;background:rgba(32,75,58,0.05)}
 td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;font-size:14px}
@@ -7266,7 +7269,7 @@ window.renderConcentrado=function(){
       const asigs=getAsignaturas(gNum);
       html+=`<div style="margin-bottom:2rem">
         <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado · ${als.length} alumnos</div>
-        <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
+        <div class="tabla-scroll-wrap"><div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
         <table style="min-width:900px;font-size:14px"><thead><tr style="background:var(--surface2)">
           <th style="min-width:180px;font-size:13px">Alumno</th>
           ${asigs.map(a=>`<th style="text-align:center;min-width:80px;font-size:11px;padding:10px 6px">${a}</th>`).join('')}
@@ -7304,7 +7307,7 @@ window.renderConcentrado=function(){
           <td style="text-align:center;padding:12px 8px"><span style="background:${avg>=7?'#dcfce7':avg>=6?'#fef3c7':avg!==null?'#fee2e2':'#f5f5f5'};color:${nColor};padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700">${nivel}</span></td>
         </tr>`;
       });
-      html+=`</tbody></table></div></div>`;
+      html+=`</tbody></table></div><div class="scroll-hint">↔ desliza</div></div></div>`;
     });
     if(!html)html=`<div class="empty">Sin calificaciones de boleta.<br><span style="font-size:12px">Ve a Evaluación → Captura de calificaciones.</span></div>`;
     document.getElementById('concentrado-tabla').innerHTML=html;
@@ -7321,7 +7324,7 @@ window.renderConcentrado=function(){
       if(!als.length)return;
       html+=`<div style="margin-bottom:2rem">
         <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado</div>
-        <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
+        <div class="tabla-scroll-wrap"><div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
         <table style="font-size:14px"><thead><tr style="background:var(--surface2)">
           <th style="min-width:180px">Alumno</th>
           ${subtipos.map(s=>`<th style="text-align:center;min-width:90px;font-size:11px">${DIAG_LABELS[s]||s}</th>`).join('')}
@@ -7345,7 +7348,7 @@ window.renderConcentrado=function(){
           <td style="text-align:center"><span style="font-size:18px;font-weight:800;font-family:var(--font-display);color:${nColor}">${avg??'—'}</span></td>
         </tr>`;
       });
-      html+=`</tbody></table></div></div>`;
+      html+=`</tbody></table></div><div class="scroll-hint">↔ desliza</div></div></div>`;
     });
     if(!html||!subtipos.length)html=`<div class="empty">Sin diagnósticos registrados.<br><span style="font-size:12px">Ve a Evaluación → Diagnóstico para capturar resultados.</span></div>`;
     document.getElementById('concentrado-tabla').innerHTML=html;
@@ -7364,7 +7367,7 @@ window.renderConcentrado=function(){
     const actsGrado=actividades.filter(act=>evals2.some(r=>r.nombre===act&&als.find(a=>a.id===r.alumno)));
     html2+=`<div style="margin-bottom:2rem">
       <div style="font-family:var(--font-display);font-weight:800;font-size:15px;color:${gradeColorNum(gNum)};margin-bottom:10px;padding:8px 14px;background:${gradeColorNum(gNum)}14;border-radius:8px;border-left:4px solid ${gradeColorNum(gNum)}">${gNum}° Grado · ${tipoLabel}</div>
-      <div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
+      <div class="tabla-scroll-wrap"><div style="overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--border)">
       <table style="font-size:14px"><thead><tr style="background:var(--surface2)">
         <th style="min-width:180px">Alumno</th>
         ${actsGrado.map(act=>`<th style="text-align:center;min-width:80px;font-size:11px;padding:8px 4px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(act)}">${esc(act.length>12?act.substring(0,12)+'…':act)}</th>`).join('')}
@@ -7388,7 +7391,7 @@ window.renderConcentrado=function(){
         <td style="text-align:center"><span style="font-size:18px;font-weight:800;font-family:var(--font-display);color:${nColor2}">${avg2??'—'}</span></td>
       </tr>`;
     });
-    html2+=`</tbody></table></div></div>`;
+    html2+=`</tbody></table></div><div class="scroll-hint">↔ desliza</div></div></div>`;
   });
   if(!html2||!actividades.length)html2=`<div class="empty">Sin ${tipoLabel.toLowerCase()} registradas.<br><span style="font-size:12px">Ve a Evaluación para capturar datos.</span></div>`;
   document.getElementById('concentrado-tabla').innerHTML=html2;
@@ -7699,11 +7702,13 @@ function renderInicio(){
   const pctA = totalAsis ? Math.round(asistencias.filter(r=>r.estado==='A').length/totalAsis*100) : null;
   const avgE = evaluaciones.length ? Math.round(evaluaciones.reduce((s,r)=>s+r.cal,0)/evaluaciones.length*10)/10 : null;
   const totalPts = puntosData.filter(r=>r.tipo==='pos').reduce((s,r)=>s+(r.valor||0),0);
-  const enRiesgo = ALUMNOS.filter(a=>{
+  const alumnosRiesgo = ALUMNOS.filter(a=>{
     const r=asistencias.filter(x=>x.alumno===a.id);
     const p=r.length?Math.round(r.filter(x=>x.estado==='A').length/r.length*100):null;
     return p!==null&&p<70;
-  }).length;
+  }).map(a=>{const r=asistencias.filter(x=>x.alumno===a.id);return {...a,pct:Math.round(r.filter(x=>x.estado==='A').length/r.length*100)};}).sort((a,b)=>a.pct-b.pct);
+  const enRiesgo = alumnosRiesgo.length;
+  const riesgoText=(()=>{if(!enRiesgo)return'';const a0=alumnosRiesgo[0],a1=alumnosRiesgo[1];if(enRiesgo===1)return primerNombre(a0.n)+' ('+a0.pct+'%) necesita atención';if(enRiesgo===2)return primerNombre(a0.n)+' ('+a0.pct+'%) y '+primerNombre(a1.n)+' ('+a1.pct+'%) necesitan atención';return primerNombre(a0.n)+' ('+a0.pct+'%), '+primerNombre(a1.n)+' ('+a1.pct+'%) y '+(enRiesgo-2)+' más necesitan atención';})();
 
   const umbralNegInicio=parseInt(localStorage.getItem('pts_umbral_neg'))||3;
   const alumnosEnAlertaNeg=ALUMNOS.filter(a=>{
@@ -7747,7 +7752,7 @@ function renderInicio(){
     <!-- Alertas -->
     ${enRiesgo>0?`<div style="background:rgba(255,244,237,.95);border:1.5px solid rgba(32,75,58,0.25);border-radius:var(--r);padding:12px 14px;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;cursor:pointer;backdrop-filter:blur(8px)" onclick="menuNav('estadisticas')">
       <span style="font-size:20px">⚠️</span>
-      <div><div style="font-weight:700;color:var(--accent);font-size:13.5px">${enRiesgo} alumno${enRiesgo>1?'s':''} necesita${enRiesgo>1?'n':''} atención</div>
+      <div><div style="font-weight:700;color:var(--accent);font-size:13.5px">${riesgoText}</div>
       <div style="font-size:11px;color:var(--muted)">Asistencia menor al 70% · Ver →</div></div>
     </div>`:''}
     ${alumnosEnAlertaNeg.length>0?`<div style="background:rgba(254,242,242,.95);border:1.5px solid rgba(214,69,69,0.3);border-radius:var(--r);padding:12px 14px;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;cursor:pointer;backdrop-filter:blur(8px)" onclick="menuNav('puntos')">
@@ -10223,7 +10228,7 @@ function renderGestionOverview(){
         const tot=(MAPA_MAESTRO[m]||[]).length;
         const imp=contenidosData.filter(c=>c.materia===m&&c.impartido).length;
         const pct=tot?Math.round(imp/tot*100):0;
-        const color=pct>=75?'var(--green)':pct>=40?'var(--amber)':'var(--accent)';
+        const color=pct>=70?'var(--green)':pct>=30?'var(--amber)':'var(--red)';
         return '<div class="gp-card" onclick="gpAbrirDetalle(\''+esc(m)+'\')">'
           +'<div style="font-size:28px;margin-bottom:8px;line-height:1">'+(GP_EMOJI[m]||'📖')+'</div>'
           +'<div class="gp-card-nombre">'+esc(m)+'</div>'
