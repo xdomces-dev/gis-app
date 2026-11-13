@@ -158,8 +158,9 @@ h1,h2,h3{font-family:var(--font-display);letter-spacing:-.01em}
 #nav-back-btn.can-go-back{opacity:1;pointer-events:auto}
 #nav-back-btn.can-go-back:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
 #nav-back-btn:active{transform:scale(0.93)}
-.nav-brand{font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--text);padding:.85rem .85rem .85rem 0;border-right:1px solid var(--border);margin-right:.85rem;white-space:nowrap;cursor:pointer;max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.nav-brand{font-family:var(--font-display);font-weight:800;font-size:13px;color:var(--text);padding:.85rem .85rem .85rem 0;border-right:1px solid var(--border);margin-right:.85rem;white-space:nowrap;cursor:pointer;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 .nav-brand span{color:var(--accent)}
+@media(max-width:480px){.nav-brand{max-width:85px;font-size:12px}.nav-brand span{display:none}}
 .nav-tabs{display:flex;flex:1;overflow-x:auto;gap:2px;padding:6px 0}
 .nav-tabs::-webkit-scrollbar{display:none}
 .ntab{padding:6px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--muted);border-radius:var(--rs);transition:all .18s cubic-bezier(.4,0,.2,1);font-family:var(--font);white-space:nowrap;font-weight:500}
@@ -6968,7 +6969,7 @@ window.renderEstadisticas = function(){
   }).sort((a,b)=>b.val-a.val);
 
   document.getElementById('stats-asist-chart').innerHTML=datosAsist.length
-    ?svgBarrasH(datosAsist,d=>d.val>=80?'#3ecf8e':d.val>=60?'#f0b429':'#f06868',d=>`${d.val}% (${d.fal} faltas)`)
+    ?svgBarrasH(datosAsist,d=>d.val>=80?'#3ecf8e':d.val>=60?'#f0b429':'#f06868',d=>`${d.val}% (${d.fal} falta${d.fal!==1?'s':''})`)
     :'<div class="empty">Sin registros de asistencia</div>';
 
   // ---- 2. CALIFICACIONES POR ASIGNATURA ----
@@ -10087,7 +10088,7 @@ const GP_EMOJI={
   'Historia':'🏛️',
   'Geografía':'🗺️',
   'Formación Cívica y Ética':'⚖️',
-  'Inglés Básico':'🇬🇧',
+  'Inglés Básico':'🌐',
 };
 
 const GP_CAMPO={
