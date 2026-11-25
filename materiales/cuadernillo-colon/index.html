@@ -375,7 +375,14 @@ function confirmar(titulo, texto, si, onYes){
     </div>`;
   document.body.appendChild(bg);
   $("mNo").focus();
-  const close=()=>bg.remove();
+  const close=()=>{ bg.remove(); document.removeEventListener("keydown",onKey); $("btnCheck").focus(); };
+  // Escape cierra; Tab se queda dentro de la ventana
+  const onKey=e=>{
+    if(e.key==="Escape"){ e.preventDefault(); close(); }
+    else if(e.key==="Tab"){ const f=[$("mNo"),$("mYes")], i=f.indexOf(document.activeElement);
+      e.preventDefault(); f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus(); }
+  };
+  document.addEventListener("keydown",onKey);
   $("mNo").onclick=close;
   bg.addEventListener("click",e=>{ if(e.target===bg) close(); });
   $("mYes").onclick=()=>{ close(); onYes(); };

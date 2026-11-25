@@ -587,7 +587,10 @@ function confetti(colors, n=160, loop=false){
   };
   CF.raf=requestAnimationFrame(step);
 }
-function stopConfetti(){ cancelAnimationFrame(CF.raf); CF.parts=[]; const c=$("confetti"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
+/* Efectos programados (fanfarria, confeti, sirena): se cancelan al deshacer o empezar de nuevo */
+let TIMERS=[];
+function later(fn,ms){ TIMERS.push(setTimeout(fn,ms)); }
+function stopConfetti(){ TIMERS.forEach(clearTimeout); TIMERS=[]; cancelAnimationFrame(CF.raf); CF.parts=[]; const c=$("confetti"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
 const TEAMCOL=[["#2f7bf6","#9cc4ff","#ffffff","#ffd84a"],["#ff7a1a","#ffc08a","#ffffff","#ffd84a"]];
 function setSiren(){
   const b=document.body;
@@ -666,7 +669,7 @@ function pickBuzz(t){
 function addStrike(){
   const r=G.round; r.strikes++; r.turn=(r.turn+1)%3; ui.newX=r.strikes;
   bigX(r.strikes); SFX.bad();
-  if(r.strikes>=3){ G.phase="steal"; setTimeout(SFX.steal,700); }
+  if(r.strikes>=3){ G.phase="steal"; later(SFX.steal,700); }
 }
 function revealPlay(i){
   const r=G.round, q=Q(r.qi);
@@ -680,7 +683,7 @@ function endRound(w, how){
   r.winner=w; r.how=how; r.gained=r.bank;
   G.teams[w].score+=r.bank;
   G.phase="roundEnd";
-  setTimeout(()=>{ SFX.win(); confetti(TEAMCOL[w]); },500);
+  later(()=>{ SFX.win(); confetti(TEAMCOL[w]); },500);
 }
 function revealMissing(cells, i){
   if(cells[i]) return;
@@ -720,7 +723,7 @@ function submitAnswer(){
     const t=G.tie, i=matchAnswer(text,Q(t.qi));
     if(i<0){ ui.msg={k:"nomatch",t:"Sin coincidencia"}; render(true); return; }
     act(()=>{ t.cells[i]=1; t.winAns=i; SFX.ok(); G.teams[t.answering].score+=Q(t.qi).r[i][1]; G.winner=t.answering; G.phase="tieWon";
-      ui.flip=[i]; setTimeout(()=>{ SFX.win(); confetti(TEAMCOL[t.answering]); },500); });
+      ui.flip=[i]; later(()=>{ SFX.win(); confetti(TEAMCOL[t.answering]); },500); });
   }
 }
 function strikeNow(){
@@ -738,6 +741,7 @@ function strikeNow(){
    =================================================================== */
 function render(keepText){
   const ph=G.phase, app=$("app");
+  if(ph!=="final") ui.finalFx=false;
   let h=topBar();
   if(ph==="setup") h+=setupView();
   else if(ph==="review") h+=reviewView();
@@ -799,7 +803,7 @@ function reviewView(){
 function scoresHTML(active){
   const T=G.teams;
   const bank = G.phase.startsWith("tie") ? "—" : `<span id="bankN">${G.round?G.round.bank:0}</span>`;
-  const teamBox=(t)=>`<div class="team t${t} ${active===t?"on":""}"><div><span class="tag">${active===t?(G.phase==="roundEnd"?"🏆 Gana la bolsa":"▶ Tiene el turno"):(t?"Equipo naranja":"Equipo azul")}</span><span class="nm display">${esc(T[t].name)}</span></div><b class="pts num" id="pts${t}">${T[t].score}</b></div>`;
+  const teamBox=(t)=>`<div class="team t${t} ${active===t?"on":""}"><div><span class="tag">${active===t?(G.phase==="roundEnd"?"🏆 Gana la bolsa":G.phase==="tieWon"?"🏆 Gana el desempate":"▶ Tiene el turno"):(t?"Equipo naranja":"Equipo azul")}</span><span class="nm display">${esc(T[t].name)}</span></div><b class="pts num" id="pts${t}">${T[t].score}</b></div>`;
   return `<div class="scores">${teamBox(0)}<div class="bank" id="bankBox"><small>Bolsa</small><b class="num">${bank}</b></div>${teamBox(1)}</div>`;
 }
 /* casillas: si "canReveal", las ocultas se pueden tocar para mostrarlas */
@@ -916,7 +920,7 @@ function tieView(){
 function finalView(){
   const T=G.teams, w=G.winner;
   const tie = G.tie && G.tie.winAns!=null;
-  setTimeout(()=>{ confetti(TEAMCOL[w].concat(["#ff2e88","#18d3c2","#9be22d"]),220,true); },300);
+  if(!ui.finalFx){ ui.finalFx=true; later(()=>{ confetti(TEAMCOL[w].concat(["#ff2e88","#18d3c2","#9be22d"]),220,true); },300); }
   return `<div class="final">
     <h1 class="display">¡Tenemos ganador!</h1>
     <div class="wn t${w} display">🏆 ${esc(T[w].name)}</div>
