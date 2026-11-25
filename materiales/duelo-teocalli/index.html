@@ -6,6 +6,8 @@
 <title>100 estudiantes dijeron · Duelo Teocalli</title>
 <style>
 :root{
+  /* colores del tema activo (los cambia applyTheme) */
+  --ta:#ff2e88; --tb:#ffb000; --tc:#18d3c2; --bg1:#3a2aa8; --bg2:#5a1b8f; --c1:#5d3bd6; --c2:#2c1490; --cb:#8f74ff;
   --night:#140b3d;      /* cielo del estudio */
   --night2:#24125e;
   --violet:#3b1f8f;
@@ -33,8 +35,10 @@ input,textarea{font:inherit}
 
 /* ================= ESCENARIO (fondo animado) ================= */
 #stage{position:fixed;inset:0;z-index:0;overflow:hidden;
-  background:radial-gradient(ellipse 120% 70% at 50% 110%,#5a1b8f 0%,transparent 60%),
-             radial-gradient(ellipse 80% 60% at 50% -20%,#3a2aa8 0%,transparent 65%),var(--night)}
+  background:radial-gradient(ellipse 120% 70% at 50% 110%,var(--bg2) 0%,transparent 60%),
+             radial-gradient(ellipse 80% 60% at 50% -20%,var(--bg1) 0%,transparent 65%),var(--night);transition:background .6s}
+#motifs span{position:absolute;bottom:-12vh;opacity:.16;filter:saturate(.8);animation:drift linear infinite}
+@keyframes drift{from{transform:translateY(0) rotate(-10deg)}to{transform:translateY(-130vh) rotate(14deg)}}
 .beam{position:absolute;bottom:-20vh;width:40vw;height:150vh;transform-origin:50% 100%;
   background:conic-gradient(from 180deg at 50% 100%,transparent 0deg,rgba(255,216,74,.14) 8deg,rgba(255,255,255,.05) 14deg,transparent 22deg);
   filter:blur(6px);mix-blend-mode:screen}
@@ -60,8 +64,8 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
   clip-path:polygon(0 0,100% 0,100% 78%,90% 100%,80% 78%,70% 100%,60% 78%,50% 100%,40% 78%,30% 100%,20% 78%,10% 100%,0 78%);
   -webkit-mask:radial-gradient(circle at 25% 38%,transparent 9%,#000 10%) ,radial-gradient(circle at 75% 38%,transparent 9%,#000 10%);
   -webkit-mask-composite:source-in;mask-composite:intersect;opacity:.92}
-.flag:nth-child(5n+1){background:var(--pink)} .flag:nth-child(5n+2){background:var(--marigold)}
-.flag:nth-child(5n+3){background:var(--teal)} .flag:nth-child(5n+4){background:var(--lime)} .flag:nth-child(5n){background:#b06cff}
+.flag:nth-child(5n+1){background:var(--ta)} .flag:nth-child(5n+2){background:var(--tb)}
+.flag:nth-child(5n+3){background:var(--tc)} .flag:nth-child(5n+4){background:var(--gold)} .flag:nth-child(5n){background:var(--cb)}
 .flag:nth-child(odd){animation-duration:2.4s;animation-delay:-.8s}
 @keyframes sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
 
@@ -71,14 +75,14 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 @keyframes shake{10%,90%{transform:translateX(-4px)}20%,80%{transform:translateX(8px)}30%,50%,70%{transform:translateX(-14px)}40%,60%{transform:translateX(14px)}}
 
 .top{display:flex;align-items:center;gap:1vw}
-.brand{display:flex;align-items:baseline;gap:.8vw;white-space:nowrap}
-.brand .logo{font-size:clamp(18px,1.9vw,38px);color:var(--gold);text-shadow:0 0 18px #ffb00088,0 3px 0 #6a2b00}
+.brand{display:flex;align-items:baseline;gap:.8vw;white-space:nowrap;min-width:0;overflow:hidden}
+.brand .logo{font-size:clamp(16px,1.7vw,36px);color:var(--gold);text-shadow:0 0 18px #ffb00088,0 3px 0 #6a2b00}
 .brand .rd{font-weight:800;color:var(--teal);font-size:clamp(12px,1vw,20px)}
 .tools{margin-left:auto;display:flex;gap:.5vw}
 .tool{background:#ffffff14;color:var(--txt);border:2px solid #ffffff30;border-radius:999px;padding:.5vh .9vw;
   font-weight:700;font-size:clamp(12px,.9vw,18px);white-space:nowrap;backdrop-filter:blur(4px)}
 .tool:hover{border-color:var(--gold);color:var(--gold)}
-.tool:disabled{opacity:.35;cursor:not-allowed}
+.tool:disabled{opacity:.7;cursor:not-allowed;filter:grayscale(1);border-style:dashed}
 
 /* ================= MARCADOR ================= */
 .scores{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2vw;align-items:stretch}
@@ -106,13 +110,13 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
   padding:1vh 1.8vw;text-align:center;font-size:clamp(20px,2.7vw,56px);line-height:1.12;
   box-shadow:0 6px 0 #a35a00,0 12px 30px #0008}
 .q.enter{animation:qin .7s cubic-bezier(.2,1.4,.4,1) both}
-.q .rn{display:block;font-family:"Segoe UI",Arial;font-weight:800;font-size:clamp(11px,1vw,20px);color:var(--pink)}
+.q .rn{display:block;font-family:"Segoe UI",Arial;font-weight:800;font-size:clamp(11px,1vw,20px);color:var(--ta)}
 @keyframes qin{from{transform:translateY(-30px) scale(.94);opacity:0}}
 
 /* ================= TABLERO ================= */
 .main{flex:1;min-height:0;display:grid;grid-template-columns:1.35fr 1fr;gap:1.4vw}
 .boardWrap{position:relative;border-radius:24px;padding:12px;min-height:0;
-  background:linear-gradient(135deg,#ffb000,#ff2e88 50%,#18d3c2);box-shadow:0 0 40px #ff2e8866}
+  background:linear-gradient(135deg,var(--tb),var(--ta) 50%,var(--tc));box-shadow:0 0 40px color-mix(in srgb,var(--ta) 45%,transparent)}
 /* foquitos de marquesina que corren */
 .boardWrap::before,.boardWrap::after{content:"";position:absolute;inset:3px;border-radius:21px;pointer-events:none;
   background:radial-gradient(circle,#fffbe0 0 3px,#ffd84a 4px,transparent 6px) 0 0/22px 22px;
@@ -129,7 +133,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 .cell .in{position:relative;width:100%;height:100%;transition:transform .75s cubic-bezier(.3,1.5,.45,1);transform-style:preserve-3d}
 .cell.open .in{transform:rotateX(-180deg)}
 .face{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:0 1.2vw}
-.front{background:linear-gradient(180deg,#5d3bd6,#2c1490);border:3px solid #8f74ff;justify-content:center;box-shadow:inset 0 -6px 0 #0004}
+.front{background:linear-gradient(180deg,var(--c1),var(--c2));border:3px solid var(--cb);justify-content:center;box-shadow:inset 0 -6px 0 #0004}
 .front .n{width:clamp(36px,3.8vw,74px);height:clamp(36px,3.8vw,74px);border-radius:50%;
   background:radial-gradient(circle at 35% 30%,#4a2aa8,#12062e);border:3px solid var(--gold);
   display:flex;align-items:center;justify-content:center;font-size:clamp(22px,2.6vw,52px);color:var(--gold);text-shadow:0 0 10px #ffb000}
@@ -163,13 +167,13 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 .big:active{transform:translateY(4px);box-shadow:0 3px 0 #0008}
 .big.t0{background:linear-gradient(135deg,#4f95ff,var(--blue-d))}
 .big.t1{background:linear-gradient(135deg,#ffa04d,var(--orange-d))}
-.big .ham{display:inline-block;transform-origin:80% 80%;animation:hammer 1.1s ease-in-out infinite}
+.big .ham{display:inline-block;transform-origin:70% 90%;animation:wave 1.1s ease-in-out infinite}
 .big.t1 .ham{animation-delay:-.55s}
-@keyframes hammer{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-40deg)}80%{transform:rotate(12deg)}}
+@keyframes wave{0%,50%,100%{transform:rotate(0)}15%{transform:rotate(-18deg)}30%{transform:rotate(16deg)}}
 .hint{color:var(--muted);text-align:center;font-weight:700;font-size:clamp(12px,1vw,20px);margin:0}
 
 .chars{display:grid;gap:.7vh}
-.ch{border-radius:14px;padding:.7vh .9vw;background:#1a0b47;border:3px solid #3b2a80;opacity:.68;display:flex;align-items:center;gap:.8vw;transition:all .35s}
+.ch{border-radius:14px;padding:.7vh .9vw;background:#1a0b47;border:3px solid #3b2a80;opacity:.75;display:flex;align-items:center;gap:.8vw;transition:all .35s}
 .ch .k{font-size:clamp(11px,.9vw,18px);font-weight:900;color:var(--muted);white-space:nowrap}
 .ch .nm{font-size:clamp(16px,1.8vw,36px);line-height:1.05;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ch .d{font-size:clamp(10px,.8vw,16px);color:var(--muted);font-weight:700;white-space:nowrap}
@@ -251,6 +255,32 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 @keyframes crown{from{transform:rotate(-2deg) scale(1);box-shadow:0 0 20px #ffd84a88}to{transform:rotate(2deg) scale(1.05);box-shadow:0 0 60px #ffd84a}}
 .final .sc{display:flex;gap:3vw;font-size:clamp(22px,2.6vw,52px)}
 
+/* ================= MENÚ DE TEMAS ================= */
+.topics{flex:1;min-height:0;display:flex;flex-direction:column;gap:1.4vh;overflow:auto;padding:0 .2vw}
+.topics .hero p{color:var(--muted)}
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw}
+.topics .hero h1{font-size:clamp(26px,3.6vw,72px)}
+.tema{position:relative;text-align:left;border-radius:22px;padding:1.6vh 1.2vw;color:#fff;overflow:hidden;min-height:0;
+  background:radial-gradient(circle at 85% 10%,var(--k2) 0%,transparent 55%),linear-gradient(150deg,var(--k1),var(--kf) 75%);
+  border:4px solid var(--ka);box-shadow:0 10px 0 #0006,0 0 30px color-mix(in srgb,var(--ka) 35%,transparent);
+  transition:transform .2s, box-shadow .2s;animation:qin .6s cubic-bezier(.2,1.4,.4,1) both;display:flex;flex-direction:column;gap:.5vh}
+.tw:nth-child(2) .tema{animation-delay:.06s}.tw:nth-child(3) .tema{animation-delay:.12s}.tw:nth-child(4) .tema{animation-delay:.18s}.tw:nth-child(5) .tema{animation-delay:.24s}.tw:nth-child(6) .tema{animation-delay:.3s}
+.tema:hover,.tema:focus-visible{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 16px 0 #0006,0 0 46px var(--ka)}
+.tema .ic{font-size:clamp(30px,3.4vw,68px);line-height:1;filter:drop-shadow(0 4px 0 #0006)}
+.tema:hover .ic{animation:wave .9s ease-in-out}
+.tema b{font-size:clamp(16px,1.55vw,32px);line-height:1.05;text-shadow:0 3px 0 #0006}
+.tema .cf{align-self:flex-start;background:#0006;border:2px solid var(--ka);color:var(--ka);border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
+.tema .ds{font-weight:600;font-size:clamp(11px,.9vw,19px);opacity:.95}
+.tema .nq{margin-top:auto;font-weight:900;font-size:clamp(11px,.9vw,18px);color:var(--k2)}
+.tw{position:relative;display:flex}
+.tw>.tema{flex:1}
+.tw .rm{position:absolute;z-index:2;top:1vh;right:.8vw;cursor:pointer;background:#0008;color:#fff;border:2px solid #fff6;border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
+.tema.load{border-style:dashed;background:#ffffff10;align-items:center;justify-content:center;text-align:center;--ka:#ffffff88}
+.tchips{display:flex;gap:1vw;justify-content:center;flex-wrap:wrap}
+.tchip{border-radius:999px;padding:.4vh 1.2vw;font-weight:900;font-size:clamp(13px,1.2vw,24px);border:3px solid #fff6}
+.tchip.t0{background:var(--blue)} .tchip.t1{background:var(--orange)}
+.tema-tag{font-weight:800;color:var(--ta);font-size:clamp(12px,1vw,20px);white-space:nowrap}
+
 /* ================= CUENTA REGRESIVA ================= */
 #count{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle,#3b1f8fee 0%,#0d0526f5 70%)}
@@ -263,7 +293,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 #count small{position:absolute;bottom:12vh;font-weight:900;font-size:clamp(18px,2.2vw,44px);color:var(--teal)}
 @keyframes tick{from{transform:scale(2.4);opacity:0}25%{opacity:1}to{transform:scale(1)}}
 .q.locked{color:#7a63c9;background:linear-gradient(180deg,#efe9ff,#d9ccff)}
-.big:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
+.big:disabled{opacity:.7;cursor:not-allowed;filter:grayscale(1)}
 .go-btn{font-size:clamp(20px,2.3vw,46px)!important;padding:2.2vh 1vw!important;animation:glow .8s ease-in-out infinite alternate}
 @keyframes glow{from{box-shadow:0 4px 0 #a35a00,0 0 0 #ffd84a00}to{box-shadow:0 4px 0 #a35a00,0 0 36px #ffd84a}}
 
@@ -286,7 +316,8 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 </style>
 </head>
 <body>
-<div id="stage"><div class="beam l"></div><div class="beam r"></div><div class="sparks"></div></div>
+<div id="stage"><div class="beam l"></div><div class="beam r"></div><div class="sparks"></div><div id="motifs"></div></div>
+<input type="file" id="fileTema" accept=".json,application/json" class="hidden">
 <div class="picado" aria-hidden="true">
   <i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i>
   <i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i><i class="flag"></i>
@@ -297,210 +328,547 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 
 <script>
 /* ===================================================================
-   BANCO DE PREGUNTAS  ·  EDITA AQUÍ
+   TEMAS Y PREGUNTAS  ·  EDITA AQUÍ
    -------------------------------------------------------------------
-   Cada pregunta: { p: "texto", r: [ [respuesta, puntos, "sinónimos"], … ] }
-   - Exactamente 5 respuestas por pregunta, ordenadas de mayor a menor.
-   - Los puntos de las 5 respuestas deben sumar 100.
-   - "sinónimos": otras formas de decir la misma respuesta, separadas
-     por comas. No hace falta escribir mayúsculas ni acentos.
-   Para usar una encuesta real: cambia los puntos por el número de
-   alumnos (de cada 100) que dieron esa respuesta.
+   Cada tema tiene su propio diseño. Para agregar uno nuevo, copia un
+   bloque { id:..., preguntas:[...] } completo, pégalo antes del "];"
+   final y cambia:
+   - id: palabra corta sin espacios ni acentos (ej. "biologia").
+   - nombre, icono (un emoji), campo (campo formativo) y descripcion.
+   - colores: a, b y c son los acentos (marco del tablero y papel
+     picado); fondo, luz1 y luz2 pintan el escenario; casilla1, casilla2
+     y borde pintan las casillas tapadas.
+   - motivos: emojis que flotan en el fondo.
+   - preguntas: al menos 6 (5 rondas y 1 de desempate). Cada una con
+     5 respuestas que suman 100:
+       ["Respuesta", puntos, "sinónimos separados por comas"]
+   También puedes cargar un tema sin tocar el código desde el menú de
+   temas («Cargar tema .json»). Ver plantilla-tema.json.
    =================================================================== */
-const BANCO = [
- {p:"Menciona algo que compras en la tiendita durante el recreo", r:[
+const TEMAS = [
+ { id:"mexico", nombre:"México y la escuela", icono:"🌮", campo:"De lo humano y lo comunitario",
+   descripcion:"Recreo, comida, fiestas patrias y la vida de todos los días.",
+   colores:{a:"#ff3355", b:"#ffb000", c:"#19c37d", fondo:"#2a0a18", luz1:"#7a1030", luz2:"#0b5a3a", casilla1:"#b3123f", casilla2:"#5c0620", borde:"#ff7a95"},
+   motivos:["🌮","🌶️","🏫","🎒","🪅","🌽"],
+   preguntas:[
+  {p:"Menciona algo que compras en la tiendita durante el recreo", r:[
   ["Papitas",30,"papas, papitas, papas fritas, sabritas, chips, frituras, doritos, ruffles"],
   ["Jugos",25,"jugo, juguito, boing, jumex, del valle, frutsi"],
   ["Dulces",20,"dulce, dulcecitos, chicle, chicles, paleta, paletas, caramelos, gomitas, chocolate, chocolates"],
   ["Galletas",15,"galleta, galletitas, emperador, chokis, marias, principe"],
   ["Agua",10,"botella de agua, agua natural, aguita, agua embotellada"]]},
- {p:"Menciona una caricatura que todo mundo conoce", r:[
-  ["Bob Esponja",30,"bob, esponja, spongebob, bob esponja pantalones cuadrados"],
-  ["Los Simpson",25,"simpson, simpsons, homero, bart"],
-  ["Dragon Ball",20,"dragon ball z, dragon ball super, goku, dbz"],
-  ["El Chavo animado",15,"chavo, el chavo, chavo del 8, chavo del ocho"],
-  ["Tom y Jerry",10,"tom and jerry, tom, jerry"]]},
- {p:"Menciona algo que siempre llevas en la mochila", r:[
+  {p:"Menciona algo que siempre llevas en la mochila", r:[
   ["Cuadernos",30,"cuaderno, libreta, libretas"],
   ["Lápices o plumas",25,"lapiz, lapices, pluma, plumas, boligrafo, lapicero, estuche, lapicera, colores"],
   ["Libros",20,"libro, libro de texto, libros de texto"],
   ["Lonche",15,"lunch, almuerzo, comida, torta, tortas, sandwich, desayuno"],
   ["Celular",10,"cel, telefono, movil"]]},
- {p:"Menciona un videojuego famoso", r:[
-  ["Minecraft",30,"maincra, mainkraft"],
-  ["Free Fire",25,"freefire, free, frifai"],
-  ["Fortnite",20,"fornite, fortnai, fornai"],
-  ["FIFA",15,"fc, ea fc, fc 25, fc 26, fifa 25"],
-  ["Mario Bros",10,"mario, mario kart, super mario, mario bros"]]},
- {p:"Menciona una red social o app que usan los jóvenes", r:[
-  ["TikTok",35,"tik tok, tiktoc"],
-  ["WhatsApp",25,"whats, wasap, guasap, whatsapp"],
-  ["Instagram",20,"insta, ig"],
-  ["YouTube",12,"yutub, youtube"],
-  ["Facebook",8,"face, feis, fb, feisbuk"]]},
- {p:"Menciona algo que le pones a los tacos", r:[
+  {p:"Menciona algo que le pones a los tacos", r:[
   ["Salsa",35,"salsita, salsa verde, salsa roja, chile, picante"],
   ["Cebolla",22,"cebollita"],
   ["Cilantro",18,"cilantrito"],
   ["Limón",15,"limones, limoncito"],
   ["Guacamole",10,"aguacate, guaca"]]},
- {p:"Menciona algo que hace un alumno cuando el maestro sale del salón", r:[
+  {p:"Menciona algo que hace un alumno cuando el maestro sale del salón", r:[
   ["Platicar",30,"hablar, chismear, chisme, echar chisme, cotorrear, echar platica"],
   ["Sacar el celular",25,"celular, usar el celular, ver el celular, cel, telefono"],
   ["Pararse",20,"levantarse, caminar, pararse de su lugar, cambiarse de lugar"],
   ["Echar relajo",15,"relajo, jugar, aventar papelitos, aventar cosas, travesuras"],
   ["Gritar",10,"hacer ruido, ruido, escandalo, gritos"]]},
- {p:"Menciona un animal que ves en un rancho de Zacatecas", r:[
+  {p:"Menciona un animal que ves en un rancho de Zacatecas", r:[
   ["Vaca",30,"vacas, toro, becerro, ganado, res"],
   ["Caballo",25,"caballos, yegua, potro"],
   ["Gallina",20,"gallinas, pollo, gallo, pollitos"],
   ["Burro",15,"burros, asno, burrito"],
   ["Cerdo",10,"puerco, marrano, cochino, chancho, cochi"]]},
- {p:"Menciona una materia de la secundaria", r:[
+  {p:"Menciona una materia de la secundaria", r:[
   ["Matemáticas",30,"mate, mates, matematica"],
   ["Español",25,"lengua, lenguajes, lectura"],
   ["Educación Física",20,"educacion fisica, ed fisica, deportes, deporte"],
   ["Inglés",15,"ingles"],
   ["Historia",10,"historia de mexico"]]},
- {p:"Menciona algo que haces al llegar a tu casa después de la escuela", r:[
+  {p:"Menciona algo que haces al llegar a tu casa después de la escuela", r:[
   ["Comer",30,"comida, almorzar, comer algo"],
   ["Dormir",25,"descansar, siesta, acostarme, dormirme"],
   ["Ver la tele o el celular",20,"tele, television, ver la tele, celular, ver el celular, cel"],
   ["Hacer la tarea",15,"tarea, las tareas"],
   ["Ayudar en la casa",10,"ayudar, quehacer, quehaceres, barrer, lavar trastes, ayudar a mi mama"]]},
- {p:"Menciona una película animada famosa", r:[
-  ["Coco",30,"la de coco"],
-  ["Toy Story",25,"woody, buzz, toy stori"],
-  ["Intensamente",20,"inside out, intensamente 2"],
-  ["Shrek",15,"shrek 2, sherk"],
-  ["Frozen",10,"elsa, frozen 2"]]},
- {p:"Menciona un antojito mexicano", r:[
+  {p:"Menciona un antojito mexicano", r:[
   ["Tacos",30,"taco, taquitos"],
   ["Tamales",25,"tamal, tamalitos"],
   ["Gorditas",20,"gordita, gorditas de horno"],
   ["Quesadillas",15,"quesadilla"],
   ["Elotes o esquites",10,"elote, esquite, esquites, vaso de elote, elote en vaso"]]},
- {p:"Menciona algo que hay en las fiestas patrias de septiembre", r:[
+  {p:"Menciona algo que hay en las fiestas patrias de septiembre", r:[
   ["El Grito",30,"grito, grito de independencia, 15 de septiembre, viva mexico"],
   ["Pozole",25,"pozolito"],
   ["Desfile",20,"16 de septiembre, el desfile"],
   ["Cohetes",15,"cuetes, fuegos artificiales, juegos pirotecnicos, pirotecnia"],
   ["Banderas",10,"bandera, banderitas"]]},
- {p:"Menciona una excusa por no traer la tarea", r:[
+  {p:"Menciona una excusa por no traer la tarea", r:[
   ["Se me olvidó",35,"olvido, la olvide, se me olvido en la casa, la deje en mi casa"],
   ["El perro se la comió",25,"perro, se la comio el perro, el perro"],
   ["No le entendí",20,"no entendi, no supe, no sabia como"],
   ["Se fue la luz o el internet",12,"luz, se fue la luz, internet, no habia internet, no tenia internet, sin luz"],
   ["Estaba enfermo",8,"enfermo, me enferme, me senti mal, enferma, estaba enferma"]]},
- {p:"Menciona un deporte que se juega en la escuela", r:[
+  {p:"Menciona un deporte que se juega en la escuela", r:[
   ["Fútbol",40,"fut, futbolito, soccer, futbol"],
   ["Básquetbol",25,"basquet, basket, basketball, baloncesto, basquetbol"],
   ["Voleibol",18,"voley, voli, volibol, volleyball"],
   ["Quemados",10,"quemado, quemaditos, dodgeball"],
   ["Carreras",7,"correr, atletismo, carrera"]]},
- {p:"Menciona algo que hay en un salón de clases", r:[
+  {p:"Menciona algo que hay en un salón de clases", r:[
   ["Pizarrón",30,"pizarra, pintarron"],
   ["Bancas",25,"banca, mesabancos, butacas, sillas, mesas, pupitres"],
   ["Escritorio",20,"escritorio del maestro"],
   ["Ventanas",15,"ventana"],
   ["Televisión",10,"tele, pantalla, proyector"]]},
- {p:"Menciona un superhéroe", r:[
-  ["Spider-Man",30,"spiderman, spider man, hombre arana, el hombre arana"],
-  ["Batman",25,"batimam"],
-  ["Superman",20,"super man"],
-  ["Iron Man",15,"ironman, tony stark"],
-  ["Capitán América",10,"capitan america"]]},
- {p:"Menciona algo que se vende en vasito con chile y limón", r:[
+  {p:"Menciona algo que se vende en vasito con chile y limón", r:[
   ["Mango",30,"manguito, mangos"],
   ["Pepino",25,"pepinos"],
   ["Jícama",20,"jicama"],
   ["Sandía",15,"sandia"],
   ["Piña",10,"pina"]]},
- {p:"Menciona algo que tu mamá te pide que hagas", r:[
+  {p:"Menciona algo que tu mamá te pide que hagas", r:[
   ["Tender la cama",25,"cama, hacer la cama, arreglar la cama"],
   ["Lavar los trastes",25,"trastes, platos, lavar platos, lavar los platos"],
   ["Barrer",20,"trapear, limpiar, limpiar el cuarto, recoger el cuarto"],
   ["Hacer la tarea",18,"tarea"],
   ["Ir a la tienda",12,"tienda, mandado, mandados, ir por las tortillas, tortillas, ir por tortillas"]]},
- {p:"Menciona un personaje de Disney", r:[
-  ["Mickey Mouse",30,"mickey, miguelito"],
-  ["Stitch",25,"estich, stich"],
-  ["Woody",20,"el vaquero woody"],
-  ["Elsa",15,"la reina elsa"],
-  ["Rayo McQueen",10,"mcqueen, rayo macuin, rayo"]]},
- {p:"Menciona algo que llevas a un día de campo", r:[
+  {p:"Menciona algo que llevas a un día de campo", r:[
   ["Comida",30,"tortas, sandwiches, lonche, botana"],
   ["Refrescos",25,"refresco, agua, bebidas, jugos, jugo, coca"],
   ["Cobija o mantel",20,"cobija, mantel, sabana, manta"],
   ["Pelota",15,"balon, pelota de futbol"],
   ["Bocina",10,"musica, bocina, radio"]]},
- {p:"Menciona algo que usas en la clase de matemáticas", r:[
+  {p:"Menciona algo que usas en la clase de matemáticas", r:[
   ["Calculadora",30,"calcu"],
   ["Regla",25,"escuadra, escuadras, juego de geometria"],
   ["Lápiz",20,"lapices, lapicero"],
   ["Goma",15,"borrador"],
   ["Compás",10,"compas, transportador"]]},
- {p:"Menciona un platillo de Navidad o Año Nuevo", r:[
+  {p:"Menciona un platillo de Navidad o Año Nuevo", r:[
   ["Pozole",30,"pozolito"],
   ["Tamales",25,"tamal"],
   ["Pavo",20,"pavito"],
   ["Bacalao",15,"bacalao a la vizcaina"],
   ["Romeritos",10,"romeritos con mole"]]},
- {p:"Menciona algo que hay en la cocina de tu casa", r:[
+  {p:"Menciona algo que hay en la cocina de tu casa", r:[
   ["Estufa",30,"estufa de gas, fogon"],
   ["Refrigerador",25,"refri, nevera"],
   ["Comal",20,"comalito"],
   ["Licuadora",15,"licuadora"],
   ["Ollas",10,"olla, cazuela, cazuelas, sarten, sartenes"]]},
- {p:"Menciona un lugar al que vas de excursión con la escuela", r:[
+  {p:"Menciona un lugar al que vas de excursión con la escuela", r:[
   ["Museo",30,"museos"],
   ["Zoológico",25,"zoo, zoologico"],
   ["Parque",20,"parque de diversiones, feria"],
   ["Zona arqueológica",15,"piramides, zona arqueologica, la quemada, ruinas, teotihuacan"],
   ["Cine",10,"pelicula, al cine"]]},
- {p:"Menciona algo que haces con tu celular", r:[
-  ["Ver videos",30,"videos, youtube, tiktok"],
-  ["Mandar mensajes",25,"mensajes, whatsapp, chatear, chat"],
-  ["Jugar",20,"juegos, jugar juegos"],
-  ["Tomar fotos",15,"fotos, selfies, selfie"],
-  ["Escuchar música",10,"musica, spotify"]]},
- {p:"Menciona un oficio o trabajo de tu comunidad", r:[
+  {p:"Menciona un oficio o trabajo de tu comunidad", r:[
   ["Campesino",30,"agricultor, sembrar, el campo, trabajar en el campo"],
   ["Maestro",25,"profesor, profe, maestra, docente"],
   ["Albañil",20,"albanil, construccion"],
   ["Tendero",15,"tienda, abarrotes, tendera"],
   ["Ganadero",10,"vaquero, ganado, ganaderia"]]},
- {p:"Menciona algo que no puede faltar en unos XV años", r:[
+  {p:"Menciona algo que no puede faltar en unos XV años", r:[
   ["Pastel",30,"el pastel"],
   ["Vestido",25,"el vestido"],
   ["Vals",20,"baile, el vals"],
   ["Música",15,"dj, banda, grupo, sonido"],
   ["Chambelanes",10,"chambelan"]]},
- {p:"Menciona un dulce mexicano", r:[
+  {p:"Menciona un dulce mexicano", r:[
   ["Mazapán",30,"mazapan, de la rosa"],
   ["Pulparindo",25,"tamarindo"],
   ["Pelón Pelo Rico",20,"pelon, pelon pelo rico, pelorico"],
   ["Duvalín",15,"duvalin"],
   ["Glorias",10,"gloria"]]},
- {p:"Menciona una razón para llegar tarde a la escuela", r:[
+  {p:"Menciona una razón para llegar tarde a la escuela", r:[
   ["Me quedé dormido",35,"dormido, dormida, me quede dormida, se me pegaron las sabanas, no escuche la alarma"],
   ["El transporte",25,"camion, combi, transporte, ruta, aventon, no paso el camion"],
   ["Ayudar en casa",15,"ayudar, quehacer, ayudar a mi mama"],
   ["Desayunar",15,"desayuno, almorzar"],
   ["La lluvia",10,"lluvia, llovio, estaba lloviendo"]]}
+ ]},
+ { id:"pantalla", nombre:"Caricaturas, películas y videojuegos", icono:"🎮", campo:"Lenguajes",
+   descripcion:"Personajes, pelis, juegos y redes que todos conocen.",
+   colores:{a:"#00e5ff", b:"#ff3df5", c:"#b6ff00", fondo:"#07071a", luz1:"#2b0b5e", luz2:"#0b3b5e", casilla1:"#3d1a8f", casilla2:"#160a3d", borde:"#00e5ff"},
+   motivos:["🎮","📺","🍿","🎬","👾","⭐"],
+   preguntas:[
+  {p:"Menciona una caricatura que todo mundo conoce", r:[
+  ["Bob Esponja",30,"bob, esponja, spongebob, bob esponja pantalones cuadrados"],
+  ["Los Simpson",25,"simpson, simpsons, homero, bart"],
+  ["Dragon Ball",20,"dragon ball z, dragon ball super, goku, dbz"],
+  ["El Chavo animado",15,"chavo, el chavo, chavo del 8, chavo del ocho"],
+  ["Tom y Jerry",10,"tom and jerry, tom, jerry"]]},
+  {p:"Menciona un videojuego famoso", r:[
+  ["Minecraft",30,"maincra, mainkraft"],
+  ["Free Fire",25,"freefire, free, frifai"],
+  ["Fortnite",20,"fornite, fortnai, fornai"],
+  ["FIFA",15,"fc, ea fc, fc 25, fc 26, fifa 25"],
+  ["Mario Bros",10,"mario, mario kart, super mario, mario bros"]]},
+  {p:"Menciona una red social o app que usan los jóvenes", r:[
+  ["TikTok",35,"tik tok, tiktoc"],
+  ["WhatsApp",25,"whats, wasap, guasap, whatsapp"],
+  ["Instagram",20,"insta, ig"],
+  ["YouTube",12,"yutub, youtube"],
+  ["Facebook",8,"face, feis, fb, feisbuk"]]},
+  {p:"Menciona una película animada famosa", r:[
+  ["Coco",30,"la de coco"],
+  ["Toy Story",25,"woody, buzz, toy stori"],
+  ["Intensamente",20,"inside out, intensamente 2"],
+  ["Shrek",15,"shrek 2, sherk"],
+  ["Frozen",10,"elsa, frozen 2"]]},
+  {p:"Menciona un superhéroe", r:[
+  ["Spider-Man",30,"spiderman, spider man, hombre arana, el hombre arana"],
+  ["Batman",25,"batimam"],
+  ["Superman",20,"super man"],
+  ["Iron Man",15,"ironman, tony stark"],
+  ["Capitán América",10,"capitan america"]]},
+  {p:"Menciona un personaje de Disney", r:[
+  ["Mickey Mouse",30,"mickey, miguelito"],
+  ["Stitch",25,"estich, stich"],
+  ["Woody",20,"el vaquero woody"],
+  ["Elsa",15,"la reina elsa"],
+  ["Rayo McQueen",10,"mcqueen, rayo macuin, rayo"]]},
+  {p:"Menciona algo que haces con tu celular", r:[
+  ["Ver videos",30,"videos, youtube, tiktok"],
+  ["Mandar mensajes",25,"mensajes, whatsapp, chatear, chat"],
+  ["Jugar",20,"juegos, jugar juegos"],
+  ["Tomar fotos",15,"fotos, selfies, selfie"],
+  ["Escuchar música",10,"musica, spotify"]]},
+  {p:"Menciona un personaje de Mario Bros", r:[
+  ["Mario",30,"mario bros, super mario"],
+  ["Luigi",25,"luiyi"],
+  ["Bowser",20,"bowser, el dragon, la tortuga"],
+  ["Princesa Peach",15,"peach, princesa, la princesa"],
+  ["Yoshi",10,"yoshi, el dinosaurio"]]},
+  {p:"Menciona un Pokémon", r:[
+  ["Pikachu",40,"pika, pikachu"],
+  ["Charmander",20,"charizard, charmeleon"],
+  ["Bulbasaur",15,"bulbasaur, bulbasor"],
+  ["Squirtle",15,"esquirtel, squirtel"],
+  ["Mewtwo",10,"mewtwo, mew"]]},
+  {p:"Menciona una botana para ver una película", r:[
+  ["Palomitas",40,"palomitas de maiz, pop corn, popcorn"],
+  ["Papitas",25,"papas, sabritas, papas fritas"],
+  ["Nachos",15,"nachos con queso"],
+  ["Dulces",12,"gomitas, chocolate, chocolates"],
+  ["Refresco",8,"soda, coca, refrescos"]]},
+  {p:"Menciona un personaje de Los Simpson", r:[
+  ["Homero",35,"homer"],
+  ["Bart",25,"bart simpson"],
+  ["Lisa",15,"lisa simpson"],
+  ["Marge",15,"marsh"],
+  ["Maggie",10,"magui, la bebe"]]}
+ ]},
+ { id:"ciencias", nombre:"Ciencias", icono:"🔬", campo:"Saberes y pensamiento científico",
+   descripcion:"Cuerpo humano, planetas, energía, materia y medio ambiente.",
+   colores:{a:"#2ef2a5", b:"#36a3ff", c:"#c6ff4a", fondo:"#04202a", luz1:"#06475a", luz2:"#0a3d2a", casilla1:"#0e6f7a", casilla2:"#05343d", borde:"#5ff6d0"},
+   motivos:["🔬","🧪","🧬","⚛️","🦠","🔭"],
+   preguntas:[
+  {p:"Menciona un planeta del sistema solar", r:[
+  ["Tierra",30,"la tierra, planeta tierra"],
+  ["Marte",25,"el planeta rojo"],
+  ["Júpiter",18,"jupiter"],
+  ["Saturno",15,"saturno"],
+  ["Venus",12,"venus"]]},
+  {p:"Menciona un órgano del cuerpo humano", r:[
+  ["Corazón",35,"corazon"],
+  ["Cerebro",25,"cerebro"],
+  ["Pulmones",18,"pulmon"],
+  ["Estómago",12,"estomago, panza"],
+  ["Hígado",10,"higado"]]},
+  {p:"Menciona algo que necesita una planta para vivir", r:[
+  ["Agua",35,"riego, regarla"],
+  ["Luz del sol",30,"sol, luz, luz solar"],
+  ["Tierra",15,"suelo, maceta"],
+  ["Aire",12,"dioxido de carbono, co2, oxigeno"],
+  ["Nutrientes",8,"abono, fertilizante, minerales"]]},
+  {p:"Menciona un animal mamífero", r:[
+  ["Perro",30,"perrito, perros"],
+  ["Gato",22,"gatito, gatos"],
+  ["Vaca",18,"vacas, toro"],
+  ["Ballena",15,"ballenas, delfin"],
+  ["Ser humano",15,"humano, persona, personas, hombre, nosotros"]]},
+  {p:"Menciona una fuente de energía", r:[
+  ["Solar",30,"sol, energia solar, paneles solares"],
+  ["Eólica",22,"eolica, viento, energia eolica"],
+  ["Petróleo",20,"petroleo, gasolina, combustibles fosiles, gas"],
+  ["Hidráulica",16,"hidraulica, presas, hidroelectrica, agua"],
+  ["Nuclear",12,"atomica, energia nuclear"]]},
+  {p:"Menciona un elemento de la tabla periódica", r:[
+  ["Oxígeno",30,"oxigeno"],
+  ["Hidrógeno",25,"hidrogeno"],
+  ["Carbono",18,"carbon"],
+  ["Oro",15,"au"],
+  ["Hierro",12,"fierro"]]},
+  {p:"Menciona algo que hay en un laboratorio de ciencias", r:[
+  ["Microscopio",35,"microscopios"],
+  ["Tubos de ensayo",25,"tubo de ensayo, tubos, probeta, probetas"],
+  ["Bata",15,"bata blanca, batas"],
+  ["Mechero",13,"mechero bunsen"],
+  ["Matraz",12,"vaso de precipitado, vasos de precipitados, matraces"]]},
+  {p:"Menciona un hueso del cuerpo humano", r:[
+  ["Cráneo",30,"craneo, calavera"],
+  ["Fémur",22,"femur"],
+  ["Costillas",20,"costilla"],
+  ["Columna vertebral",16,"columna, vertebras, vertebra"],
+  ["Clavícula",12,"clavicula"]]},
+  {p:"Menciona una forma de cuidar el medio ambiente", r:[
+  ["Reciclar",35,"reciclaje, separar basura, separar la basura"],
+  ["Ahorrar agua",25,"cuidar el agua, cerrar la llave"],
+  ["Plantar árboles",20,"plantar arboles, sembrar arboles, reforestar, arboles"],
+  ["No tirar basura",12,"no tirar basura, basura en su lugar, basura en el bote"],
+  ["Ahorrar luz",8,"apagar la luz, ahorrar energia, luz"]]},
+  {p:"Menciona una enfermedad que se previene con vacuna", r:[
+  ["Sarampión",25,"sarampion"],
+  ["COVID",25,"covid 19, coronavirus"],
+  ["Influenza",20,"gripe, gripa"],
+  ["Polio",15,"poliomielitis"],
+  ["Tétanos",15,"tetanos"]]}
+ ]},
+ { id:"historia", nombre:"Historia de México", icono:"📜", campo:"Ética, naturaleza y sociedades",
+   descripcion:"Culturas prehispánicas, Independencia, Revolución y símbolos patrios.",
+   colores:{a:"#e0b56a", b:"#c0503a", c:"#4f9d6e", fondo:"#1e120a", luz1:"#5a3a1a", luz2:"#3a1a10", casilla1:"#8a5a2b", casilla2:"#4a2a12", borde:"#f0c98a"},
+   motivos:["📜","🏛️","🦅","🗿","⚔️","🌵"],
+   preguntas:[
+  {p:"Menciona un personaje de la Independencia de México", r:[
+  ["Miguel Hidalgo",35,"hidalgo, cura hidalgo"],
+  ["José María Morelos",22,"morelos"],
+  ["Josefa Ortiz de Domínguez",18,"josefa, la corregidora, corregidora, josefa ortiz"],
+  ["Ignacio Allende",13,"allende"],
+  ["Vicente Guerrero",12,"guerrero"]]},
+  {p:"Menciona un personaje de la Revolución Mexicana", r:[
+  ["Pancho Villa",35,"villa, francisco villa"],
+  ["Emiliano Zapata",30,"zapata"],
+  ["Francisco I. Madero",15,"madero"],
+  ["Venustiano Carranza",12,"carranza"],
+  ["Porfirio Díaz",8,"porfirio, porfirio diaz, don porfirio"]]},
+  {p:"Menciona una cultura prehispánica de México", r:[
+  ["Mexicas o aztecas",35,"aztecas, mexicas, azteca, mexica"],
+  ["Mayas",30,"maya"],
+  ["Olmecas",15,"olmeca"],
+  ["Toltecas",10,"tolteca"],
+  ["Zapotecas",10,"zapoteca"]]},
+  {p:"Menciona un alimento que México le dio al mundo", r:[
+  ["Maíz",30,"maiz, elote"],
+  ["Chocolate",25,"cacao"],
+  ["Chile",20,"chiles"],
+  ["Jitomate",15,"tomate"],
+  ["Aguacate",10,"aguacates"]]},
+  {p:"Menciona una fecha patria que se celebra en México", r:[
+  ["Independencia (16 de septiembre)",35,"independencia, 16 de septiembre, 15 de septiembre, grito"],
+  ["Revolución (20 de noviembre)",25,"revolucion, 20 de noviembre"],
+  ["Batalla de Puebla (5 de mayo)",20,"batalla de puebla, 5 de mayo, cinco de mayo"],
+  ["Día de la Bandera (24 de febrero)",12,"dia de la bandera, bandera, 24 de febrero"],
+  ["Natalicio de Benito Juárez (21 de marzo)",8,"benito juarez, juarez, natalicio de juarez, 21 de marzo"]]},
+  {p:"Menciona un presidente famoso en la historia de México", r:[
+  ["Benito Juárez",40,"juarez, benito juarez"],
+  ["Lázaro Cárdenas",20,"cardenas, lazaro cardenas"],
+  ["Porfirio Díaz",18,"porfirio, porfirio diaz"],
+  ["Francisco I. Madero",12,"madero"],
+  ["Guadalupe Victoria",10,"guadalupe victoria, primer presidente"]]},
+  {p:"Menciona una zona arqueológica de México", r:[
+  ["Teotihuacán",35,"teotihuacan, piramides de teotihuacan, piramide del sol"],
+  ["Chichén Itzá",30,"chichen itza, chichen"],
+  ["Palenque",13,"palenque"],
+  ["Tulum",12,"tulum"],
+  ["La Quemada",10,"quemada"]]},
+  {p:"Menciona algo que trajeron los españoles a América", r:[
+  ["Caballos",30,"caballo"],
+  ["Trigo",20,"pan"],
+  ["Ganado",18,"vacas, vaca, cerdos, reses"],
+  ["Enfermedades",17,"viruela, enfermedad, sarampion"],
+  ["Idioma español",15,"espanol, idioma, castellano, lengua"]]},
+  {p:"Menciona algo que aparece en el Escudo Nacional", r:[
+  ["Águila",35,"aguila"],
+  ["Serpiente",25,"vibora, culebra"],
+  ["Nopal",20,"tuna, tunas"],
+  ["Lago",12,"agua, islote, piedra"],
+  ["Ramas de laurel y encino",8,"laurel, encino, ramas, hojas"]]},
+  {p:"Menciona un hecho importante de la historia de México", r:[
+  ["Independencia",35,"guerra de independencia"],
+  ["Revolución Mexicana",30,"revolucion"],
+  ["Conquista",15,"llegada de los espanoles, caida de tenochtitlan"],
+  ["Batalla de Puebla",12,"5 de mayo, cinco de mayo"],
+  ["Expropiación petrolera",8,"expropiacion, expropiacion petrolera, petroleo"]]}
+ ]},
+ { id:"geografia", nombre:"Geografía", icono:"🌎", campo:"Ética, naturaleza y sociedades",
+   descripcion:"Estados, continentes, océanos, volcanes y paisajes.",
+   colores:{a:"#2fb8ff", b:"#34d27b", c:"#ffd166", fondo:"#04122e", luz1:"#0b4a8a", luz2:"#0b5e4a", casilla1:"#1565c0", casilla2:"#0a2f6b", borde:"#6fc3ff"},
+   motivos:["🌎","🗺️","🏔️","🌋","🧭","🌊"],
+   preguntas:[
+  {p:"Menciona un estado de la República Mexicana", r:[
+  ["Zacatecas",30,"zacatecas"],
+  ["Jalisco",22,"jalisco"],
+  ["Ciudad de México",18,"cdmx, df, distrito federal"],
+  ["Nuevo León",15,"nuevo leon"],
+  ["Veracruz",15,"veracruz"]]},
+  {p:"Menciona un continente", r:[
+  ["América",35,"america"],
+  ["Europa",25,"europa"],
+  ["Asia",18,"asia"],
+  ["África",12,"africa"],
+  ["Oceanía",10,"oceania, australia"]]},
+  {p:"Menciona un océano", r:[
+  ["Pacífico",40,"pacifico, oceano pacifico"],
+  ["Atlántico",30,"atlantico, oceano atlantico"],
+  ["Índico",13,"indico, oceano indico"],
+  ["Ártico",10,"artico, glacial artico"],
+  ["Antártico",7,"antartico, austral, glacial antartico"]]},
+  {p:"Menciona un país vecino o cercano a México", r:[
+  ["Estados Unidos",40,"eua, usa, eeuu, gringolandia"],
+  ["Guatemala",25,"guatemala"],
+  ["Belice",15,"belice"],
+  ["Cuba",12,"cuba"],
+  ["Canadá",8,"canada"]]},
+  {p:"Menciona un volcán o montaña famosa de México", r:[
+  ["Popocatépetl",35,"popocatepetl, popo, don goyo"],
+  ["Iztaccíhuatl",20,"iztaccihuatl, izta, la mujer dormida"],
+  ["Pico de Orizaba",20,"orizaba, citlaltepetl"],
+  ["Volcán de Colima",13,"colima, volcan de fuego"],
+  ["Paricutín",12,"paricutin"]]},
+  {p:"Menciona una playa famosa de México", r:[
+  ["Cancún",30,"cancun"],
+  ["Acapulco",25,"acapulco"],
+  ["Puerto Vallarta",18,"vallarta"],
+  ["Mazatlán",15,"mazatlan"],
+  ["Los Cabos",12,"cabos, cabo san lucas"]]},
+  {p:"Menciona un país de Europa", r:[
+  ["España",35,"espana"],
+  ["Francia",22,"francia"],
+  ["Italia",18,"italia"],
+  ["Alemania",15,"alemania"],
+  ["Inglaterra",10,"reino unido"]]},
+  {p:"Menciona algo que usas para ubicarte o encontrar un lugar", r:[
+  ["Mapa",30,"mapas, croquis"],
+  ["GPS",25,"google maps, maps, ubicacion"],
+  ["Brújula",20,"brujula"],
+  ["Preguntar",15,"pedir direcciones, preguntarle a alguien"],
+  ["Señales",10,"senales, letreros, senalamientos"]]},
+  {p:"Menciona un tipo de paisaje", r:[
+  ["Desierto",30,"arido, semidesierto"],
+  ["Bosque",25,"bosques, pinos"],
+  ["Selva",20,"tropical, jungla"],
+  ["Playa",15,"costa, mar"],
+  ["Montaña",10,"montana, montanas, sierra, cerro, cerros"]]},
+  {p:"Menciona un platillo típico de un estado de México", r:[
+  ["Mole poblano",30,"mole"],
+  ["Cochinita pibil",25,"cochinita"],
+  ["Birria",20,"birria"],
+  ["Tlayudas",13,"tlayuda"],
+  ["Asado de boda",12,"asado"]]}
+ ]},
+ { id:"cuerpo", nombre:"Aparatos y sistemas del cuerpo humano", icono:"🫀", campo:"Saberes y pensamiento científico",
+   descripcion:"Clase de Biología: órganos, aparatos y sistemas que trabajan juntos.",
+   colores:{a:"#ff4d6d", b:"#ffb3c1", c:"#4dd4ff", fondo:"#2a0611", luz1:"#6b0f2a", luz2:"#0f3a5a", casilla1:"#a4133c", casilla2:"#590d22", borde:"#ff8fa3"},
+   motivos:["🫀", "🫁", "🧠", "🦴", "💪", "🩸"],
+   preguntas:[
+  {p:"Menciona un aparato o sistema del cuerpo humano", r:[
+  ["Circulatorio",25,"aparato circulatorio"],
+  ["Digestivo",25,"aparato digestivo"],
+  ["Respiratorio",20,"aparato respiratorio"],
+  ["Nervioso",15,"sistema nervioso"],
+  ["Óseo",15,"oseo, sistema oseo, esqueleto, esqueletico"]]},
+  {p:"Menciona un nivel de organización del cuerpo", r:[
+  ["Célula",30,"celula, celulas"],
+  ["Órgano",25,"organo, organos"],
+  ["Tejido",20,"tejidos"],
+  ["Aparato o sistema",15,"aparato, sistema, aparatos, sistemas"],
+  ["Organismo",10,"cuerpo completo, organismos"]]},
+  {p:"Menciona un órgano del aparato digestivo", r:[
+  ["Estómago",35,"estomago, panza"],
+  ["Intestino delgado",20,"intestino delgado"],
+  ["Boca",18,"boca"],
+  ["Esófago",15,"esofago"],
+  ["Intestino grueso",12,"intestino grueso, colon"]]},
+  {p:"Menciona una parte del aparato respiratorio", r:[
+  ["Pulmones",35,"pulmon"],
+  ["Fosas nasales",25,"nariz, fosas nasales"],
+  ["Tráquea",18,"traquea"],
+  ["Diafragma",12,"diafragma"],
+  ["Alvéolos",10,"alveolos, alveolo"]]},
+  {p:"Menciona algo que forma parte del aparato circulatorio", r:[
+  ["Corazón",40,"corazon"],
+  ["Venas",20,"vena, vena cava"],
+  ["Arterias",20,"arteria, aorta, arteria aorta"],
+  ["Sangre",12,"sangre"],
+  ["Vasos sanguíneos",8,"vasos sanguineos"]]},
+  {p:"Menciona algo que forma parte del aparato urinario", r:[
+  ["Riñones",40,"rinon, rinones"],
+  ["Vejiga",30,"vejiga"],
+  ["Uretra",12,"uretra"],
+  ["Uréteres",10,"ureter, ureteres"],
+  ["Orina",8,"pipi, pis"]]},
+  {p:"Menciona un hueso del sistema óseo", r:[
+  ["Cráneo",30,"craneo, calavera"],
+  ["Costillas",25,"costilla"],
+  ["Columna vertebral",20,"columna, vertebras"],
+  ["Fémur",15,"femur"],
+  ["Pelvis",10,"cadera"]]},
+  {p:"Menciona un músculo del cuerpo", r:[
+  ["Bíceps",35,"biceps"],
+  ["Abdominales",25,"abdomen, abdominal, cuadritos"],
+  ["Cuádriceps",15,"cuadriceps, muslo"],
+  ["Pectoral",15,"pectorales, pecho"],
+  ["Deltoides",10,"deltoide, hombro"]]},
+  {p:"Menciona una glándula del sistema endocrino", r:[
+  ["Páncreas",30,"pancreas"],
+  ["Tiroides",25,"tiroides"],
+  ["Hipófisis",15,"hipofisis, pituitaria"],
+  ["Ovarios",15,"ovario"],
+  ["Testículos",15,"testiculo"]]},
+  {p:"Menciona algo del sistema linfático e inmunitario", r:[
+  ["Ganglios linfáticos",30,"ganglios, ganglio, bolitas"],
+  ["Glóbulos blancos",25,"globulos blancos, defensas, leucocitos"],
+  ["Amígdalas",20,"amigdalas, anginas"],
+  ["Bazo",15,"bazo"],
+  ["Timo",10,"timo"]]},
+  {p:"Menciona algo que forma la piel o el sistema tegumentario", r:[
+  ["Piel",35,"piel"],
+  ["Pelo",25,"cabello, vello"],
+  ["Uñas",20,"uñitas"],
+  ["Glándulas sudoríparas",12,"sudor, glandulas sudoriparas, sudoripara"],
+  ["Epidermis",8,"epidermis, dermis, hipodermis"]]},
+  {p:"Menciona algo que hace tu cuerpo cuando haces ejercicio", r:[
+  ["Respirar más rápido",30,"respirar rapido, respirar mas, agitarse, jadear"],
+  ["Sudar",25,"sudor"],
+  ["El corazón late más rápido",20,"latir, latidos, pulso, corazon late rapido"],
+  ["Contraer los músculos",15,"musculos, contraer, mover los musculos"],
+  ["Calentarse",10,"calor, temperatura, calentarse"]]}
+ ]}
 ];
 
+/* «Mezcla de todo»: toma preguntas de todos los temas */
+const MEZCLA = { id:"mezcla", nombre:"Mezcla de todo", icono:"🎲", campo:"Todos los campos formativos",
+  descripcion:"Preguntas al azar de todos los temas.",
+  colores:{a:"#ff2e88", b:"#ffb000", c:"#18d3c2", fondo:"#140b3d", luz1:"#3a2aa8", luz2:"#5a1b8f", casilla1:"#5d3bd6", casilla2:"#2c1490", borde:"#8f74ff"},
+  motivos:["❓","⭐","🎉","💡","🎲","✨"] };
+
+/* Temas cargados desde archivo .json (se guardan en esta computadora) */
+const EXTRA_KEY = "duelo-teocalli-temas-extra";
+let ALL_TEMAS = [], QMAP = {};
+function buildTemas(){
+  let extra=[]; try{ extra=JSON.parse(localStorage.getItem(EXTRA_KEY))||[]; }catch(e){}
+  ALL_TEMAS=[...TEMAS, ...extra.map(t=>({...t, extra:true}))];
+  QMAP={}; ALL_TEMAS.forEach(t=>t.preguntas.forEach((q,i)=>{ QMAP[t.id+":"+i]=q; }));
+}
+function temaById(id){ return id==="mezcla" ? MEZCLA : (ALL_TEMAS.find(t=>t.id===id) || MEZCLA); }
+function keysFor(id){ return Object.keys(QMAP).filter(k=> id==="mezcla" || k.startsWith(id+":")); }
+buildTemas();
 
 const RONDAS = 5;
-const STORE = "duelo-teocalli-v1";
+const STORE = "duelo-teocalli-v2";
 const ROLES = ["Abre la ronda.","Da la siguiente respuesta.","Continúa el tablero."];
 
 /* ===================================================================
    COMPARACIÓN DE RESPUESTAS
    =================================================================== */
+/* La ñ se cambia por «ny» antes de quitar acentos: así «uñas» (unyas) no se confunde con el artículo «unas» */
 const STOP = new Set(["un","una","unos","unas","el","la","los","las","lo","de","del","al","a","y","e","o","u","en","con","que","se","me","le","les","mi","mis","su","sus","tu","tus","pues","este","esta","eh","por","para","yo"]);
 function toks(s){
-  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+  return String(s).toLowerCase().replace(/ñ/g,"ny").normalize("NFD").replace(/[̀-ͯ]/g,"")
     .replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w && !STOP.has(w));
 }
 function wEq(a,b){
@@ -652,12 +1020,19 @@ function afterRender(){
 /* ===================================================================
    LÓGICA DEL JUEGO
    =================================================================== */
-const Q = qi=>BANCO[qi];
+/* qi es "tema:número". Si un tema cargado se quitó, se muestra un aviso en vez de fallar. */
+const FALTA = {p:"(Esta pregunta ya no está en el banco)", r:[["—",20,""],["—",20,""],["—",20,""],["—",20,""],["—",20,""]]};
+const Q = qi=>QMAP[qi] || FALTA;
 const other = t=>1-t;
 function shuffle(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
 function pickUnused(){
-  let pool=[...BANCO.keys()].filter(i=>!G.used.includes(i));
-  if(!pool.length){ G.used=[]; pool=[...BANCO.keys()]; }
+  const all=keysFor(G.tema||"mezcla");
+  let pool=all.filter(k=>!G.used.includes(k));
+  if(!pool.length){
+    G.used=G.used.filter(k=>!all.includes(k));
+    const fresh=all.filter(k=>!G.qOrder.includes(k) && !(G.tie && G.tie.qi===k));
+    pool=fresh.length?fresh:all;
+  }
   const q=pool[Math.floor(Math.random()*pool.length)]; G.used.push(q); return q;
 }
 /* Siguientes tres integrantes del equipo, en orden de registro y de forma circular */
@@ -667,10 +1042,41 @@ function nextThree(t){
   tm.rot=(tm.rot+3)%n;
   return out;
 }
-function startGame(){
+/* Menú principal: pausa la partida y lleva a la pantalla de equipos */
+function goMenu(){
+  stopConfetti(); ui.msg=null; ui.pending="";
+  G.resume=G.phase;
+  G.draft=G.teams.map(t=>({name:t.name, list:t.members.join("\n")}));
+  G.phase="review";
+  save(); render();
+}
+/* Continuar: aplica los cambios de nombres e integrantes sin tocar los puntos */
+/* Aplica nombres e integrantes corregidos a un estado (el actual o una copia de «Deshacer») */
+function applyRoster(st, drafts){
+  drafts.forEach((d,i)=>{
+    const tm=st.teams[i], m=parseList(d.list), changed=m.length!==tm.members.length;
+    tm.name=d.name.trim()||(i?"Equipo Naranja":"Equipo Azul");
+    tm.members=m; tm.rot=tm.rot%m.length;
+    if(changed && st.round && st.round.control===i && st.round.chars.length){
+      const start=st.round.chars[0]%m.length;
+      st.round.chars=[0,1,2].map(k=>(start+k)%m.length);
+    }
+  });
+}
+function resumeGame(){
+  ui.msg=null; ui.pending="";
+  const drafts=G.draft;
+  applyRoster(G, drafts);
+  // así «Deshacer» después de continuar no regresa los nombres viejos
+  UNDO.forEach(st=>{ if(st.teams && st.teams.length===2){ applyRoster(st, drafts); st.draft=clone(drafts); } });
+  G.phase=G.resume; G.resume=null;
+  save(); render();
+}
+function startGame(tema){
+  G.tema = tema || G.tema || "mezcla";
   G.teams = G.draft.map((d,i)=>({name:d.name.trim()||(i?"Equipo Naranja":"Equipo Azul"), members:parseList(d.list), score:0, rot:0}));
   G.used=[]; G.qOrder=[]; for(let i=0;i<RONDAS;i++) G.qOrder.push(pickUnused());
-  G.roundIdx=0; G.tie=null; G.winner=null; ui.shown=null;
+  G.roundIdx=0; G.tie=null; G.winner=null; G.resume=null; ui.shown=null;
   startRound();
 }
 function startRound(){
@@ -705,14 +1111,14 @@ function revealMissing(cells, i){
   if(cells[i]) return;
   cells[i]=3; ui.flip.push(i); SFX.reveal();
 }
-/* Cuenta regresiva 3, 2, 1 antes de mostrar la pregunta: nadie puede ver la pregunta ni tocar el martillo antes */
+/* Cuenta regresiva 3, 2, 1 antes de mostrar la pregunta: nadie puede ver la pregunta antes de tiempo */
 function countdown(){
   if(ui.counting) return; ui.counting=true;
   const el=document.createElement("div"); el.id="count"; el.setAttribute("role","status");
   document.body.appendChild(el);
   const steps=["3","2","1","¡YA!"];
   steps.forEach((n,k)=>later(()=>{
-    el.innerHTML=`<div class="ring"></div><b class="num ${k===3?"go":""}">${n}</b><small>${k<3?"Manos lejos del martillo…":"¡Lean la pregunta y den el martillazo!"}</small>`;
+    el.innerHTML=`<div class="ring"></div><b class="num ${k===3?"go":""}">${n}</b><small>${k<3?"Prepárense… manos abajo":"¡Manos arriba! Gana quien levante la mano primero"}</small>`;
     if(k<3) play([[k===2?660:520,.18,"square",0,.2]]); else play([[880,.12,"square",0,.2],[1320,.5,"square",.1,.22]]);
   }, k*900));
   later(()=>{
@@ -769,14 +1175,35 @@ function strikeNow(){
 }
 
 /* ===================================================================
+   DISEÑO DEL TEMA
+   =================================================================== */
+let THEME_ON=null;
+function applyTheme(t){
+  if(THEME_ON===t.id) return; THEME_ON=t.id;
+  const c=Object.assign({}, MEZCLA.colores, t.colores||{}), st=document.documentElement.style;
+  const map={a:"--ta",b:"--tb",c:"--tc",fondo:"--night",luz1:"--bg1",luz2:"--bg2",casilla1:"--c1",casilla2:"--c2",borde:"--cb"};
+  Object.entries(map).forEach(([k,v])=>st.setProperty(v,c[k]));
+  const m=(t.motivos&&t.motivos.length?t.motivos:MEZCLA.motivos);
+  $("motifs").innerHTML = REDUCED ? "" : Array.from({length:14},(_,i)=>{
+    const left=(i*7.3+((i*37)%11))%100, dur=18+(i*5)%14, del=-(i*2.7)%dur, size=2.6+(i*13%5);
+    return `<span style="left:${left}vw;font-size:${size}vw;animation-duration:${dur}s;animation-delay:${del}s">${esc(m[i%m.length])}</span>`; }).join("");
+}
+function currentTheme(){
+  const playing=!["setup","review","topics"].includes(G.phase) || G.resume;
+  return playing && G.tema ? temaById(G.tema) : MEZCLA;
+}
+
+/* ===================================================================
    RENDER
    =================================================================== */
 function render(keepText){
   const ph=G.phase, app=$("app");
   if(ph!=="final") ui.finalFx=false;
+  applyTheme(currentTheme());
   let h=topBar();
   if(ph==="setup") h+=setupView();
   else if(ph==="review") h+=reviewView();
+  else if(ph==="topics") h+=topicsView();
   else if(ph==="final") h+=finalView();
   else h+=gameView();
   app.innerHTML=h;
@@ -787,7 +1214,7 @@ function render(keepText){
   if(inp){ if(keepText||ui.msg&&["nomatch","stealno","stealdup"].includes(ui.msg.k)) inp.value=ui.pending; inp.focus(); if(keepText) inp.select(); }
 }
 function topBar(){
-  const inGame=!["setup","review"].includes(G.phase);
+  const inGame=!["setup","review","topics"].includes(G.phase);
   const rd = G.phase.startsWith("tie") ? "Desempate" : `Ronda ${G.roundIdx+1} de ${RONDAS}`;
   return `<header class="top">
     <div class="brand"><span class="logo display">100 estudiantes dijeron · Duelo Teocalli</span>${inGame && G.phase!=="final" ? `<span class="rd">${rd}</span>`:""}</div>
@@ -795,6 +1222,7 @@ function topBar(){
       ${inGame?`<button class="tool" id="bUndo" ${UNDO.length?"":"disabled"}>↶ Deshacer última acción</button>`:""}
       <button class="tool" id="bSound">${G.sound?"🔊 Sonido":"🔇 Sin sonido"}</button>
       <button class="tool" id="bFull">⛶ Pantalla completa</button>
+      ${inGame?`<button class="tool" id="bMenu">🏠 Menú principal</button>`:""}
       ${inGame?`<button class="tool" id="bNew">⟲ Nueva partida</button>`:""}
     </div></header>`;
 }
@@ -823,14 +1251,67 @@ function reviewView(){
     <div class="cards">${card(0)}${card(1)}</div>
     <div class="rules"><b>Reglas</b>
       <ul>
-        <li>Se juegan ${RONDAS} rondas. Cada pregunta tiene 5 respuestas ocultas.</li>
-        <li>Cada pregunta aparece después de una cuenta regresiva 3, 2, 1. El equipo que gana el martillazo controla el tablero (el martillazo vale 0 puntos). Responden tres integrantes, uno por turno, en orden.</li>
+        <li>Primero se elige el tema. Se juegan ${RONDAS} rondas y cada pregunta tiene 5 respuestas ocultas.</li>
+        <li>Cada pregunta aparece después de una cuenta regresiva 3, 2, 1. El equipo del primero que levanta la mano controla el tablero (levantar la mano vale 0 puntos). Responden tres integrantes, uno por turno, en orden.</li>
         <li>Cada acierto suma a la bolsa. Con 3 errores ✖, el equipo rival puede robar con una sola respuesta: si acierta, se lleva toda la bolsa.</li>
         <li>Gana quien tenga más puntos al final. Si hay empate, se juega una pregunta de desempate.</li>
         <li>Puntajes de juego inspirados en una encuesta escolar.</li>
       </ul></div>
-    <div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn" id="bStart">Iniciar concurso ▶</button></div>
+    ${G.resume
+      ? `<div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn ghost" id="bNew3">⟲ Nueva partida</button><button class="btn" id="bResume">▶ Continuar partida</button></div>
+         <p class="hint">Partida en pausa (${G.resume.startsWith("tie")?"desempate":`ronda ${G.roundIdx+1} de ${RONDAS}`}). Si corriges los equipos, se conservan los puntos.</p>`
+      : `<div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn" id="bTopics">Elegir tema ▶</button></div>`}
   </div>`;
+}
+function topicsView(){
+  const T=G.draft.map((d,i)=>d.name.trim()||(i?"Equipo Naranja":"Equipo Azul"));
+  const card=t=>{ const c=Object.assign({},MEZCLA.colores,t.colores||{}); const n=keysFor(t.id).length;
+    return `<div class="tw"><button class="tema" data-tema="${esc(t.id)}" style="--ka:${esc(c.a)};--k1:${esc(c.casilla1)};--kf:${esc(c.fondo)};--k2:${esc(c.b)}">
+      <span class="ic">${esc(t.icono||"❓")}</span><b class="display">${esc(t.nombre)}</b>
+      <span class="cf">${esc(t.campo||"Tema cargado")}</span><span class="ds">${esc(t.descripcion||"")}</span>
+      <span class="nq">${n} preguntas</span></button>${t.extra?`<button class="rm" data-quitar="${esc(t.id)}" aria-label="Quitar el tema ${esc(t.nombre)}">✕ Quitar</button>`:""}</div>`; };
+  return `<div class="topics">
+    <div class="hero"><h1 class="display">Cultura general</h1><p>Elige el tema del concurso</p></div>
+    <div class="tchips"><span class="tchip t0 display">${esc(T[0])}</span><span class="tchip t1 display">${esc(T[1])}</span></div>
+    <div class="tgrid">${ALL_TEMAS.map(card).join("")}${card(MEZCLA)}
+      <div class="tw"><button class="tema load" id="bLoad"><span class="ic">📂</span><b class="display">Cargar tema</b><span class="ds">Archivo .json con preguntas nuevas</span></button></div></div>
+    <div class="actions"><button class="btn ghost" id="bBack2">◀ Volver a los equipos</button></div>
+  </div>`;
+}
+/* Lee un tema nuevo desde un archivo .json (mismo formato que los temas de arriba) */
+function loadTemaFile(file){
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const t=JSON.parse(rd.result);
+      const err=validTema(t); if(err){ toast("No se pudo cargar: "+err); return; }
+      t.id=String(t.id||t.nombre).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-");
+      const ya=TEMAS.find(x=>x.id===t.id);
+      if(ya || t.id==="mezcla"){ toast(`El tema «${ya?ya.nombre:t.nombre}» ya viene incluido en el juego. Cambia su "id" para cargarlo como tema nuevo.`); return; }
+      let extra=[]; try{ extra=JSON.parse(localStorage.getItem(EXTRA_KEY))||[]; }catch(e){}
+      const reemplaza=extra.some(x=>x.id===t.id);
+      extra=extra.filter(x=>x.id!==t.id); extra.push(t);
+      try{ localStorage.setItem(EXTRA_KEY, JSON.stringify(extra)); }
+      catch(e){ toast("No se pudo guardar el tema: el navegador no tiene espacio o bloquea el guardado"); return; }
+      buildTemas(); render(); toast(`Tema «${t.nombre}» ${reemplaza?"actualizado":"cargado"} con ${t.preguntas.length} preguntas`);
+    }catch(e){ toast("No se pudo cargar: el archivo no es un .json válido"); }
+  };
+  rd.readAsText(file);
+}
+function validTema(t){
+  if(!t || typeof t!=="object") return "el archivo está vacío";
+  if(!t.nombre) return "falta el nombre del tema";
+  if(!Array.isArray(t.preguntas) || t.preguntas.length<RONDAS+1) return `se necesitan al menos ${RONDAS+1} preguntas (${RONDAS} rondas y 1 de desempate)`;
+  for(let i=0;i<t.preguntas.length;i++){ const q=t.preguntas[i];
+    if(!q || !q.p || !Array.isArray(q.r) || q.r.length!==5) return `la pregunta ${i+1} debe tener texto y 5 respuestas`;
+    if(q.r.some(a=>!Array.isArray(a) || !a[0] || typeof a[1]!=="number")) return `revisa las respuestas de la pregunta ${i+1}`;
+  }
+  return "";
+}
+function quitarTema(id){
+  let extra=[]; try{ extra=JSON.parse(localStorage.getItem(EXTRA_KEY))||[]; }catch(e){}
+  localStorage.setItem(EXTRA_KEY, JSON.stringify(extra.filter(x=>x.id!==id)));
+  buildTemas(); render(); toast("Tema quitado");
 }
 function scoresHTML(active){
   const T=G.teams;
@@ -867,13 +1348,14 @@ function entryHTML(label, extraBtns){
     ${extraBtns||""}
   </div>`;
 }
+function temaLabel(){ const t=temaById(G.tema||"mezcla"); return `${esc(t.icono)} ${esc(t.nombre)}`; }
 function qBox(label, text, locked){
   return `<div class="q display ${ui.enter?"enter":""} ${locked?"locked":""}"><span class="rn">${label}</span>${locked?"🔒 La pregunta aparece después del 3, 2, 1":esc(text)}</div>`;
 }
 function goBox(hint){
   return `<div class="box buzz"><h2 class="ttl display">¿Listos?</h2>
     <button class="btn wide display go-btn" id="bGo">▶ Lanzar pregunta: 3, 2, 1</button>
-    <p class="hint">${esc(hint)} Cuando aparezca la pregunta, gana el turno quien toque primero.</p></div>`;
+    <p class="hint">${esc(hint)} Cuando aparezca la pregunta, gana el turno quien levante la mano primero.</p></div>`;
 }
 function revealAllBtn(cells){
   const n=cells.filter(c=>!c).length;
@@ -889,11 +1371,11 @@ function gameView(){
   const active = ph==="steal"?other(r.control):ph==="roundEnd"?r.winner:(r.control??-1);
   let side="";
   if(ph==="buzz"){
-    side = r.ready===false ? goBox("Un integrante de cada equipo, frente al martillo.")
-      : `<div class="box buzz"><h2 class="ttl display">¿Quién ganó el martillazo?</h2>
-      <button class="big t0 display" data-buzz="0"><span class="ham">🔨</span> ${esc(G.teams[0].name)}</button>
-      <button class="big t1 display" data-buzz="1"><span class="ham">🔨</span> ${esc(G.teams[1].name)}</button>
-      <p class="hint">El martillazo da el control del tablero. Vale 0 puntos.</p></div>`;
+    side = r.ready===false ? goBox("Un integrante de cada equipo al frente, con las manos abajo.")
+      : `<div class="box buzz"><h2 class="ttl display">¿Quién levantó la mano primero?</h2>
+      <button class="big t0 display" data-buzz="0"><span class="ham">✋</span> ${esc(G.teams[0].name)}</button>
+      <button class="big t1 display" data-buzz="1"><span class="ham">✋</span> ${esc(G.teams[1].name)}</button>
+      <p class="hint">Levantar la mano primero da el control del tablero. Vale 0 puntos.</p></div>`;
   } else if(ph==="play"){
     const tm=G.teams[r.control];
     side=`<div class="chars">${r.chars.map((mi,k)=>`<div class="ch ${k===r.turn?"on":""}">
@@ -922,7 +1404,7 @@ function gameView(){
       <button class="btn wide display" id="bNext" style="font-size:clamp(18px,1.8vw,36px);padding:1.5vh 1vw">${G.roundIdx+1<RONDAS?"Siguiente ronda ▶":"Ver resultado final ▶"}</button>`;
   }
   return `${scoresHTML(active)}
-    ${qBox(`Ronda ${G.roundIdx+1} · 100 estudiantes dijeron…`, q.p, r.ready===false)}
+    ${qBox(`Ronda ${G.roundIdx+1} · ${temaLabel()} · 100 estudiantes dijeron…`, q.p, r.ready===false)}
     <div class="main">${boardHTML(r.qi,r.cells,ph==="roundEnd")}<aside class="side c${active}">${side}</aside></div>`;
 }
 function tieView(){
@@ -930,10 +1412,10 @@ function tieView(){
   let side="";
   if(ph==="tieBuzz"){
     side=`${t.note?`<p class="msg warn">⚠ ${esc(t.note)}</p>`:""}
-      ${t.ready===false ? goBox("¡Empate! Un integrante de cada equipo, frente al martillo.")
-      : `<div class="box buzz"><h2 class="ttl display">¡Empate! ¿Quién ganó el martillazo?</h2>
-      <button class="big t0 display" data-buzz="0"><span class="ham">🔨</span> ${esc(G.teams[0].name)}</button>
-      <button class="big t1 display" data-buzz="1"><span class="ham">🔨</span> ${esc(G.teams[1].name)}</button>
+      ${t.ready===false ? goBox("¡Empate! Un integrante de cada equipo al frente, con las manos abajo.")
+      : `<div class="box buzz"><h2 class="ttl display">¡Empate! ¿Quién levantó la mano primero?</h2>
+      <button class="big t0 display" data-buzz="0"><span class="ham">✋</span> ${esc(G.teams[0].name)}</button>
+      <button class="big t1 display" data-buzz="1"><span class="ham">✋</span> ${esc(G.teams[1].name)}</button>
       <p class="hint">Quien acierte una respuesta del tablero gana el concurso.</p></div>`}`;
   } else if(ph==="tiePlay"){
     side=`<div class="steal t${t.answering} display">Responde ${esc(G.teams[t.answering].name)}<small>${t.fails?"El otro equipo falló. ¡Una respuesta para ganar!":"Una respuesta del tablero para ganar."}</small></div>
@@ -956,7 +1438,7 @@ function tieView(){
   }
   const act_ = ph==="tiePlay"?t.answering: ph==="tieWon"?t.answering:-1;
   return `${scoresHTML(act_)}
-    ${qBox("Pregunta de desempate", q.p, ph==="tieBuzz" && t.ready===false)}
+    ${qBox(`Pregunta de desempate · ${temaLabel()}`, q.p, ph==="tieBuzz" && t.ready===false)}
     <div class="main">${boardHTML(t.qi,t.cells,ph==="tieFail"||ph==="tieWon")}<aside class="side c${act_}">${side}</aside></div>`;
 }
 function finalView(){
@@ -992,7 +1474,21 @@ function bind(){
     if(ok){ G.phase="review"; save(); render(); }
   });
   on("bBack","click",()=>{ G.phase="setup"; save(); render(); });
-  on("bStart","click",()=>{ UNDO=[]; startGame(); save(); render(); });
+  on("bTopics","click",()=>{ G.phase="topics"; save(); render(); });
+  on("bBack2","click",()=>{ G.phase="review"; save(); render(); });
+  document.querySelectorAll(".tema[data-tema]").forEach(c=>{
+    c.addEventListener("click",()=>{ UNDO=[]; startGame(c.dataset.tema); save(); render(); });
+    c.addEventListener("mouseenter",()=>applyTheme(temaById(c.dataset.tema)));
+    c.addEventListener("focus",()=>applyTheme(temaById(c.dataset.tema)));
+  });
+  document.querySelectorAll("[data-quitar]").forEach(x=>{
+    x.addEventListener("click",()=>{ const t=temaById(x.dataset.quitar);
+      if(confirm(`¿Quitar el tema «${t.nombre}» de esta computadora?`)) quitarTema(x.dataset.quitar); });
+  });
+  on("bLoad","click",()=>$("fileTema").click());
+  on("bMenu","click",goMenu);
+  on("bResume","click",resumeGame);
+  on("bNew3","click",confirmNew);
   // juego
   document.querySelectorAll("[data-buzz]").forEach(b=>b.addEventListener("click",()=>{
     const t=+b.dataset.buzz;
@@ -1038,13 +1534,15 @@ function bigX(n){
   const app=$("app"); app.classList.remove("shake"); void app.offsetWidth; if(!REDUCED) app.classList.add("shake");
 }
 function toast(t){
+  document.querySelectorAll(".toast").forEach(x=>x.remove());
   const el=document.createElement("div"); el.className="toast"; el.textContent=t; document.body.appendChild(el);
   setTimeout(()=>{ el.style.opacity=0; setTimeout(()=>el.remove(),450); },1800);
 }
 
 /* ---------- inicio ---------- */
 (function init(){
-  BANCO.forEach((q,i)=>{ const s=q.r.reduce((a,x)=>a+x[1],0); if(q.r.length!==5||s!==100) console.warn(`Pregunta ${i+1}: ${q.r.length} respuestas, suman ${s}`); });
+  ALL_TEMAS.forEach(t=>t.preguntas.forEach((q,i)=>{ const s=q.r.reduce((a,x)=>a+x[1],0); if(q.r.length!==5||s!==100) console.warn(`${t.nombre}, pregunta ${i+1}: ${q.r.length} respuestas, suman ${s}`); }));
+  $("fileTema").addEventListener("change",e=>{ const f=e.target.files[0]; if(f) loadTemaFile(f); e.target.value=""; });
   const had=load();
   render();
   if(had && !["setup","review"].includes(G.phase)) toast("Partida recuperada");

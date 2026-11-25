@@ -1,0 +1,63 @@
+{
+  "id": "deportes",
+  "nombre": "Deportes",
+  "icono": "⚽",
+  "campo": "De lo humano y lo comunitario",
+  "descripcion": "Futbol, juegos olímpicos y ejercicio.",
+  "colores": {
+    "a": "#ffde00",
+    "b": "#ff6a00",
+    "c": "#00d084",
+    "fondo": "#06210f",
+    "luz1": "#0f5a2a",
+    "luz2": "#3a2a00",
+    "casilla1": "#138a3e",
+    "casilla2": "#08451f",
+    "borde": "#7cf0a8"
+  },
+  "motivos": ["⚽", "🏀", "🏆", "🥇", "🏃", "🎾"],
+  "preguntas": [
+    { "p": "Menciona un deporte olímpico", "r": [
+      ["Fútbol", 30, "futbol, fut, soccer"],
+      ["Natación", 25, "natacion, nadar"],
+      ["Atletismo", 20, "correr, carreras"],
+      ["Gimnasia", 15, "gimnasia olimpica"],
+      ["Boxeo", 10, "box"]
+    ]},
+    { "p": "Menciona algo que usa un futbolista", "r": [
+      ["Balón", 35, "balon, pelota"],
+      ["Tacos", 25, "tachones, zapatos de futbol"],
+      ["Espinilleras", 15, "espinillera"],
+      ["Uniforme", 15, "playera, camiseta, jersey, short"],
+      ["Calcetas", 10, "calcetines, medias"]
+    ]},
+    { "p": "Menciona un equipo de futbol mexicano", "r": [
+      ["América", 30, "america, aguilas"],
+      ["Chivas", 25, "guadalajara, chivas rayadas"],
+      ["Cruz Azul", 18, "cruz azul, la maquina"],
+      ["Pumas", 15, "unam"],
+      ["Tigres", 12, "tigres uanl"]
+    ]},
+    { "p": "Menciona un deporte que se juega con raqueta", "r": [
+      ["Tenis", 40, "tennis"],
+      ["Ping pong", 20, "tenis de mesa"],
+      ["Bádminton", 20, "badminton"],
+      ["Frontón", 12, "fronton"],
+      ["Pádel", 8, "padel"]
+    ]},
+    { "p": "Menciona algo que haces antes de hacer ejercicio", "r": [
+      ["Calentar", 35, "calentamiento"],
+      ["Estirar", 30, "estiramiento, estirarse"],
+      ["Tomar agua", 15, "agua, hidratarse"],
+      ["Ponerse ropa deportiva", 12, "ropa deportiva, cambiarse, ponerse los tenis"],
+      ["Comer algo ligero", 8, "comer, fruta, desayunar"]
+    ]},
+    { "p": "Menciona algo que se entrega a los ganadores de una competencia", "r": [
+      ["Medalla", 35, "medallas, medalla de oro"],
+      ["Trofeo", 30, "copa, trofeos"],
+      ["Diploma", 15, "reconocimiento, certificado"],
+      ["Premio en dinero", 12, "dinero, premio"],
+      ["Aplausos", 8, "porra, felicitaciones"]
+    ]}
+  ]
+}

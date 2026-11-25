@@ -1,0 +1,105 @@
+{
+  "id": "cuerpo",
+  "nombre": "Aparatos y sistemas del cuerpo humano",
+  "icono": "🫀",
+  "campo": "Saberes y pensamiento científico",
+  "descripcion": "Clase de Biología: órganos, aparatos y sistemas que trabajan juntos.",
+  "colores": {
+    "a": "#ff4d6d",
+    "b": "#ffb3c1",
+    "c": "#4dd4ff",
+    "fondo": "#2a0611",
+    "luz1": "#6b0f2a",
+    "luz2": "#0f3a5a",
+    "casilla1": "#a4133c",
+    "casilla2": "#590d22",
+    "borde": "#ff8fa3"
+  },
+  "motivos": ["🫀", "🫁", "🧠", "🦴", "💪", "🩸"],
+  "preguntas": [
+    { "p": "Menciona un aparato o sistema del cuerpo humano", "r": [
+      ["Circulatorio", 25, "aparato circulatorio"],
+      ["Digestivo", 25, "aparato digestivo"],
+      ["Respiratorio", 20, "aparato respiratorio"],
+      ["Nervioso", 15, "sistema nervioso"],
+      ["Óseo", 15, "oseo, sistema oseo, esqueleto, esqueletico"]
+    ]},
+    { "p": "Menciona un nivel de organización del cuerpo", "r": [
+      ["Célula", 30, "celula, celulas"],
+      ["Órgano", 25, "organo, organos"],
+      ["Tejido", 20, "tejidos"],
+      ["Aparato o sistema", 15, "aparato, sistema, aparatos, sistemas"],
+      ["Organismo", 10, "cuerpo completo, organismos"]
+    ]},
+    { "p": "Menciona un órgano del aparato digestivo", "r": [
+      ["Estómago", 35, "estomago, panza"],
+      ["Intestino delgado", 20, "intestino delgado"],
+      ["Boca", 18, "boca"],
+      ["Esófago", 15, "esofago"],
+      ["Intestino grueso", 12, "intestino grueso, colon"]
+    ]},
+    { "p": "Menciona una parte del aparato respiratorio", "r": [
+      ["Pulmones", 35, "pulmon"],
+      ["Fosas nasales", 25, "nariz, fosas nasales"],
+      ["Tráquea", 18, "traquea"],
+      ["Diafragma", 12, "diafragma"],
+      ["Alvéolos", 10, "alveolos, alveolo"]
+    ]},
+    { "p": "Menciona algo que forma parte del aparato circulatorio", "r": [
+      ["Corazón", 40, "corazon"],
+      ["Venas", 20, "vena, vena cava"],
+      ["Arterias", 20, "arteria, aorta, arteria aorta"],
+      ["Sangre", 12, "sangre"],
+      ["Vasos sanguíneos", 8, "vasos sanguineos"]
+    ]},
+    { "p": "Menciona algo que forma parte del aparato urinario", "r": [
+      ["Riñones", 40, "rinon, rinones"],
+      ["Vejiga", 30, "vejiga"],
+      ["Uretra", 12, "uretra"],
+      ["Uréteres", 10, "ureter, ureteres"],
+      ["Orina", 8, "pipi, pis"]
+    ]},
+    { "p": "Menciona un hueso del sistema óseo", "r": [
+      ["Cráneo", 30, "craneo, calavera"],
+      ["Costillas", 25, "costilla"],
+      ["Columna vertebral", 20, "columna, vertebras"],
+      ["Fémur", 15, "femur"],
+      ["Pelvis", 10, "cadera"]
+    ]},
+    { "p": "Menciona un músculo del cuerpo", "r": [
+      ["Bíceps", 35, "biceps"],
+      ["Abdominales", 25, "abdomen, abdominal, cuadritos"],
+      ["Cuádriceps", 15, "cuadriceps, muslo"],
+      ["Pectoral", 15, "pectorales, pecho"],
+      ["Deltoides", 10, "deltoide, hombro"]
+    ]},
+    { "p": "Menciona una glándula del sistema endocrino", "r": [
+      ["Páncreas", 30, "pancreas"],
+      ["Tiroides", 25, "tiroides"],
+      ["Hipófisis", 15, "hipofisis, pituitaria"],
+      ["Ovarios", 15, "ovario"],
+      ["Testículos", 15, "testiculo"]
+    ]},
+    { "p": "Menciona algo del sistema linfático e inmunitario", "r": [
+      ["Ganglios linfáticos", 30, "ganglios, ganglio, bolitas"],
+      ["Glóbulos blancos", 25, "globulos blancos, defensas, leucocitos"],
+      ["Amígdalas", 20, "amigdalas, anginas"],
+      ["Bazo", 15, "bazo"],
+      ["Timo", 10, "timo"]
+    ]},
+    { "p": "Menciona algo que forma la piel o el sistema tegumentario", "r": [
+      ["Piel", 35, "piel"],
+      ["Pelo", 25, "cabello, vello"],
+      ["Uñas", 20, "uñitas"],
+      ["Glándulas sudoríparas", 12, "sudor, glandulas sudoriparas, sudoripara"],
+      ["Epidermis", 8, "epidermis, dermis, hipodermis"]
+    ]},
+    { "p": "Menciona algo que hace tu cuerpo cuando haces ejercicio", "r": [
+      ["Respirar más rápido", 30, "respirar rapido, respirar mas, agitarse, jadear"],
+      ["Sudar", 25, "sudor"],
+      ["El corazón late más rápido", 20, "latir, latidos, pulso, corazon late rapido"],
+      ["Contraer los músculos", 15, "musculos, contraer, mover los musculos"],
+      ["Calentarse", 10, "calor, temperatura, calentarse"]
+    ]}
+  ]
+}

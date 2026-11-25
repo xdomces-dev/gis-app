@@ -80,6 +80,13 @@ Botón en la barra superior (`toggleModoAnon`). Muestra alumnos como "Alumno 01�
 ### Nota técnica
 Funciones llamadas desde `onclick`/`onchange` en el HTML deben ser globales: definirlas como `window.fn=function…` o agregarlas al `Object.assign(window,{…})` al final del `<script type="module">`. Si no, fallan con ReferenceError.
 
+### Materiales de clase (`materiales/`) — independientes de GIS
+Páginas sueltas para el aula, fuera de `public/` (no se despliegan con Firebase). Ver `materiales/README.md`.
+- `duelo-teocalli/index.html`: concurso «100 estudiantes dijeron» para proyectar; un solo archivo, offline, lo controla solo el docente. Menú «Cultura general» con temas (`TEMAS` en el código, cada uno con colores propios) y carga de temas `.json` (`temas/plantilla-tema.json`, mínimo 6 preguntas). Cada pregunta: 5 respuestas que suman 100 con sinónimos. Guardado en `localStorage['duelo-teocalli-v2']`.
+- Para convertir una clase (p. ej. un .pptx) en tema: preguntas abiertas «Menciona…», solo con contenido de la clase; ejemplo en `temas/cuerpo-humano.json`.
+- `cuadernillo-colon/index.html`: examen en video de una sola entrega por teléfono (se publica en Netlify).
+- Al editar el Duelo: comprobar que ningún sinónimo choque con otra respuesta (`matchAnswer`) y que el menú quepa a 1366×768.
+
 ### Flujo multi-máquina (laptop escuela ↔ Leviatan casa)
 `git pull` al empezar · commit + `git push` al terminar · `firebase deploy --only hosting` SOLO después del push (nunca publicar sin subir a GitHub).
 
