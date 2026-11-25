@@ -667,10 +667,31 @@ function nextThree(t){
   tm.rot=(tm.rot+3)%n;
   return out;
 }
+/* Menú principal: pausa la partida y lleva a la pantalla de equipos */
+function goMenu(){
+  stopConfetti();
+  act(()=>{
+    G.resume=G.phase;
+    G.draft=G.teams.map(t=>({name:t.name, list:t.members.join("\n")}));
+    G.phase="review";
+  });
+}
+/* Continuar: aplica los cambios de nombres e integrantes sin tocar los puntos */
+function resumeGame(){
+  act(()=>{
+    G.draft.forEach((d,i)=>{
+      const tm=G.teams[i], m=parseList(d.list);
+      tm.name=d.name.trim()||(i?"Equipo Naranja":"Equipo Azul");
+      tm.members=m; tm.rot=tm.rot%m.length;
+      if(G.round && G.round.control===i) G.round.chars=G.round.chars.map(c=>c%m.length);
+    });
+    G.phase=G.resume; G.resume=null;
+  });
+}
 function startGame(){
   G.teams = G.draft.map((d,i)=>({name:d.name.trim()||(i?"Equipo Naranja":"Equipo Azul"), members:parseList(d.list), score:0, rot:0}));
   G.used=[]; G.qOrder=[]; for(let i=0;i<RONDAS;i++) G.qOrder.push(pickUnused());
-  G.roundIdx=0; G.tie=null; G.winner=null; ui.shown=null;
+  G.roundIdx=0; G.tie=null; G.winner=null; G.resume=null; ui.shown=null;
   startRound();
 }
 function startRound(){
@@ -795,6 +816,7 @@ function topBar(){
       ${inGame?`<button class="tool" id="bUndo" ${UNDO.length?"":"disabled"}>↶ Deshacer última acción</button>`:""}
       <button class="tool" id="bSound">${G.sound?"🔊 Sonido":"🔇 Sin sonido"}</button>
       <button class="tool" id="bFull">⛶ Pantalla completa</button>
+      ${inGame?`<button class="tool" id="bMenu">🏠 Menú principal</button>`:""}
       ${inGame?`<button class="tool" id="bNew">⟲ Nueva partida</button>`:""}
     </div></header>`;
 }
@@ -829,7 +851,10 @@ function reviewView(){
         <li>Gana quien tenga más puntos al final. Si hay empate, se juega una pregunta de desempate.</li>
         <li>Puntajes de juego inspirados en una encuesta escolar.</li>
       </ul></div>
-    <div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn" id="bStart">Iniciar concurso ▶</button></div>
+    ${G.resume
+      ? `<div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn ghost" id="bNew3">⟲ Nueva partida</button><button class="btn" id="bResume">▶ Continuar partida</button></div>
+         <p class="hint">Partida en pausa (${G.resume.startsWith("tie")?"desempate":`ronda ${G.roundIdx+1} de ${RONDAS}`}). Si corriges los equipos, se conservan los puntos.</p>`
+      : `<div class="actions"><button class="btn ghost" id="bBack">✎ Corregir equipos</button><button class="btn" id="bStart">Iniciar concurso ▶</button></div>`}
   </div>`;
 }
 function scoresHTML(active){
@@ -993,6 +1018,9 @@ function bind(){
   });
   on("bBack","click",()=>{ G.phase="setup"; save(); render(); });
   on("bStart","click",()=>{ UNDO=[]; startGame(); save(); render(); });
+  on("bMenu","click",goMenu);
+  on("bResume","click",resumeGame);
+  on("bNew3","click",confirmNew);
   // juego
   document.querySelectorAll("[data-buzz]").forEach(b=>b.addEventListener("click",()=>{
     const t=+b.dataset.buzz;
