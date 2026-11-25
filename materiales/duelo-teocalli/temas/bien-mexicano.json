@@ -1,0 +1,119 @@
+{
+  "id": "mexicano",
+  "nombre": "¡Bien mexicano!",
+  "icono": "🪅",
+  "campo": "Lenguajes",
+  "descripcion": "Frases de barrio, comida típica, música y fiestas.",
+  "colores": {
+    "a": "#ff1f7a",
+    "b": "#ffc800",
+    "c": "#00b36b",
+    "fondo": "#1a0a20",
+    "luz1": "#6a0f4a",
+    "luz2": "#0b4a2a",
+    "casilla1": "#c2185b",
+    "casilla2": "#6a0d33",
+    "borde": "#ff7ab0"
+  },
+  "motivos": ["🪅", "🎺", "🎸", "🌵", "🌽", "💃"],
+  "preguntas": [
+    { "p": "Menciona un apodo cariñoso para la novia o el novio", "r": [
+      ["Mi amor", 30, "amor, amorcito"],
+      ["Mi vida", 22, "vida, vidita"],
+      ["Bebé", 18, "bebe, baby, beibi"],
+      ["Gordo o gordita", 15, "gordita, gordo, gordis"],
+      ["Chula", 15, "chulo, preciosa, hermosa, reina"]
+    ]},
+    { "p": "Menciona cómo se le dice a la casa en el barrio", "r": [
+      ["Chante", 30, "chantecito"],
+      ["Cantón", 30, "canton"],
+      ["Casita", 15, "mi casita, mi casa"],
+      ["Jacal", 15, "jacalito"],
+      ["Depa", 10, "departamento"]
+    ]},
+    { "p": "Menciona cómo se le dice al dinero", "r": [
+      ["Lana", 35, "lanita"],
+      ["Varo", 25, "baro, varos, baros, varitos"],
+      ["Feria", 18, "ferita"],
+      ["Billete", 12, "billetes, biyuyo"],
+      ["Morlacos", 10, "morlaco"]
+    ]},
+    { "p": "Menciona cómo le dices a un amigo", "r": [
+      ["Carnal", 30, "carnalito, carnala"],
+      ["Compa", 25, "compadre, compita"],
+      ["Güey", 20, "wey, guey, buey"],
+      ["Bro", 15, "brother"],
+      ["Cuate", 10, "cuatacho, valedor"]
+    ]},
+    { "p": "Menciona una expresión muy mexicana", "r": [
+      ["¡Órale!", 30, "orale"],
+      ["¡No manches!", 25, "no manches, no manchen"],
+      ["¡Qué padre!", 20, "que padre, padre, padrisimo"],
+      ["¡Ahorita!", 15, "ahorita, ahoritita"],
+      ["¡Aguas!", 10, "aguas"]
+    ]},
+    { "p": "Menciona algo que grita el vendedor que pasa por tu calle", "r": [
+      ["¡Tamales oaxaqueños!", 35, "tamales, tamales oaxaquenos"],
+      ["¡El gas!", 25, "gas, el gaas"],
+      ["¡Se compran colchones!", 20, "colchones, se compran colchones, fierro viejo, refrigeradores"],
+      ["¡Elotes!", 12, "elotes, esquites"],
+      ["¡Camotes!", 8, "camote, camotero"]
+    ]},
+    { "p": "Menciona un platillo típico mexicano", "r": [
+      ["Mole", 30, "mole poblano"],
+      ["Pozole", 25, "pozolito"],
+      ["Chiles en nogada", 18, "nogada"],
+      ["Enchiladas", 15, "enchilada"],
+      ["Chilaquiles", 12, "chilaquil"]
+    ]},
+    { "p": "Menciona una bebida tradicional mexicana sin alcohol", "r": [
+      ["Agua de horchata", 30, "horchata"],
+      ["Agua de jamaica", 25, "jamaica"],
+      ["Atole", 20, "champurrado"],
+      ["Chocolate caliente", 15, "chocolate"],
+      ["Agua de tamarindo", 10, "tamarindo"]
+    ]},
+    { "p": "Menciona un género de música mexicana", "r": [
+      ["Banda", 30, "banda sinaloense, tambora"],
+      ["Mariachi", 25, "ranchera, rancheras"],
+      ["Norteño", 20, "nortena, nortenas, norteno"],
+      ["Cumbia", 15, "cumbias, sonidero"],
+      ["Son jarocho", 10, "jarocho"]
+    ]},
+    { "p": "Menciona un instrumento de la música mexicana", "r": [
+      ["Guitarra", 30, "guitarron, vihuela"],
+      ["Trompeta", 25, "trompetas"],
+      ["Violín", 20, "violin"],
+      ["Acordeón", 15, "acordeon"],
+      ["Tuba", 10, "sousafon, charcheta"]
+    ]},
+    { "p": "Menciona una canción mexicana que todo mundo conoce", "r": [
+      ["Cielito lindo", 30, "cielito, ay ay ay ay"],
+      ["El Rey", 25, "rey, con dinero y sin dinero"],
+      ["Las Mañanitas", 20, "mananitas"],
+      ["La Bamba", 15, "bamba"],
+      ["México lindo y querido", 10, "mexico lindo"]
+    ]},
+    { "p": "Menciona algo que no falta en una fiesta mexicana", "r": [
+      ["Piñata", 30, "pinata, pinatas"],
+      ["Música", 25, "musica, banda, sonido"],
+      ["Comida", 20, "taquiza, carnitas, barbacoa"],
+      ["Papel picado", 15, "adornos"],
+      ["Pastel", 10, "pastelito"]
+    ]},
+    { "p": "Menciona algo que se vende en el tianguis", "r": [
+      ["Ropa", 30, "ropa usada, paca"],
+      ["Fruta y verdura", 25, "fruta, frutas, verdura, verduras"],
+      ["Comida", 20, "tacos, garnachas, quesadillas"],
+      ["Juguetes", 15, "juguete"],
+      ["Zapatos", 10, "tenis, huaraches"]
+    ]},
+    { "p": "Menciona un juego tradicional mexicano", "r": [
+      ["Lotería", 30, "loteria"],
+      ["Canicas", 25, "canica, cotorras"],
+      ["Trompo", 20, "trompos"],
+      ["Balero", 15, "baleros"],
+      ["Matatena", 10, "matatenas"]
+    ]}
+  ]
+}
