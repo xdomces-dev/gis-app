@@ -55,7 +55,7 @@ En `duelo-teocalli/index.html`, busca `TEMAS Y PREGUNTAS · EDITA AQUÍ`. Copia 
 
 - Cada respuesta lleva el texto que se muestra, los puntos y los sinónimos separados por comas.
 - Van cinco respuestas por pregunta, de mayor a menor, y los puntos suman 100.
-- Cada tema necesita al menos 5 preguntas.
+- Cada tema necesita al menos 6 preguntas: 5 para las rondas y 1 para el desempate.
 - Las preguntas deben ser abiertas, con varias respuestas válidas («Menciona…»), no de una sola respuesta correcta.
 
 ### Colores del tema

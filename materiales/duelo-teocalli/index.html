@@ -82,7 +82,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 .tool{background:#ffffff14;color:var(--txt);border:2px solid #ffffff30;border-radius:999px;padding:.5vh .9vw;
   font-weight:700;font-size:clamp(12px,.9vw,18px);white-space:nowrap;backdrop-filter:blur(4px)}
 .tool:hover{border-color:var(--gold);color:var(--gold)}
-.tool:disabled{opacity:.35;cursor:not-allowed}
+.tool:disabled{opacity:.7;cursor:not-allowed;filter:grayscale(1);border-style:dashed}
 
 /* ================= MARCADOR ================= */
 .scores{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2vw;align-items:stretch}
@@ -173,7 +173,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 .hint{color:var(--muted);text-align:center;font-weight:700;font-size:clamp(12px,1vw,20px);margin:0}
 
 .chars{display:grid;gap:.7vh}
-.ch{border-radius:14px;padding:.7vh .9vw;background:#1a0b47;border:3px solid #3b2a80;opacity:.68;display:flex;align-items:center;gap:.8vw;transition:all .35s}
+.ch{border-radius:14px;padding:.7vh .9vw;background:#1a0b47;border:3px solid #3b2a80;opacity:.75;display:flex;align-items:center;gap:.8vw;transition:all .35s}
 .ch .k{font-size:clamp(11px,.9vw,18px);font-weight:900;color:var(--muted);white-space:nowrap}
 .ch .nm{font-size:clamp(16px,1.8vw,36px);line-height:1.05;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ch .d{font-size:clamp(10px,.8vw,16px);color:var(--muted);font-weight:700;white-space:nowrap}
@@ -264,7 +264,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
   background:radial-gradient(circle at 85% 10%,var(--k2) 0%,transparent 55%),linear-gradient(150deg,var(--k1),var(--kf) 75%);
   border:4px solid var(--ka);box-shadow:0 10px 0 #0006,0 0 30px color-mix(in srgb,var(--ka) 35%,transparent);
   transition:transform .2s, box-shadow .2s;animation:qin .6s cubic-bezier(.2,1.4,.4,1) both;display:flex;flex-direction:column;gap:.5vh}
-.tema:nth-child(2){animation-delay:.06s}.tema:nth-child(3){animation-delay:.12s}.tema:nth-child(4){animation-delay:.18s}.tema:nth-child(5){animation-delay:.24s}.tema:nth-child(6){animation-delay:.3s}
+.tw:nth-child(2) .tema{animation-delay:.06s}.tw:nth-child(3) .tema{animation-delay:.12s}.tw:nth-child(4) .tema{animation-delay:.18s}.tw:nth-child(5) .tema{animation-delay:.24s}.tw:nth-child(6) .tema{animation-delay:.3s}
 .tema:hover,.tema:focus-visible{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 16px 0 #0006,0 0 46px var(--ka)}
 .tema .ic{font-size:clamp(30px,3.4vw,68px);line-height:1;filter:drop-shadow(0 4px 0 #0006)}
 .tema:hover .ic{animation:wave .9s ease-in-out}
@@ -272,7 +272,9 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 .tema .cf{align-self:flex-start;background:#0006;border:2px solid var(--ka);color:var(--ka);border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
 .tema .ds{font-weight:600;font-size:clamp(11px,.9vw,19px);opacity:.95}
 .tema .nq{margin-top:auto;font-weight:900;font-size:clamp(11px,.9vw,18px);color:var(--k2)}
-.tema .rm{position:absolute;z-index:2;top:1vh;right:.8vw;background:#0008;color:#fff;border:2px solid #fff6;border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
+.tw{position:relative;display:flex}
+.tw>.tema{flex:1}
+.tw .rm{position:absolute;z-index:2;top:1vh;right:.8vw;cursor:pointer;background:#0008;color:#fff;border:2px solid #fff6;border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
 .tema.load{border-style:dashed;background:#ffffff10;align-items:center;justify-content:center;text-align:center;--ka:#ffffff88}
 .tchips{display:flex;gap:1vw;justify-content:center;flex-wrap:wrap}
 .tchip{border-radius:999px;padding:.4vh 1.2vw;font-weight:900;font-size:clamp(13px,1.2vw,24px);border:3px solid #fff6}
@@ -291,7 +293,7 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 #count small{position:absolute;bottom:12vh;font-weight:900;font-size:clamp(18px,2.2vw,44px);color:var(--teal)}
 @keyframes tick{from{transform:scale(2.4);opacity:0}25%{opacity:1}to{transform:scale(1)}}
 .q.locked{color:#7a63c9;background:linear-gradient(180deg,#efe9ff,#d9ccff)}
-.big:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
+.big:disabled{opacity:.7;cursor:not-allowed;filter:grayscale(1)}
 .go-btn{font-size:clamp(20px,2.3vw,46px)!important;padding:2.2vh 1vw!important;animation:glow .8s ease-in-out infinite alternate}
 @keyframes glow{from{box-shadow:0 4px 0 #a35a00,0 0 0 #ffd84a00}to{box-shadow:0 4px 0 #a35a00,0 0 36px #ffd84a}}
 
@@ -337,7 +339,8 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
      picado); fondo, luz1 y luz2 pintan el escenario; casilla1, casilla2
      y borde pintan las casillas tapadas.
    - motivos: emojis que flotan en el fondo.
-   - preguntas: al menos 5. Cada una con 5 respuestas que suman 100:
+   - preguntas: al menos 6 (5 rondas y 1 de desempate). Cada una con
+     5 respuestas que suman 100:
        ["Respuesta", puntos, "sinónimos separados por comas"]
    También puedes cargar un tema sin tocar el código desde el menú de
    temas («Cargar tema .json»). Ver plantilla-tema.json.
@@ -825,7 +828,7 @@ const TEMAS = [
   {p:"Menciona algo que forma la piel o el sistema tegumentario", r:[
   ["Piel",35,"piel"],
   ["Pelo",25,"cabello, vello"],
-  ["Uñas",20,"unas"],
+  ["Uñas",20,"uñitas"],
   ["Glándulas sudoríparas",12,"sudor, glandulas sudoriparas, sudoripara"],
   ["Epidermis",8,"epidermis, dermis, hipodermis"]]},
   {p:"Menciona algo que hace tu cuerpo cuando haces ejercicio", r:[
@@ -862,10 +865,10 @@ const ROLES = ["Abre la ronda.","Da la siguiente respuesta.","Continúa el table
 /* ===================================================================
    COMPARACIÓN DE RESPUESTAS
    =================================================================== */
-/* «una/unas» no se ignoran: al quitar acentos, «uñas» se vuelve «unas» */
-const STOP = new Set(["un","unos","el","la","los","las","lo","de","del","al","a","y","e","o","u","en","con","que","se","me","le","les","mi","mis","su","sus","tu","tus","pues","este","esta","eh","por","para","yo"]);
+/* La ñ se cambia por «ny» antes de quitar acentos: así «uñas» (unyas) no se confunde con el artículo «unas» */
+const STOP = new Set(["un","una","unos","unas","el","la","los","las","lo","de","del","al","a","y","e","o","u","en","con","que","se","me","le","les","mi","mis","su","sus","tu","tus","pues","este","esta","eh","por","para","yo"]);
 function toks(s){
-  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+  return String(s).toLowerCase().replace(/ñ/g,"ny").normalize("NFD").replace(/[̀-ͯ]/g,"")
     .replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w && !STOP.has(w));
 }
 function wEq(a,b){
@@ -1025,7 +1028,11 @@ function shuffle(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=M
 function pickUnused(){
   const all=keysFor(G.tema||"mezcla");
   let pool=all.filter(k=>!G.used.includes(k));
-  if(!pool.length){ G.used=G.used.filter(k=>!all.includes(k)); pool=all; }
+  if(!pool.length){
+    G.used=G.used.filter(k=>!all.includes(k));
+    const fresh=all.filter(k=>!G.qOrder.includes(k) && !(G.tie && G.tie.qi===k));
+    pool=fresh.length?fresh:all;
+  }
   const q=pool[Math.floor(Math.random()*pool.length)]; G.used.push(q); return q;
 }
 /* Siguientes tres integrantes del equipo, en orden de registro y de forma circular */
@@ -1037,24 +1044,33 @@ function nextThree(t){
 }
 /* Menú principal: pausa la partida y lleva a la pantalla de equipos */
 function goMenu(){
-  stopConfetti();
-  act(()=>{
-    G.resume=G.phase;
-    G.draft=G.teams.map(t=>({name:t.name, list:t.members.join("\n")}));
-    G.phase="review";
-  });
+  stopConfetti(); ui.msg=null; ui.pending="";
+  G.resume=G.phase;
+  G.draft=G.teams.map(t=>({name:t.name, list:t.members.join("\n")}));
+  G.phase="review";
+  save(); render();
 }
 /* Continuar: aplica los cambios de nombres e integrantes sin tocar los puntos */
-function resumeGame(){
-  act(()=>{
-    G.draft.forEach((d,i)=>{
-      const tm=G.teams[i], m=parseList(d.list);
-      tm.name=d.name.trim()||(i?"Equipo Naranja":"Equipo Azul");
-      tm.members=m; tm.rot=tm.rot%m.length;
-      if(G.round && G.round.control===i) G.round.chars=G.round.chars.map(c=>c%m.length);
-    });
-    G.phase=G.resume; G.resume=null;
+/* Aplica nombres e integrantes corregidos a un estado (el actual o una copia de «Deshacer») */
+function applyRoster(st, drafts){
+  drafts.forEach((d,i)=>{
+    const tm=st.teams[i], m=parseList(d.list), changed=m.length!==tm.members.length;
+    tm.name=d.name.trim()||(i?"Equipo Naranja":"Equipo Azul");
+    tm.members=m; tm.rot=tm.rot%m.length;
+    if(changed && st.round && st.round.control===i && st.round.chars.length){
+      const start=st.round.chars[0]%m.length;
+      st.round.chars=[0,1,2].map(k=>(start+k)%m.length);
+    }
   });
+}
+function resumeGame(){
+  ui.msg=null; ui.pending="";
+  const drafts=G.draft;
+  applyRoster(G, drafts);
+  // así «Deshacer» después de continuar no regresa los nombres viejos
+  UNDO.forEach(st=>{ if(st.teams && st.teams.length===2){ applyRoster(st, drafts); st.draft=clone(drafts); } });
+  G.phase=G.resume; G.resume=null;
+  save(); render();
 }
 function startGame(tema){
   G.tema = tema || G.tema || "mezcla";
@@ -1250,16 +1266,15 @@ function reviewView(){
 function topicsView(){
   const T=G.draft.map((d,i)=>d.name.trim()||(i?"Equipo Naranja":"Equipo Azul"));
   const card=t=>{ const c=Object.assign({},MEZCLA.colores,t.colores||{}); const n=keysFor(t.id).length;
-    return `<button class="tema" data-tema="${esc(t.id)}" style="--ka:${esc(c.a)};--k1:${esc(c.casilla1)};--kf:${esc(c.fondo)};--k2:${esc(c.b)}">
-      ${t.extra?`<span class="rm" data-quitar="${esc(t.id)}" role="button" tabindex="0">✕ Quitar</span>`:""}
+    return `<div class="tw"><button class="tema" data-tema="${esc(t.id)}" style="--ka:${esc(c.a)};--k1:${esc(c.casilla1)};--kf:${esc(c.fondo)};--k2:${esc(c.b)}">
       <span class="ic">${esc(t.icono||"❓")}</span><b class="display">${esc(t.nombre)}</b>
       <span class="cf">${esc(t.campo||"Tema cargado")}</span><span class="ds">${esc(t.descripcion||"")}</span>
-      <span class="nq">${n} preguntas</span></button>`; };
+      <span class="nq">${n} preguntas</span></button>${t.extra?`<button class="rm" data-quitar="${esc(t.id)}" aria-label="Quitar el tema ${esc(t.nombre)}">✕ Quitar</button>`:""}</div>`; };
   return `<div class="topics">
     <div class="hero"><h1 class="display">Cultura general</h1><p>Elige el tema del concurso</p></div>
     <div class="tchips"><span class="tchip t0 display">${esc(T[0])}</span><span class="tchip t1 display">${esc(T[1])}</span></div>
     <div class="tgrid">${ALL_TEMAS.map(card).join("")}${card(MEZCLA)}
-      <button class="tema load" id="bLoad"><span class="ic">📂</span><b class="display">Cargar tema</b><span class="ds">Archivo .json con preguntas nuevas</span></button></div>
+      <div class="tw"><button class="tema load" id="bLoad"><span class="ic">📂</span><b class="display">Cargar tema</b><span class="ds">Archivo .json con preguntas nuevas</span></button></div></div>
     <div class="actions"><button class="btn ghost" id="bBack2">◀ Volver a los equipos</button></div>
   </div>`;
 }
@@ -1271,11 +1286,14 @@ function loadTemaFile(file){
       const t=JSON.parse(rd.result);
       const err=validTema(t); if(err){ toast("No se pudo cargar: "+err); return; }
       t.id=String(t.id||t.nombre).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-");
-      if(TEMAS.some(x=>x.id===t.id) || t.id==="mezcla") t.id+="-2";
+      const ya=TEMAS.find(x=>x.id===t.id);
+      if(ya || t.id==="mezcla"){ toast(`El tema «${ya?ya.nombre:t.nombre}» ya viene incluido en el juego. Cambia su "id" para cargarlo como tema nuevo.`); return; }
       let extra=[]; try{ extra=JSON.parse(localStorage.getItem(EXTRA_KEY))||[]; }catch(e){}
+      const reemplaza=extra.some(x=>x.id===t.id);
       extra=extra.filter(x=>x.id!==t.id); extra.push(t);
-      localStorage.setItem(EXTRA_KEY, JSON.stringify(extra));
-      buildTemas(); render(); toast(`Tema «${t.nombre}» cargado con ${t.preguntas.length} preguntas`);
+      try{ localStorage.setItem(EXTRA_KEY, JSON.stringify(extra)); }
+      catch(e){ toast("No se pudo guardar el tema: el navegador no tiene espacio o bloquea el guardado"); return; }
+      buildTemas(); render(); toast(`Tema «${t.nombre}» ${reemplaza?"actualizado":"cargado"} con ${t.preguntas.length} preguntas`);
     }catch(e){ toast("No se pudo cargar: el archivo no es un .json válido"); }
   };
   rd.readAsText(file);
@@ -1283,7 +1301,7 @@ function loadTemaFile(file){
 function validTema(t){
   if(!t || typeof t!=="object") return "el archivo está vacío";
   if(!t.nombre) return "falta el nombre del tema";
-  if(!Array.isArray(t.preguntas) || t.preguntas.length<5) return "se necesitan al menos 5 preguntas";
+  if(!Array.isArray(t.preguntas) || t.preguntas.length<RONDAS+1) return `se necesitan al menos ${RONDAS+1} preguntas (${RONDAS} rondas y 1 de desempate)`;
   for(let i=0;i<t.preguntas.length;i++){ const q=t.preguntas[i];
     if(!q || !q.p || !Array.isArray(q.r) || q.r.length!==5) return `la pregunta ${i+1} debe tener texto y 5 respuestas`;
     if(q.r.some(a=>!Array.isArray(a) || !a[0] || typeof a[1]!=="number")) return `revisa las respuestas de la pregunta ${i+1}`;
@@ -1459,14 +1477,13 @@ function bind(){
   on("bTopics","click",()=>{ G.phase="topics"; save(); render(); });
   on("bBack2","click",()=>{ G.phase="review"; save(); render(); });
   document.querySelectorAll(".tema[data-tema]").forEach(c=>{
-    c.addEventListener("click",e=>{ if(e.target.closest("[data-quitar]")) return; UNDO=[]; startGame(c.dataset.tema); save(); render(); });
+    c.addEventListener("click",()=>{ UNDO=[]; startGame(c.dataset.tema); save(); render(); });
     c.addEventListener("mouseenter",()=>applyTheme(temaById(c.dataset.tema)));
     c.addEventListener("focus",()=>applyTheme(temaById(c.dataset.tema)));
   });
   document.querySelectorAll("[data-quitar]").forEach(x=>{
-    const go=e=>{ e.stopPropagation(); const t=temaById(x.dataset.quitar);
-      if(confirm(`¿Quitar el tema «${t.nombre}» de esta computadora?`)) quitarTema(x.dataset.quitar); };
-    x.addEventListener("click",go); x.addEventListener("keydown",e=>{ if(e.key==="Enter") go(e); });
+    x.addEventListener("click",()=>{ const t=temaById(x.dataset.quitar);
+      if(confirm(`¿Quitar el tema «${t.nombre}» de esta computadora?`)) quitarTema(x.dataset.quitar); });
   });
   on("bLoad","click",()=>$("fileTema").click());
   on("bMenu","click",goMenu);

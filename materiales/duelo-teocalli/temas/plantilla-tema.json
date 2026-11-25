@@ -51,6 +51,13 @@
       ["Tomar agua", 15, "agua, hidratarse"],
       ["Ponerse ropa deportiva", 12, "ropa deportiva, cambiarse, ponerse los tenis"],
       ["Comer algo ligero", 8, "comer, fruta, desayunar"]
+    ]},
+    { "p": "Menciona algo que se entrega a los ganadores de una competencia", "r": [
+      ["Medalla", 35, "medallas, medalla de oro"],
+      ["Trofeo", 30, "copa, trofeos"],
+      ["Diploma", 15, "reconocimiento, certificado"],
+      ["Premio en dinero", 12, "dinero, premio"],
+      ["Aplausos", 8, "porra, felicitaciones"]
     ]}
   ]
 }
