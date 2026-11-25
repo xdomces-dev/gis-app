@@ -19,6 +19,7 @@ Después de registrar los equipos se abre el menú **Cultura general**. Cada tem
 | 📜 Historia de México | Ética, naturaleza y sociedades | 10 |
 | 🌎 Geografía | Ética, naturaleza y sociedades | 10 |
 | 🫀 Aparatos y sistemas del cuerpo humano | Saberes y pensamiento científico | 12 |
+| 🪅 ¡Bien mexicano! (barrio, comida, música) | Lenguajes | 14 |
 | 🎲 Mezcla de todo | Todos | todas |
 
 Cada partida usa 5 preguntas del tema elegido. Los puntajes son de juego, no de una encuesta real.
