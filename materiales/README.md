@@ -18,9 +18,12 @@ Después de registrar los equipos se abre el menú **Cultura general**. Cada tem
 | 🔬 Ciencias | Saberes y pensamiento científico | 10 |
 | 📜 Historia de México | Ética, naturaleza y sociedades | 10 |
 | 🌎 Geografía | Ética, naturaleza y sociedades | 10 |
+| 🫀 Aparatos y sistemas del cuerpo humano | Saberes y pensamiento científico | 12 |
 | 🎲 Mezcla de todo | Todos | todas |
 
 Cada partida usa 5 preguntas del tema elegido. Los puntajes son de juego, no de una encuesta real.
+
+El tema del cuerpo humano se armó a partir de la presentación de clase «Aparatos y sistemas del cuerpo humano»; su copia en `duelo-teocalli/temas/cuerpo-humano.json` sirve como ejemplo de cómo convertir una clase en tema.
 
 ## Agregar un tema
 
