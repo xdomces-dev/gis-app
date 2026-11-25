@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La llegada de los europeos a América</title>
+<meta name="description" content="Cuadernillo digital de Historia · Telesecundaria Teocalli">
+<meta property="og:title" content="La llegada de los europeos a América">
+<meta property="og:description" content="Telesecundaria Teocalli · Historia. Mira el video y responde cinco preguntas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbf6ec;      /* fondo papel */
+  --card:#ffffff;
+  --navy:#1d2b4f;       /* azul marino */
+  --navy-2:#2f4170;
+  --ink:#1f2433;
+  --muted:#5a6175;
+  --line:#e3d9c6;
+  --terra:#b9532c;      /* terracota */
+  --terra-cl:#f8e4d9;
+  --ok:#1d7a4c; --ok-cl:#e1f3e9;
+  --bad:#b3261e; --bad-cl:#fbe5e3;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:'Nunito',system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5;
+  background-image:linear-gradient(rgba(29,43,79,.045) 1px,transparent 1px);
+  background-size:100% 28px;
+}
+h1,h2,h3{font-family:'Baloo 2','Nunito',sans-serif;line-height:1.15;margin:0}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 48px}
+.hidden{display:none!important}
+:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
+
+/* ---------- Encabezado ---------- */
+header.head{
+  background:var(--navy);color:#fff;border-radius:0 0 var(--r) var(--r);
+  padding:18px 18px 16px;margin:0 -16px 16px;position:relative;overflow:hidden;
+}
+@media (min-width:672px){header.head{margin:0 0 16px;border-radius:0 0 var(--r) var(--r)}}
+.head .map{position:absolute;right:-10px;top:-6px;width:150px;height:110px;opacity:.85;pointer-events:none}
+.head h1{font-size:1.55rem;max-width:78%;position:relative}
+.head .sub{margin:4px 0 0;font-weight:800;color:#f3c9b4;font-size:.95rem;position:relative}
+.name{margin-top:14px;position:relative}
+.name label{display:block;font-weight:800;font-size:.9rem;margin-bottom:4px}
+.name textarea{resize:vertical;line-height:1.4}
+.name input,.name textarea{
+  width:100%;padding:12px 14px;border-radius:12px;border:2px solid transparent;
+  font:inherit;font-weight:700;color:var(--ink);background:#fff;min-height:48px;
+}
+.name textarea:focus{outline:none;border-color:var(--terra)}
+.name textarea.missing{border-color:#ffb199;box-shadow:0 0 0 3px rgba(255,177,153,.45)}
+.inst{
+  margin:14px 0 0;background:rgba(255,255,255,.1);border-left:4px solid var(--terra);
+  border-radius:8px;padding:9px 12px;font-weight:700;position:relative
+}
+
+/* ---------- Video ---------- */
+.video{margin-bottom:18px}
+.frame{position:relative;width:100%;aspect-ratio:16/9;background:#0f1730;border-radius:var(--r);overflow:hidden;box-shadow:0 4px 16px rgba(29,43,79,.18)}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.frame .novideo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;padding:16px;text-align:center;font-weight:700}
+.vlink{display:inline-block;margin-top:6px;color:var(--navy-2);font-size:.88rem;font-weight:700}
+
+/* ---------- Avance ---------- */
+.progress{
+  position:sticky;top:0;z-index:5;background:rgba(251,246,236,.96);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  padding:8px 0;margin-bottom:6px;display:flex;align-items:center;gap:10px
+}
+.progress .bar{flex:1;height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress .bar i{display:block;height:100%;width:0;background:var(--terra);transition:width .3s}
+.progress b{font-size:.92rem;color:var(--navy);white-space:nowrap}
+
+/* ---------- Preguntas ---------- */
+.q{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:14px 14px 12px;margin:12px 0;scroll-margin-top:60px}
+.q.missing{border-color:var(--terra);box-shadow:0 0 0 3px rgba(185,83,44,.18)}
+.q .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-family:'Baloo 2';margin-right:8px;flex-shrink:0}
+.q h2{font-size:1.12rem;display:flex;align-items:flex-start;color:var(--navy);margin-bottom:10px;font-family:'Nunito';font-weight:800}
+.q h2 span.t{padding-top:3px}
+.pend{display:none;color:var(--terra);font-weight:800;font-size:.88rem;margin:0 0 8px}
+.q.missing .pend{display:block}
+.opt{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  min-height:54px;padding:10px 12px;margin:8px 0 0;border-radius:12px;
+  border:2px solid var(--line);background:#fffdf8;color:var(--ink);font-weight:700;
+}
+.opt .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--navy-2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.opt[aria-checked="true"]{border-color:var(--navy);background:#e8edf8}
+.opt[aria-checked="true"] .dot{background:var(--navy);border-color:var(--navy)}
+.opt[aria-checked="true"] .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.opt:disabled{cursor:default}
+.submitted .opt{opacity:.9}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:block;width:100%;min-height:54px;border:none;border-radius:12px;
+  background:var(--terra);color:#fff;font-weight:800;font-size:1.05rem;padding:12px 16px;margin-top:16px
+}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--navy);border:2px solid var(--navy);font-size:.98rem;min-height:48px}
+.msg{color:var(--terra);font-weight:800;text-align:center;margin:10px 0 0;min-height:1.3em}
+
+/* ---------- Resultado ---------- */
+#result{scroll-margin-top:12px}
+.rcard{
+  background:var(--navy);color:#fff;border-radius:var(--r);padding:16px 18px;margin-top:20px;
+  display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;
+  border:3px solid var(--terra)
+}
+.rcard .lbl{font-size:.75rem;letter-spacing:.1em;font-weight:800;color:#f3c9b4;grid-column:1/-1}
+.rcard .who{font-family:'Baloo 2';font-size:1.35rem;line-height:1.1;word-break:break-word}
+.rcard .topic{font-size:.9rem;font-weight:700;opacity:.92}
+.rcard .when{font-size:.8rem;opacity:.85}
+.rcard .score{grid-row:2/5;grid-column:2;text-align:center;background:#fff;color:var(--navy);border-radius:12px;padding:8px 12px;min-width:84px}
+.rcard .score b{display:block;font-family:'Baloo 2';font-size:2rem;line-height:1}
+.rcard .score small{font-weight:800;font-size:.75rem}
+.rev{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.rev.ok{border-color:var(--ok);background:var(--ok-cl)}
+.rev.bad{border-color:var(--bad);background:var(--bad-cl)}
+.rev .tag{font-weight:800;font-size:.92rem;margin-bottom:4px}
+.rev.ok .tag{color:var(--ok)} .rev.bad .tag{color:var(--bad)}
+.rev p{margin:4px 0}
+.rev .qt{font-weight:800;color:var(--navy)}
+.rev .why{font-size:.94rem;color:var(--ink);border-top:1px dashed rgba(0,0,0,.15);padding-top:6px;margin-top:6px}
+.rev .min{display:inline-block;background:var(--navy);color:#fff;border-radius:99px;padding:1px 9px;font-size:.8rem;font-weight:800;margin-right:4px}
+
+/* ---------- Confirmación ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,48,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal{background:#fff;border-radius:16px;padding:18px;max-width:420px;width:100%}
+.modal h3{color:var(--navy);font-size:1.25rem;margin-bottom:6px}
+.modal p{margin:0 0 4px}
+.modal .row{display:flex;gap:10px}
+.modal .row .btn{margin-top:14px}
+footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. Encabezado -->
+  <header class="head">
+    <svg class="map" viewBox="0 0 150 110" aria-hidden="true">
+      <!-- rosa de los vientos y ruta punteada -->
+      <path d="M8 92 C 40 60, 70 78, 104 40" fill="none" stroke="#f3c9b4" stroke-width="2" stroke-dasharray="4 5"/>
+      <path d="M100 36 l8 2 -4 7z" fill="#f3c9b4"/>
+      <g transform="translate(112 34)" fill="none" stroke="#fff" stroke-width="1.5" opacity=".9">
+        <circle r="20"/><circle r="3" fill="#fff"/>
+        <path d="M0 -26 L5 0 L0 26 L-5 0Z" fill="#b9532c" stroke="#fff"/>
+        <path d="M-26 0 L0 4 L26 0 L0 -4Z" fill="rgba(255,255,255,.35)"/>
+      </g>
+      <text x="108" y="5" fill="#fff" font-size="9" font-family="Nunito" font-weight="800">N</text>
+    </svg>
+    <h1>La llegada de los europeos a América</h1>
+    <p class="sub">Telesecundaria Teocalli · Historia</p>
+    <div class="name">
+      <label for="nombre">Nombre del alumno o integrantes del equipo</label>
+      <textarea id="nombre" rows="2" maxlength="250" placeholder="Ej.: Ana López, Luis Pérez, Carmen Ruiz…"></textarea>
+    </div>
+    <p class="inst">Mira el video, toma apuntes y responde las cinco preguntas. Puedes volver a ver el video cuando lo necesites. <b>Es un examen: solo puedes entregar una vez.</b></p>
+  </header>
+
+  <!-- 2. Video -->
+  <section class="video" aria-label="Video">
+    <div class="frame" id="frame"></div>
+    <a class="vlink" id="vlink" target="_blank" rel="noopener">Abrir el video en otra pestaña ↗</a>
+  </section>
+
+  <!-- 3. Preguntas -->
+  <div class="progress" aria-live="polite"><div class="bar"><i id="pbar"></i></div><b id="ptxt">0 de 5 respondidas</b></div>
+  <main id="questions"></main>
+
+  <button class="btn" id="btnCheck">Entregar examen</button>
+  <p class="msg" id="msg" role="alert"></p>
+
+  <!-- 4. Resultado -->
+  <section id="result" class="hidden" aria-live="polite"></section>
+
+  <footer>Video: «El descubrimiento de América», canal La cuna de Halicarnaso (YouTube).</footer>
+</div>
+
+<script>
+/* ================= CONFIGURACIÓN ================= */
+// Pega aquí el enlace del video. Acepta youtube.com/watch?v=…, youtu.be/…, /shorts/… y /embed/…
+const VIDEO_URL = "https://www.youtube.com/watch?v=obQ4gpVqdbI";
+const TEMA = "La llegada de los europeos a América";
+const STORE = "cuad-europeos-america-examen-v2";
+// true = al entregar se muestran la respuesta correcta y la explicación.
+// false = solo se indica qué pregunta estuvo bien o mal (así no se pasan las respuestas entre equipos).
+const MOSTRAR_RESPUESTAS = false;
+
+/* Preguntas en el orden del video. "ok" = índice de la opción correcta.
+   "min" y "why" salen de la transcripción del video. */
+const QUESTIONS = [
+  { q:"¿Qué pasó en 1453 que obligó a los europeos a buscar otra ruta para comerciar con Asia?",
+    opts:["Los turcos otomanos conquistaron Constantinopla y cerraron el paso hacia Asia",
+          "Los Reyes Católicos prohibieron el comercio con Oriente",
+          "Se terminaron la seda y las especias en Asia"],
+    ok:0, min:"1:16",
+    why:"El video explica que en 1453 los turcos otomanos conquistaron Constantinopla y cerraron el paso a los comerciantes europeos que iban y venían de Asia. Por eso Portugal y Castilla buscaron una nueva ruta por el océano Atlántico." },
+  { q:"Al cruzar el océano Atlántico, ¿a dónde quería llegar Colón?",
+    opts:["A las islas Canarias, para quedarse a vivir ahí",
+          "A las Indias, es decir, a Asia",
+          "A las costas de África, como los portugueses"],
+    ok:1, min:"2:46",
+    why:"Colón dice en el video que estaba convencido de que la Tierra es redonda y de que, cruzando el océano Atlántico, llegaría a las Indias." },
+  { q:"El 12 de octubre de 1492, ¿a dónde llegó realmente la expedición?",
+    opts:["A la India, como Colón lo había planeado",
+          "A las costas de Portugal",
+          "A una isla del Caribe, en América, que Colón llamó San Salvador"],
+    ok:2, min:"3:40",
+    why:"El 12 de octubre avistaron tierra en una isla que Colón llamó San Salvador; después exploraron La Española (hoy Haití y República Dominicana) y Cuba. No llegó a Asia: llegó a América, aunque él no lo supo." },
+  { q:"¿Por qué el continente se llama América?",
+    opts:["Por el geógrafo Américo Vespucio, que anunció que era un continente nuevo y no Asia",
+          "Porque así lo llamó Colón al llegar",
+          "Porque así lo llamaban los pueblos que ya vivían ahí"],
+    ok:0, min:"4:33",
+    why:"El video dice que el nombre de América viene del geógrafo Américo Vespucio, el primero en anunciar que se había llegado a un nuevo continente y no a Asia." },
+  { q:"Cuando llegaron los europeos, ¿qué pueblos con civilizaciones avanzadas ya vivían en América?",
+    opts:["Los vikingos, los chinos y los portugueses",
+          "Los mayas, los aztecas y los incas",
+          "Los romanos, los griegos y los egipcios"],
+    ok:1, min:"5:50",
+    why:"Según el video, en América ya vivían pueblos que habían llegado desde Asia hace más de 20 000 años; los principales eran los mayas, los aztecas y los incas, con civilizaciones avanzadas." }
+];
+
+/* ================= ESTADO ================= */
+const $ = id => document.getElementById(id);
+let S = load() || { nombre:"", ans:Array(QUESTIONS.length).fill(null), done:false, score:0, fecha:null };
+
+function load(){ try{ const v = JSON.parse(localStorage.getItem(STORE)); return v && Array.isArray(v.ans) && v.ans.length===QUESTIONS.length ? v : null; }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ================= VIDEO ================= */
+function youtubeId(url){
+  try{
+    const u = new URL(url.trim());
+    const host = u.hostname.replace(/^www\.|^m\./,"");
+    if(host==="youtu.be") return u.pathname.slice(1).split("/")[0] || null;
+    if(host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")){
+      if(u.searchParams.get("v")) return u.searchParams.get("v");
+      const m = u.pathname.match(/\/(embed|shorts|live|v)\/([\w-]{11})/);
+      if(m) return m[2];
+    }
+  }catch(e){}
+  return null;
+}
+(function setupVideo(){
+  const id = youtubeId(VIDEO_URL);
+  const frame = $("frame"), link = $("vlink");
+  link.href = id ? "https://www.youtube.com/watch?v="+id : VIDEO_URL;
+  if(id){
+    frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1" title="Video: El descubrimiento de América"
+      loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  } else {
+    frame.innerHTML = `<div class="novideo">No se pudo cargar el video aquí. Usa el enlace de abajo.</div>`;
+  }
+})();
+
+/* ================= PREGUNTAS ================= */
+function renderQuestions(){
+  $("questions").innerHTML = QUESTIONS.map((x,qi)=>`
+    <section class="q" id="q${qi}" role="radiogroup" aria-labelledby="qt${qi}">
+      <h2 id="qt${qi}"><span class="num">${qi+1}</span><span class="t">${esc(x.q)}</span></h2>
+      <p class="pend">⚠ Falta responder esta pregunta</p>
+      ${x.opts.map((o,oi)=>`<button type="button" class="opt" role="radio" data-q="${qi}" data-o="${oi}"
+          aria-checked="${S.ans[qi]===oi}" ${S.done?"disabled":""}><span class="dot"></span><span>${esc(o)}</span></button>`).join("")}
+    </section>`).join("");
+  document.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    if(S.done) return;
+    const qi=+b.dataset.q, oi=+b.dataset.o;
+    S.ans[qi]=oi; save();
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.setAttribute("aria-checked", x===b));
+    b.parentElement.classList.remove("missing");
+    $("msg").textContent="";
+    updateProgress();
+  }));
+  document.body.classList.toggle("submitted", S.done);
+}
+function updateProgress(){
+  const n = S.ans.filter(a=>a!==null).length;
+  $("ptxt").textContent = `${n} de ${QUESTIONS.length} respondidas`;
+  $("pbar").style.width = (n/QUESTIONS.length*100)+"%";
+}
+
+/* ================= NOMBRE ================= */
+const nombre = $("nombre");
+nombre.value = S.nombre || "";
+nombre.disabled = S.done;
+nombre.addEventListener("input",()=>{ S.nombre = nombre.value; save(); if(nombre.value.trim()) nombre.classList.remove("missing"); });
+
+/* ================= REVISAR ================= */
+$("btnCheck").addEventListener("click",()=>{
+  if(S.done) return;
+  S.nombre = nombre.value.trim().replace(/\s+/g," ");
+  const faltan = S.ans.map((a,i)=>a===null?i:-1).filter(i=>i>=0);
+  document.querySelectorAll(".q").forEach(el=>el.classList.remove("missing"));
+  nombre.classList.toggle("missing", !S.nombre);
+  faltan.forEach(i=>$("q"+i).classList.add("missing"));
+
+  if(!S.nombre){
+    $("msg").textContent = "Escribe tu nombre o los de tu equipo arriba antes de entregar.";
+    nombre.scrollIntoView({behavior:"smooth",block:"center"});
+    setTimeout(()=>nombre.focus({preventScroll:true}),350);
+    return;
+  }
+  if(faltan.length){
+    $("msg").textContent = faltan.length===1
+      ? `Te falta la pregunta ${faltan[0]+1}.`
+      : `Te faltan las preguntas ${faltan.map(i=>i+1).join(", ")}.`;
+    const el = $("q"+faltan[0]);
+    el.scrollIntoView({behavior:"smooth",block:"start"});
+    setTimeout(()=>el.querySelector(".opt").focus({preventScroll:true}),350);
+    return;
+  }
+  save();
+  confirmar("¿Entregar el examen?",
+    "Solo tienen una oportunidad. Después de entregar ya no podrán cambiar ninguna respuesta.",
+    "Sí, entregar", ()=>{
+      if(S.done) return;
+      S.score = S.ans.reduce((s,a,i)=>s+(a===QUESTIONS[i].ok?1:0),0);
+      S.done = true; S.fecha = new Date().toISOString();
+      save();
+      applyDone();
+      $("result").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+});
+
+function applyDone(){
+  renderQuestions();
+  nombre.value = S.nombre; nombre.disabled = S.done;
+  $("btnCheck").classList.toggle("hidden", S.done);
+  $("msg").textContent = "";
+  const r = $("result");
+  if(!S.done){ r.classList.add("hidden"); r.innerHTML=""; return; }
+  const f = S.fecha ? new Date(S.fecha) : new Date();
+  const fecha = f.toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"}) + " · " + f.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+  let h = `<div class="rcard">
+      <span class="lbl">EXAMEN ENTREGADO · HISTORIA</span>
+      <span class="who">${esc(S.nombre)}</span>
+      <span class="topic">${esc(TEMA)}</span>
+      <span class="when">${esc(fecha)}</span>
+      <div class="score"><b>${S.score}/${QUESTIONS.length}</b><small>aciertos</small></div>
+    </div>`;
+  QUESTIONS.forEach((x,i)=>{
+    const ok = S.ans[i]===x.ok;
+    h += `<div class="rev ${ok?"ok":"bad"}">
+      <div class="tag">${ok?"✔ Correcta":"✘ Incorrecta"} · Pregunta ${i+1}</div>
+      <p class="qt">${esc(x.q)}</p>
+      <p>Tu respuesta: <b>${esc(x.opts[S.ans[i]])}</b></p>
+      ${MOSTRAR_RESPUESTAS && !ok ? `<p>Respuesta correcta: <b>${esc(x.opts[x.ok])}</b></p>` : ""}
+      ${MOSTRAR_RESPUESTAS ? `<p class="why"><span class="min">▶ min ${x.min}</span>${esc(x.why)}</p>` : ""}
+    </div>`;
+  });
+  r.innerHTML = h;
+  r.classList.remove("hidden");
+}
+
+/* ================= CONFIRMACIÓN ================= */
+function confirmar(titulo, texto, si, onYes){
+  const bg = document.createElement("div");
+  bg.className="modal-bg";
+  bg.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+      <h3 id="mt">${esc(titulo)}</h3>
+      <p>${esc(texto)}</p>
+      <div class="row"><button class="btn ghost" id="mNo">Revisar otra vez</button><button class="btn" id="mYes">${esc(si)}</button></div>
+    </div>`;
+  document.body.appendChild(bg);
+  $("mNo").focus();
+  const close=()=>{ bg.remove(); document.removeEventListener("keydown",onKey); $("btnCheck").focus(); };
+  // Escape cierra; Tab se queda dentro de la ventana
+  const onKey=e=>{
+    if(e.key==="Escape"){ e.preventDefault(); close(); }
+    else if(e.key==="Tab"){ const f=[$("mNo"),$("mYes")], i=f.indexOf(document.activeElement);
+      e.preventDefault(); f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus(); }
+  };
+  document.addEventListener("keydown",onKey);
+  $("mNo").onclick=close;
+  bg.addEventListener("click",e=>{ if(e.target===bg) close(); });
+  $("mYes").onclick=()=>{ close(); onYes(); };
+}
+
+/* ================= INICIO ================= */
+applyDone();
+updateProgress();
+</script>
+</body>
+</html>
