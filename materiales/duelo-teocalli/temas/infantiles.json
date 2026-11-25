@@ -1,0 +1,105 @@
+{
+  "id": "infantiles",
+  "nombre": "Caricaturas y películas infantiles",
+  "icono": "🧸",
+  "campo": "Lenguajes",
+  "descripcion": "Princesas, Pixar, Shrek, Coco y las caricaturas de antes.",
+  "colores": {
+    "a": "#ff6fd8",
+    "b": "#ffd93d",
+    "c": "#5ce1ff",
+    "fondo": "#1b1140",
+    "luz1": "#4a1f8a",
+    "luz2": "#0f4a7a",
+    "casilla1": "#7b3fe4",
+    "casilla2": "#3a1a7a",
+    "borde": "#c9a4ff"
+  },
+  "motivos": ["🧸", "🏰", "🦁", "🐠", "⭐", "🎈"],
+  "preguntas": [
+    { "p": "Menciona una princesa de Disney", "r": [
+      ["Cenicienta", 25, "cenicienta"],
+      ["Blancanieves", 22, "blanca nieves"],
+      ["Bella", 18, "la bella, la bella y la bestia"],
+      ["Ariel", 18, "la sirenita, sirenita"],
+      ["Rapunzel", 17, "enredados"]
+    ]},
+    { "p": "Menciona un personaje de Toy Story", "r": [
+      ["Woody", 35, "el vaquero"],
+      ["Buzz Lightyear", 30, "buzz"],
+      ["Jessie", 13, "jesi, jessi, la vaquera"],
+      ["Rex", 12, "el dinosaurio"],
+      ["Señor Cara de Papa", 10, "cara de papa, señor cara de papa, senor cara de papa, mr potato"]
+    ]},
+    { "p": "Menciona un personaje de Bob Esponja", "r": [
+      ["Bob Esponja", 30, "bob"],
+      ["Patricio", 30, "patrick"],
+      ["Calamardo", 18, "calamardo tentaculos"],
+      ["Don Cangrejo", 12, "cangrejo, señor cangrejo, senor cangrejo"],
+      ["Arenita", 10, "arenita mejillas"]
+    ]},
+    { "p": "Menciona una película de animales animados", "r": [
+      ["El Rey León", 35, "rey leon, simba"],
+      ["Buscando a Nemo", 25, "nemo, dory, buscando a dory"],
+      ["Madagascar", 15, "madagascar"],
+      ["La Era de Hielo", 15, "era de hielo"],
+      ["Zootopia", 10, "zootopia"]
+    ]},
+    { "p": "Menciona un villano de película infantil", "r": [
+      ["Scar", 25, "scar"],
+      ["Úrsula", 20, "ursula"],
+      ["Maléfica", 20, "malefica"],
+      ["Capitán Garfio", 20, "garfio, capitan garfio"],
+      ["Cruella", 15, "cruella de vil"]
+    ]},
+    { "p": "Menciona un personaje de Mickey y sus amigos", "r": [
+      ["Mickey", 30, "mickey mouse, miguelito"],
+      ["Minnie", 25, "mimi, minie"],
+      ["Pato Donald", 20, "donald"],
+      ["Goofy", 15, "tribilin"],
+      ["Pluto", 10, "pluto"]
+    ]},
+    { "p": "Menciona una caricatura que veían tus papás", "r": [
+      ["Los Picapiedra", 30, "picapiedra, pedro picapiedra"],
+      ["Scooby-Doo", 25, "scooby, scoobydoo"],
+      ["Los Pitufos", 18, "pitufos, pitufo"],
+      ["El Pájaro Loco", 15, "pajaro loco"],
+      ["Looney Tunes", 12, "bugs bunny, correcaminos, piolin"]
+    ]},
+    { "p": "Menciona un personaje de Shrek", "r": [
+      ["Shrek", 35, "sherk"],
+      ["Burro", 25, "el burro"],
+      ["Fiona", 20, "princesa fiona"],
+      ["Gato con Botas", 15, "gato, el gato con botas"],
+      ["Dragona", 5, "dragon"]
+    ]},
+    { "p": "Menciona un personaje de la película Coco", "r": [
+      ["Miguel", 35, "miguel rivera"],
+      ["Héctor", 25, "hector"],
+      ["Mamá Coco", 20, "coco, mama coco"],
+      ["Ernesto de la Cruz", 12, "ernesto, de la cruz"],
+      ["Dante", 8, "el perro, dante"]
+    ]},
+    { "p": "Menciona una película de Pixar", "r": [
+      ["Toy Story", 25, "toy stori"],
+      ["Coco", 22, "coco"],
+      ["Cars", 20, "rayo mcqueen, cars"],
+      ["Intensamente", 18, "inside out"],
+      ["Up", 15, "up una aventura de altura"]
+    ]},
+    { "p": "Menciona un personaje de Plaza Sésamo", "r": [
+      ["Elmo", 35, "elmo"],
+      ["Abelardo", 25, "abelardo"],
+      ["Comegalletas", 20, "monstruo comegalletas, cookie monster"],
+      ["Beto y Enrique", 12, "beto, enrique"],
+      ["Lola", 8, "lola"]
+    ]},
+    { "p": "Menciona un personaje de Mi villano favorito", "r": [
+      ["Gru", 40, "gru"],
+      ["Minions", 30, "minion, kevin, stuart"],
+      ["Agnes", 15, "agnes"],
+      ["Margo", 10, "margo"],
+      ["Edith", 5, "edith"]
+    ]}
+  ]
+}

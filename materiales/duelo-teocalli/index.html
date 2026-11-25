@@ -258,16 +258,19 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 /* ================= MENÚ DE TEMAS ================= */
 .topics{flex:1;min-height:0;display:flex;flex-direction:column;gap:1.4vh;overflow:auto;padding:0 .2vw}
 .topics .hero p{color:var(--muted)}
-.tgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:1vw}
+.tgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:.9vw}
+.tema .ds{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tema .cf{white-space:normal;line-height:1.15}
-.topics .hero h1{font-size:clamp(26px,3.6vw,72px)}
-.tema{position:relative;text-align:left;border-radius:22px;padding:1.6vh 1.2vw;color:#fff;overflow:hidden;min-height:0;
+.topics .hero h1{font-size:clamp(24px,3vw,62px)}
+.topics .hero p{margin-top:.2vh}
+.topics{gap:1.1vh}
+.tema{position:relative;text-align:left;border-radius:20px;padding:1.2vh .9vw;color:#fff;overflow:hidden;min-height:0;
   background:radial-gradient(circle at 85% 10%,var(--k2) 0%,transparent 55%),linear-gradient(150deg,var(--k1),var(--kf) 75%);
   border:4px solid var(--ka);box-shadow:0 10px 0 #0006,0 0 30px color-mix(in srgb,var(--ka) 35%,transparent);
   transition:transform .2s, box-shadow .2s;animation:qin .6s cubic-bezier(.2,1.4,.4,1) both;display:flex;flex-direction:column;gap:.5vh}
 .tw:nth-child(2) .tema{animation-delay:.06s}.tw:nth-child(3) .tema{animation-delay:.12s}.tw:nth-child(4) .tema{animation-delay:.18s}.tw:nth-child(5) .tema{animation-delay:.24s}.tw:nth-child(6) .tema{animation-delay:.3s}
 .tema:hover,.tema:focus-visible{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 16px 0 #0006,0 0 46px var(--ka)}
-.tema .ic{font-size:clamp(30px,3.4vw,68px);line-height:1;filter:drop-shadow(0 4px 0 #0006)}
+.tema .ic{font-size:clamp(26px,2.8vw,58px);line-height:1;filter:drop-shadow(0 4px 0 #0006)}
 .tema:hover .ic{animation:wave .9s ease-in-out}
 .tema b{font-size:clamp(16px,1.55vw,32px);line-height:1.05;text-shadow:0 3px 0 #0006}
 .tema .cf{align-self:flex-start;background:#0006;border:2px solid var(--ka);color:var(--ka);border-radius:999px;padding:.2vh .7vw;font-weight:800;font-size:clamp(10px,.8vw,16px)}
@@ -928,6 +931,240 @@ const TEMAS = [
   ["Trompo",20,"trompos"],
   ["Balero",15,"baleros"],
   ["Matatena",10,"matatenas"]]}
+ ]},
+ { id:"infantiles", nombre:"Caricaturas y películas infantiles", icono:"🧸", campo:"Lenguajes",
+   descripcion:"Princesas, Pixar, Shrek, Coco y las caricaturas de antes.",
+   colores:{a:"#ff6fd8", b:"#ffd93d", c:"#5ce1ff", fondo:"#1b1140", luz1:"#4a1f8a", luz2:"#0f4a7a", casilla1:"#7b3fe4", casilla2:"#3a1a7a", borde:"#c9a4ff"},
+   motivos:["🧸", "🏰", "🦁", "🐠", "⭐", "🎈"],
+   preguntas:[
+   {p:"Menciona una princesa de Disney", r:[
+  ["Cenicienta",25,"cenicienta"],
+  ["Blancanieves",22,"blanca nieves"],
+  ["Bella",18,"la bella, la bella y la bestia"],
+  ["Ariel",18,"la sirenita, sirenita"],
+  ["Rapunzel",17,"enredados"]]},
+   {p:"Menciona un personaje de Toy Story", r:[
+  ["Woody",35,"el vaquero"],
+  ["Buzz Lightyear",30,"buzz"],
+  ["Jessie",13,"jesi, jessi, la vaquera"],
+  ["Rex",12,"el dinosaurio"],
+  ["Señor Cara de Papa",10,"cara de papa, señor cara de papa, senor cara de papa, mr potato"]]},
+   {p:"Menciona un personaje de Bob Esponja", r:[
+  ["Bob Esponja",30,"bob"],
+  ["Patricio",30,"patrick"],
+  ["Calamardo",18,"calamardo tentaculos"],
+  ["Don Cangrejo",12,"cangrejo, señor cangrejo, senor cangrejo"],
+  ["Arenita",10,"arenita mejillas"]]},
+   {p:"Menciona una película de animales animados", r:[
+  ["El Rey León",35,"rey leon, simba"],
+  ["Buscando a Nemo",25,"nemo, dory, buscando a dory"],
+  ["Madagascar",15,"madagascar"],
+  ["La Era de Hielo",15,"era de hielo"],
+  ["Zootopia",10,"zootopia"]]},
+   {p:"Menciona un villano de película infantil", r:[
+  ["Scar",25,"scar"],
+  ["Úrsula",20,"ursula"],
+  ["Maléfica",20,"malefica"],
+  ["Capitán Garfio",20,"garfio, capitan garfio"],
+  ["Cruella",15,"cruella de vil"]]},
+   {p:"Menciona un personaje de Mickey y sus amigos", r:[
+  ["Mickey",30,"mickey mouse, miguelito"],
+  ["Minnie",25,"mimi, minie"],
+  ["Pato Donald",20,"donald"],
+  ["Goofy",15,"tribilin"],
+  ["Pluto",10,"pluto"]]},
+   {p:"Menciona una caricatura que veían tus papás", r:[
+  ["Los Picapiedra",30,"picapiedra, pedro picapiedra"],
+  ["Scooby-Doo",25,"scooby, scoobydoo"],
+  ["Los Pitufos",18,"pitufos, pitufo"],
+  ["El Pájaro Loco",15,"pajaro loco"],
+  ["Looney Tunes",12,"bugs bunny, correcaminos, piolin"]]},
+   {p:"Menciona un personaje de Shrek", r:[
+  ["Shrek",35,"sherk"],
+  ["Burro",25,"el burro"],
+  ["Fiona",20,"princesa fiona"],
+  ["Gato con Botas",15,"gato, el gato con botas"],
+  ["Dragona",5,"dragon"]]},
+   {p:"Menciona un personaje de la película Coco", r:[
+  ["Miguel",35,"miguel rivera"],
+  ["Héctor",25,"hector"],
+  ["Mamá Coco",20,"coco, mama coco"],
+  ["Ernesto de la Cruz",12,"ernesto, de la cruz"],
+  ["Dante",8,"el perro, dante"]]},
+   {p:"Menciona una película de Pixar", r:[
+  ["Toy Story",25,"toy stori"],
+  ["Coco",22,"coco"],
+  ["Cars",20,"rayo mcqueen, cars"],
+  ["Intensamente",18,"inside out"],
+  ["Up",15,"up una aventura de altura"]]},
+   {p:"Menciona un personaje de Plaza Sésamo", r:[
+  ["Elmo",35,"elmo"],
+  ["Abelardo",25,"abelardo"],
+  ["Comegalletas",20,"monstruo comegalletas, cookie monster"],
+  ["Beto y Enrique",12,"beto, enrique"],
+  ["Lola",8,"lola"]]},
+   {p:"Menciona un personaje de Mi villano favorito", r:[
+  ["Gru",40,"gru"],
+  ["Minions",30,"minion, kevin, stuart"],
+  ["Agnes",15,"agnes"],
+  ["Margo",10,"margo"],
+  ["Edith",5,"edith"]]}
+ ]},
+ { id:"animales", nombre:"Animales", icono:"🦁", campo:"Saberes y pensamiento científico",
+   descripcion:"Selva, mar, desierto, mascotas e insectos.",
+   colores:{a:"#8bd34a", b:"#ffb347", c:"#4fc3f7", fondo:"#0d1f0f", luz1:"#2f5a1a", luz2:"#5a3a12", casilla1:"#3e7d22", casilla2:"#1f3f12", borde:"#a8e07a"},
+   motivos:["🦁", "🐘", "🐒", "🦜", "🐢", "🦋"],
+   preguntas:[
+   {p:"Menciona un animal de la selva", r:[
+  ["Mono",30,"chango, simio, changuito"],
+  ["Jaguar",22,"jaguares"],
+  ["Tucán",18,"tucan"],
+  ["Serpiente",15,"vibora, boa, culebra"],
+  ["Guacamaya",15,"loro, perico, papagayo"]]},
+   {p:"Menciona un animal del mar", r:[
+  ["Tiburón",30,"tiburon"],
+  ["Ballena",22,"ballenas"],
+  ["Delfín",20,"delfin"],
+  ["Pulpo",15,"pulpos"],
+  ["Estrella de mar",13,"estrella"]]},
+   {p:"Menciona un animal que se tiene como mascota", r:[
+  ["Perro",40,"perrito, perros"],
+  ["Gato",30,"gatito, gatos"],
+  ["Pez",12,"peces, pececito, pescadito"],
+  ["Hámster",10,"hamster"],
+  ["Tortuga",8,"tortuguita"]]},
+   {p:"Menciona un animal que vuela", r:[
+  ["Pájaro",30,"pajaro, ave, aves, pajarito"],
+  ["Águila",22,"aguila"],
+  ["Murciélago",18,"murcielago"],
+  ["Mariposa",15,"mariposas"],
+  ["Abeja",15,"abejas"]]},
+   {p:"Menciona un animal del desierto o semidesierto", r:[
+  ["Víbora de cascabel",30,"vibora, cascabel, serpiente"],
+  ["Coyote",22,"coyotes"],
+  ["Alacrán",20,"alacran, escorpion"],
+  ["Lagartija",15,"lagarto"],
+  ["Correcaminos",13,"correcaminos"]]},
+   {p:"Menciona un animal peligroso", r:[
+  ["León",30,"leon"],
+  ["Tiburón",25,"tiburon"],
+  ["Cocodrilo",20,"caiman, lagarto"],
+  ["Serpiente",15,"vibora, cobra"],
+  ["Oso",10,"osos"]]},
+   {p:"Menciona un animal con rayas o manchas", r:[
+  ["Cebra",35,"cebras"],
+  ["Tigre",25,"tigres"],
+  ["Jirafa",18,"jirafas"],
+  ["Leopardo",12,"guepardo, chita"],
+  ["Vaca",10,"vacas"]]},
+   {p:"Menciona un animal de México en peligro de extinción", r:[
+  ["Ajolote",30,"axolote"],
+  ["Vaquita marina",22,"vaquita"],
+  ["Jaguar",20,"jaguares"],
+  ["Tortuga marina",15,"tortuga, tortugas"],
+  ["Lobo mexicano",13,"lobo"]]},
+   {p:"Menciona un insecto", r:[
+  ["Hormiga",30,"hormigas"],
+  ["Mosca",22,"moscas"],
+  ["Mosquito",18,"zancudo"],
+  ["Abeja",15,"abejas"],
+  ["Cucaracha",15,"cucarachas"]]},
+   {p:"Menciona un animal que nace de un huevo", r:[
+  ["Gallina",40,"pollo, gallo, pollito"],
+  ["Tortuga",18,"tortugas"],
+  ["Serpiente",15,"vibora"],
+  ["Pato",15,"patito"],
+  ["Cocodrilo",12,"caiman"]]},
+   {p:"Menciona un animal que salta", r:[
+  ["Canguro",35,"canguros"],
+  ["Rana",30,"sapo, ranas"],
+  ["Conejo",20,"conejito"],
+  ["Chapulín",10,"chapulin, saltamontes, grillo"],
+  ["Pulga",5,"pulgas"]]},
+   {p:"Menciona un animal que hace un sonido muy fuerte", r:[
+  ["León",30,"leon, rugido"],
+  ["Perro",25,"ladrido, ladra"],
+  ["Gallo",20,"quiquiriqui, canta"],
+  ["Burro",15,"rebuzna, rebuzno"],
+  ["Elefante",10,"barrito"]]}
+ ]},
+ { id:"gente", nombre:"Lo que dice la gente", icono:"🗳️", campo:"De lo humano y lo comunitario",
+   descripcion:"Preguntas de encuesta de la vida diaria, como en la tele.",
+   colores:{a:"#ffcc00", b:"#ff4f4f", c:"#3fd0ff", fondo:"#0b1030", luz1:"#2a2f8a", luz2:"#6a1a3a", casilla1:"#2f4fd6", casilla2:"#18256e", borde:"#8fa8ff"},
+   motivos:["📋", "🗣️", "🏠", "🚗", "🍎", "🎄"],
+   preguntas:[
+   {p:"Menciona algo que hay en un baño", r:[
+  ["Escusado",30,"taza, inodoro, excusado, retrete, baño"],
+  ["Regadera",22,"ducha"],
+  ["Lavabo",18,"lavamanos"],
+  ["Papel de baño",15,"papel, papel higienico"],
+  ["Espejo",15,"espejos"]]},
+   {p:"Menciona algo que llevas a la playa", r:[
+  ["Traje de baño",30,"traje, bikini, short"],
+  ["Bloqueador",25,"protector solar, bloqueador solar"],
+  ["Toalla",20,"toallas"],
+  ["Lentes de sol",15,"lentes, gafas"],
+  ["Sombrero",10,"sombrilla, gorra"]]},
+   {p:"Menciona algo que haces antes de dormir", r:[
+  ["Lavarte los dientes",35,"lavarse los dientes, cepillarse, dientes"],
+  ["Ponerte la pijama",20,"pijama, piyama"],
+  ["Ver el celular",20,"celular, cel"],
+  ["Rezar",15,"orar"],
+  ["Bañarte",10,"bañarse, bañarme, baño"]]},
+   {p:"Menciona algo que se compra en la farmacia", r:[
+  ["Medicina",35,"medicamento, medicinas, pastillas"],
+  ["Jarabe",20,"jarabes"],
+  ["Curitas",18,"curita, venditas"],
+  ["Vitaminas",15,"vitamina"],
+  ["Alcohol",12,"gasas, algodon"]]},
+   {p:"Menciona algo que tiene un carro", r:[
+  ["Llantas",35,"llanta, ruedas"],
+  ["Volante",22,"volante"],
+  ["Puertas",18,"puerta"],
+  ["Motor",15,"motor"],
+  ["Espejos",10,"espejo, retrovisor"]]},
+   {p:"Menciona un trabajo donde se usa uniforme", r:[
+  ["Doctor",25,"medico, enfermera, enfermero"],
+  ["Policía",25,"policia"],
+  ["Bombero",20,"bomberos"],
+  ["Soldado",15,"militar"],
+  ["Cocinero",15,"chef"]]},
+   {p:"Menciona algo que se pone en el árbol de Navidad", r:[
+  ["Esferas",35,"esfera"],
+  ["Luces",25,"series, foquitos"],
+  ["Estrella",18,"estrellita"],
+  ["Escarcha",12,"guirnalda"],
+  ["Regalos",10,"regalo"]]},
+   {p:"Menciona algo que hay en un hospital", r:[
+  ["Doctores",30,"doctor, medico, medicos"],
+  ["Camas",22,"cama, camilla"],
+  ["Enfermeras",20,"enfermera, enfermero"],
+  ["Medicinas",15,"medicina"],
+  ["Ambulancias",13,"ambulancia"]]},
+   {p:"Menciona algo que es de color rojo", r:[
+  ["Sangre",25,"sangre"],
+  ["Manzana",22,"manzanas"],
+  ["Fresa",20,"fresas"],
+  ["Jitomate",18,"tomate"],
+  ["Corazón",15,"corazon"]]},
+   {p:"Menciona algo que hay en un parque", r:[
+  ["Juegos",30,"columpios, resbaladilla, sube y baja"],
+  ["Árboles",25,"arbol, arboles"],
+  ["Bancas",18,"banca"],
+  ["Pasto",15,"cesped"],
+  ["Fuente",12,"fuentes"]]},
+   {p:"Menciona algo que hace la gente cuando llueve", r:[
+  ["Abrir el paraguas",35,"paraguas, sombrilla"],
+  ["Correr",22,"corre"],
+  ["Meterse a la casa",18,"meterse, resguardarse, encerrarse"],
+  ["Ponerse chamarra",15,"chamarra, impermeable"],
+  ["Dormir",10,"dormirse"]]},
+   {p:"Menciona una fruta", r:[
+  ["Manzana",30,"manzanas"],
+  ["Plátano",25,"platano, banana"],
+  ["Naranja",18,"naranjas"],
+  ["Fresa",15,"fresas"],
+  ["Uva",12,"uvas"]]}
  ]}
 ];
 

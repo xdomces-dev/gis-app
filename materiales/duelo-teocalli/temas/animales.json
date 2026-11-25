@@ -1,0 +1,105 @@
+{
+  "id": "animales",
+  "nombre": "Animales",
+  "icono": "🦁",
+  "campo": "Saberes y pensamiento científico",
+  "descripcion": "Selva, mar, desierto, mascotas e insectos.",
+  "colores": {
+    "a": "#8bd34a",
+    "b": "#ffb347",
+    "c": "#4fc3f7",
+    "fondo": "#0d1f0f",
+    "luz1": "#2f5a1a",
+    "luz2": "#5a3a12",
+    "casilla1": "#3e7d22",
+    "casilla2": "#1f3f12",
+    "borde": "#a8e07a"
+  },
+  "motivos": ["🦁", "🐘", "🐒", "🦜", "🐢", "🦋"],
+  "preguntas": [
+    { "p": "Menciona un animal de la selva", "r": [
+      ["Mono", 30, "chango, simio, changuito"],
+      ["Jaguar", 22, "jaguares"],
+      ["Tucán", 18, "tucan"],
+      ["Serpiente", 15, "vibora, boa, culebra"],
+      ["Guacamaya", 15, "loro, perico, papagayo"]
+    ]},
+    { "p": "Menciona un animal del mar", "r": [
+      ["Tiburón", 30, "tiburon"],
+      ["Ballena", 22, "ballenas"],
+      ["Delfín", 20, "delfin"],
+      ["Pulpo", 15, "pulpos"],
+      ["Estrella de mar", 13, "estrella"]
+    ]},
+    { "p": "Menciona un animal que se tiene como mascota", "r": [
+      ["Perro", 40, "perrito, perros"],
+      ["Gato", 30, "gatito, gatos"],
+      ["Pez", 12, "peces, pececito, pescadito"],
+      ["Hámster", 10, "hamster"],
+      ["Tortuga", 8, "tortuguita"]
+    ]},
+    { "p": "Menciona un animal que vuela", "r": [
+      ["Pájaro", 30, "pajaro, ave, aves, pajarito"],
+      ["Águila", 22, "aguila"],
+      ["Murciélago", 18, "murcielago"],
+      ["Mariposa", 15, "mariposas"],
+      ["Abeja", 15, "abejas"]
+    ]},
+    { "p": "Menciona un animal del desierto o semidesierto", "r": [
+      ["Víbora de cascabel", 30, "vibora, cascabel, serpiente"],
+      ["Coyote", 22, "coyotes"],
+      ["Alacrán", 20, "alacran, escorpion"],
+      ["Lagartija", 15, "lagarto"],
+      ["Correcaminos", 13, "correcaminos"]
+    ]},
+    { "p": "Menciona un animal peligroso", "r": [
+      ["León", 30, "leon"],
+      ["Tiburón", 25, "tiburon"],
+      ["Cocodrilo", 20, "caiman, lagarto"],
+      ["Serpiente", 15, "vibora, cobra"],
+      ["Oso", 10, "osos"]
+    ]},
+    { "p": "Menciona un animal con rayas o manchas", "r": [
+      ["Cebra", 35, "cebras"],
+      ["Tigre", 25, "tigres"],
+      ["Jirafa", 18, "jirafas"],
+      ["Leopardo", 12, "guepardo, chita"],
+      ["Vaca", 10, "vacas"]
+    ]},
+    { "p": "Menciona un animal de México en peligro de extinción", "r": [
+      ["Ajolote", 30, "axolote"],
+      ["Vaquita marina", 22, "vaquita"],
+      ["Jaguar", 20, "jaguares"],
+      ["Tortuga marina", 15, "tortuga, tortugas"],
+      ["Lobo mexicano", 13, "lobo"]
+    ]},
+    { "p": "Menciona un insecto", "r": [
+      ["Hormiga", 30, "hormigas"],
+      ["Mosca", 22, "moscas"],
+      ["Mosquito", 18, "zancudo"],
+      ["Abeja", 15, "abejas"],
+      ["Cucaracha", 15, "cucarachas"]
+    ]},
+    { "p": "Menciona un animal que nace de un huevo", "r": [
+      ["Gallina", 40, "pollo, gallo, pollito"],
+      ["Tortuga", 18, "tortugas"],
+      ["Serpiente", 15, "vibora"],
+      ["Pato", 15, "patito"],
+      ["Cocodrilo", 12, "caiman"]
+    ]},
+    { "p": "Menciona un animal que salta", "r": [
+      ["Canguro", 35, "canguros"],
+      ["Rana", 30, "sapo, ranas"],
+      ["Conejo", 20, "conejito"],
+      ["Chapulín", 10, "chapulin, saltamontes, grillo"],
+      ["Pulga", 5, "pulgas"]
+    ]},
+    { "p": "Menciona un animal que hace un sonido muy fuerte", "r": [
+      ["León", 30, "leon, rugido"],
+      ["Perro", 25, "ladrido, ladra"],
+      ["Gallo", 20, "quiquiriqui, canta"],
+      ["Burro", 15, "rebuzna, rebuzno"],
+      ["Elefante", 10, "barrito"]
+    ]}
+  ]
+}

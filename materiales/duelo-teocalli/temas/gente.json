@@ -1,0 +1,105 @@
+{
+  "id": "gente",
+  "nombre": "Lo que dice la gente",
+  "icono": "🗳️",
+  "campo": "De lo humano y lo comunitario",
+  "descripcion": "Preguntas de encuesta de la vida diaria, como en la tele.",
+  "colores": {
+    "a": "#ffcc00",
+    "b": "#ff4f4f",
+    "c": "#3fd0ff",
+    "fondo": "#0b1030",
+    "luz1": "#2a2f8a",
+    "luz2": "#6a1a3a",
+    "casilla1": "#2f4fd6",
+    "casilla2": "#18256e",
+    "borde": "#8fa8ff"
+  },
+  "motivos": ["📋", "🗣️", "🏠", "🚗", "🍎", "🎄"],
+  "preguntas": [
+    { "p": "Menciona algo que hay en un baño", "r": [
+      ["Escusado", 30, "taza, inodoro, excusado, retrete, baño"],
+      ["Regadera", 22, "ducha"],
+      ["Lavabo", 18, "lavamanos"],
+      ["Papel de baño", 15, "papel, papel higienico"],
+      ["Espejo", 15, "espejos"]
+    ]},
+    { "p": "Menciona algo que llevas a la playa", "r": [
+      ["Traje de baño", 30, "traje, bikini, short"],
+      ["Bloqueador", 25, "protector solar, bloqueador solar"],
+      ["Toalla", 20, "toallas"],
+      ["Lentes de sol", 15, "lentes, gafas"],
+      ["Sombrero", 10, "sombrilla, gorra"]
+    ]},
+    { "p": "Menciona algo que haces antes de dormir", "r": [
+      ["Lavarte los dientes", 35, "lavarse los dientes, cepillarse, dientes"],
+      ["Ponerte la pijama", 20, "pijama, piyama"],
+      ["Ver el celular", 20, "celular, cel"],
+      ["Rezar", 15, "orar"],
+      ["Bañarte", 10, "bañarse, bañarme, baño"]
+    ]},
+    { "p": "Menciona algo que se compra en la farmacia", "r": [
+      ["Medicina", 35, "medicamento, medicinas, pastillas"],
+      ["Jarabe", 20, "jarabes"],
+      ["Curitas", 18, "curita, venditas"],
+      ["Vitaminas", 15, "vitamina"],
+      ["Alcohol", 12, "gasas, algodon"]
+    ]},
+    { "p": "Menciona algo que tiene un carro", "r": [
+      ["Llantas", 35, "llanta, ruedas"],
+      ["Volante", 22, "volante"],
+      ["Puertas", 18, "puerta"],
+      ["Motor", 15, "motor"],
+      ["Espejos", 10, "espejo, retrovisor"]
+    ]},
+    { "p": "Menciona un trabajo donde se usa uniforme", "r": [
+      ["Doctor", 25, "medico, enfermera, enfermero"],
+      ["Policía", 25, "policia"],
+      ["Bombero", 20, "bomberos"],
+      ["Soldado", 15, "militar"],
+      ["Cocinero", 15, "chef"]
+    ]},
+    { "p": "Menciona algo que se pone en el árbol de Navidad", "r": [
+      ["Esferas", 35, "esfera"],
+      ["Luces", 25, "series, foquitos"],
+      ["Estrella", 18, "estrellita"],
+      ["Escarcha", 12, "guirnalda"],
+      ["Regalos", 10, "regalo"]
+    ]},
+    { "p": "Menciona algo que hay en un hospital", "r": [
+      ["Doctores", 30, "doctor, medico, medicos"],
+      ["Camas", 22, "cama, camilla"],
+      ["Enfermeras", 20, "enfermera, enfermero"],
+      ["Medicinas", 15, "medicina"],
+      ["Ambulancias", 13, "ambulancia"]
+    ]},
+    { "p": "Menciona algo que es de color rojo", "r": [
+      ["Sangre", 25, "sangre"],
+      ["Manzana", 22, "manzanas"],
+      ["Fresa", 20, "fresas"],
+      ["Jitomate", 18, "tomate"],
+      ["Corazón", 15, "corazon"]
+    ]},
+    { "p": "Menciona algo que hay en un parque", "r": [
+      ["Juegos", 30, "columpios, resbaladilla, sube y baja"],
+      ["Árboles", 25, "arbol, arboles"],
+      ["Bancas", 18, "banca"],
+      ["Pasto", 15, "cesped"],
+      ["Fuente", 12, "fuentes"]
+    ]},
+    { "p": "Menciona algo que hace la gente cuando llueve", "r": [
+      ["Abrir el paraguas", 35, "paraguas, sombrilla"],
+      ["Correr", 22, "corre"],
+      ["Meterse a la casa", 18, "meterse, resguardarse, encerrarse"],
+      ["Ponerse chamarra", 15, "chamarra, impermeable"],
+      ["Dormir", 10, "dormirse"]
+    ]},
+    { "p": "Menciona una fruta", "r": [
+      ["Manzana", 30, "manzanas"],
+      ["Plátano", 25, "platano, banana"],
+      ["Naranja", 18, "naranjas"],
+      ["Fresa", 15, "fresas"],
+      ["Uva", 12, "uvas"]
+    ]}
+  ]
+}

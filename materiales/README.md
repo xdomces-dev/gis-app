@@ -20,6 +20,9 @@ Después de registrar los equipos se abre el menú **Cultura general**. Cada tem
 | 🌎 Geografía | Ética, naturaleza y sociedades | 10 |
 | 🫀 Aparatos y sistemas del cuerpo humano | Saberes y pensamiento científico | 12 |
 | 🪅 ¡Bien mexicano! (barrio, comida, música) | Lenguajes | 14 |
+| 🧸 Caricaturas y películas infantiles | Lenguajes | 12 |
+| 🦁 Animales | Saberes y pensamiento científico | 12 |
+| 🗳️ Lo que dice la gente (encuesta de la vida diaria) | De lo humano y lo comunitario | 12 |
 | 🎲 Mezcla de todo | Todos | todas |
 
 Cada partida usa 5 preguntas del tema elegido. Los puntajes son de juego, no de una encuesta real.
