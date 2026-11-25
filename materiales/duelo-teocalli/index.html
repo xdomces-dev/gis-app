@@ -251,6 +251,22 @@ body.siren #stage::after{content:"";position:absolute;inset:0;animation:siren .7
 @keyframes crown{from{transform:rotate(-2deg) scale(1);box-shadow:0 0 20px #ffd84a88}to{transform:rotate(2deg) scale(1.05);box-shadow:0 0 60px #ffd84a}}
 .final .sc{display:flex;gap:3vw;font-size:clamp(22px,2.6vw,52px)}
 
+/* ================= CUENTA REGRESIVA ================= */
+#count{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,#3b1f8fee 0%,#0d0526f5 70%)}
+#count .ring{position:absolute;width:min(70vh,60vw);height:min(70vh,60vw);border-radius:50%;border:1.4vh solid var(--gold);
+  box-shadow:0 0 60px #ffb000,inset 0 0 60px #ffb00088;animation:ring .9s ease-out infinite}
+@keyframes ring{from{transform:scale(.6);opacity:1}to{transform:scale(1.25);opacity:0}}
+#count b{position:relative;font-size:min(48vh,38vw);line-height:1;color:var(--gold);text-shadow:0 0 50px #ffb000,0 1.2vh 0 #a3007a,0 2.4vh 0 #4a0a6b;
+  animation:tick .9s cubic-bezier(.2,1.5,.4,1) both}
+#count b.go{color:var(--pink);font-size:min(36vh,26vw);text-shadow:0 0 60px #ff2e88,0 1.2vh 0 #6a0040}
+#count small{position:absolute;bottom:12vh;font-weight:900;font-size:clamp(18px,2.2vw,44px);color:var(--teal)}
+@keyframes tick{from{transform:scale(2.4);opacity:0}25%{opacity:1}to{transform:scale(1)}}
+.q.locked{color:#7a63c9;background:linear-gradient(180deg,#efe9ff,#d9ccff)}
+.big:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
+.go-btn{font-size:clamp(20px,2.3vw,46px)!important;padding:2.2vh 1vw!important;animation:glow .8s ease-in-out infinite alternate}
+@keyframes glow{from{box-shadow:0 4px 0 #a35a00,0 0 0 #ffd84a00}to{box-shadow:0 4px 0 #a35a00,0 0 36px #ffd84a}}
+
 /* ================= EFECTOS GLOBALES ================= */
 #confetti{position:fixed;inset:0;z-index:35;pointer-events:none}
 #bigX{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:40;gap:2vw;background:radial-gradient(circle,#ff000033,transparent 70%)}
@@ -590,7 +606,7 @@ function confetti(colors, n=160, loop=false){
 /* Efectos programados (fanfarria, confeti, sirena): se cancelan al deshacer o empezar de nuevo */
 let TIMERS=[];
 function later(fn,ms){ TIMERS.push(setTimeout(fn,ms)); }
-function stopConfetti(){ TIMERS.forEach(clearTimeout); TIMERS=[]; cancelAnimationFrame(CF.raf); CF.parts=[]; const c=$("confetti"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
+function stopConfetti(){ TIMERS.forEach(clearTimeout); TIMERS=[]; ui.counting=false; const cd=$("count"); if(cd) cd.remove(); cancelAnimationFrame(CF.raf); CF.parts=[]; const c=$("confetti"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
 const TEAMCOL=[["#2f7bf6","#9cc4ff","#ffffff","#ffd84a"],["#ff7a1a","#ffc08a","#ffffff","#ffd84a"]];
 function setSiren(){
   const b=document.body;
@@ -660,7 +676,7 @@ function startGame(){
 function startRound(){
   G.round={qi:G.qOrder[G.roundIdx], control:null, chars:[], turn:0,
     cells:[0,0,0,0,0],   // 0 oculta · 1 la abrió el equipo con control · 2 la abrió el robo · 3 nadie la dijo (revelada al final)
-    strikes:0, bank:0, winner:null, how:null, gained:0};
+    strikes:0, bank:0, winner:null, how:null, gained:0, ready:false};
   G.phase="buzz";
 }
 function pickBuzz(t){
@@ -689,6 +705,22 @@ function revealMissing(cells, i){
   if(cells[i]) return;
   cells[i]=3; ui.flip.push(i); SFX.reveal();
 }
+/* Cuenta regresiva 3, 2, 1 antes de mostrar la pregunta: nadie puede ver la pregunta ni tocar el martillo antes */
+function countdown(){
+  if(ui.counting) return; ui.counting=true;
+  const el=document.createElement("div"); el.id="count"; el.setAttribute("role","status");
+  document.body.appendChild(el);
+  const steps=["3","2","1","¡YA!"];
+  steps.forEach((n,k)=>later(()=>{
+    el.innerHTML=`<div class="ring"></div><b class="num ${k===3?"go":""}">${n}</b><small>${k<3?"Manos lejos del martillo…":"¡Lean la pregunta y den el martillazo!"}</small>`;
+    if(k<3) play([[k===2?660:520,.18,"square",0,.2]]); else play([[880,.12,"square",0,.2],[1320,.5,"square",.1,.22]]);
+  }, k*900));
+  later(()=>{
+    el.remove(); ui.counting=false;
+    const tgt = G.phase==="tieBuzz" ? G.tie : G.round;
+    if(tgt){ tgt.ready=true; ui.enterKey=null; save(); render(); }
+  }, steps.length*900+150);
+}
 function nextRound(){
   stopConfetti();
   G.roundIdx++;
@@ -697,7 +729,7 @@ function nextRound(){
   if(a.score===b.score){ startTie(); } else { G.winner=a.score>b.score?0:1; G.phase="final"; }
 }
 function startTie(note){
-  G.tie={qi:pickUnused(), first:null, answering:null, cells:[0,0,0,0,0], fails:0, note:note||"", winAns:null};
+  G.tie={qi:pickUnused(), first:null, answering:null, cells:[0,0,0,0,0], fails:0, note:note||"", winAns:null, ready:false};
   G.phase="tieBuzz";
 }
 function parseList(s){ return String(s).split(/\r?\n/).map(x=>x.trim().replace(/\s+/g," ")).filter(Boolean); }
@@ -792,7 +824,7 @@ function reviewView(){
     <div class="rules"><b>Reglas</b>
       <ul>
         <li>Se juegan ${RONDAS} rondas. Cada pregunta tiene 5 respuestas ocultas.</li>
-        <li>El equipo que gana el martillazo controla el tablero (el martillazo vale 0 puntos). Responden tres integrantes, uno por turno, en orden.</li>
+        <li>Cada pregunta aparece después de una cuenta regresiva 3, 2, 1. El equipo que gana el martillazo controla el tablero (el martillazo vale 0 puntos). Responden tres integrantes, uno por turno, en orden.</li>
         <li>Cada acierto suma a la bolsa. Con 3 errores ✖, el equipo rival puede robar con una sola respuesta: si acierta, se lleva toda la bolsa.</li>
         <li>Gana quien tenga más puntos al final. Si hay empate, se juega una pregunta de desempate.</li>
         <li>Puntajes de juego inspirados en una encuesta escolar.</li>
@@ -835,6 +867,14 @@ function entryHTML(label, extraBtns){
     ${extraBtns||""}
   </div>`;
 }
+function qBox(label, text, locked){
+  return `<div class="q display ${ui.enter?"enter":""} ${locked?"locked":""}"><span class="rn">${label}</span>${locked?"🔒 La pregunta aparece después del 3, 2, 1":esc(text)}</div>`;
+}
+function goBox(hint){
+  return `<div class="box buzz"><h2 class="ttl display">¿Listos?</h2>
+    <button class="btn wide display go-btn" id="bGo">▶ Lanzar pregunta: 3, 2, 1</button>
+    <p class="hint">${esc(hint)} Cuando aparezca la pregunta, gana el turno quien toque primero.</p></div>`;
+}
 function revealAllBtn(cells){
   const n=cells.filter(c=>!c).length;
   return n?`<button class="btn teal wide" id="bRevAll">👀 Revelar las ${n} respuesta${n===1?"":"s"} que nadie dijo</button>
@@ -849,7 +889,8 @@ function gameView(){
   const active = ph==="steal"?other(r.control):ph==="roundEnd"?r.winner:(r.control??-1);
   let side="";
   if(ph==="buzz"){
-    side=`<div class="box buzz"><h2 class="ttl display">¿Quién ganó el martillazo?</h2>
+    side = r.ready===false ? goBox("Un integrante de cada equipo, frente al martillo.")
+      : `<div class="box buzz"><h2 class="ttl display">¿Quién ganó el martillazo?</h2>
       <button class="big t0 display" data-buzz="0"><span class="ham">🔨</span> ${esc(G.teams[0].name)}</button>
       <button class="big t1 display" data-buzz="1"><span class="ham">🔨</span> ${esc(G.teams[1].name)}</button>
       <p class="hint">El martillazo da el control del tablero. Vale 0 puntos.</p></div>`;
@@ -881,7 +922,7 @@ function gameView(){
       <button class="btn wide display" id="bNext" style="font-size:clamp(18px,1.8vw,36px);padding:1.5vh 1vw">${G.roundIdx+1<RONDAS?"Siguiente ronda ▶":"Ver resultado final ▶"}</button>`;
   }
   return `${scoresHTML(active)}
-    <div class="q display ${ui.enter?"enter":""}"><span class="rn">Ronda ${G.roundIdx+1} · 100 estudiantes dijeron…</span>${esc(q.p)}</div>
+    ${qBox(`Ronda ${G.roundIdx+1} · 100 estudiantes dijeron…`, q.p, r.ready===false)}
     <div class="main">${boardHTML(r.qi,r.cells,ph==="roundEnd")}<aside class="side c${active}">${side}</aside></div>`;
 }
 function tieView(){
@@ -889,10 +930,11 @@ function tieView(){
   let side="";
   if(ph==="tieBuzz"){
     side=`${t.note?`<p class="msg warn">⚠ ${esc(t.note)}</p>`:""}
-      <div class="box buzz"><h2 class="ttl display">¡Empate! ¿Quién ganó el martillazo?</h2>
+      ${t.ready===false ? goBox("¡Empate! Un integrante de cada equipo, frente al martillo.")
+      : `<div class="box buzz"><h2 class="ttl display">¡Empate! ¿Quién ganó el martillazo?</h2>
       <button class="big t0 display" data-buzz="0"><span class="ham">🔨</span> ${esc(G.teams[0].name)}</button>
       <button class="big t1 display" data-buzz="1"><span class="ham">🔨</span> ${esc(G.teams[1].name)}</button>
-      <p class="hint">Quien acierte una respuesta del tablero gana el concurso.</p></div>`;
+      <p class="hint">Quien acierte una respuesta del tablero gana el concurso.</p></div>`}`;
   } else if(ph==="tiePlay"){
     side=`<div class="steal t${t.answering} display">Responde ${esc(G.teams[t.answering].name)}<small>${t.fails?"El otro equipo falló. ¡Una respuesta para ganar!":"Una respuesta del tablero para ganar."}</small></div>
       ${strikesHTML(t.fails)}
@@ -914,7 +956,7 @@ function tieView(){
   }
   const act_ = ph==="tiePlay"?t.answering: ph==="tieWon"?t.answering:-1;
   return `${scoresHTML(act_)}
-    <div class="q display ${ui.enter?"enter":""}"><span class="rn">Pregunta de desempate</span>${esc(q.p)}</div>
+    ${qBox("Pregunta de desempate", q.p, ph==="tieBuzz" && t.ready===false)}
     <div class="main">${boardHTML(t.qi,t.cells,ph==="tieFail"||ph==="tieWon")}<aside class="side c${act_}">${side}</aside></div>`;
 }
 function finalView(){
@@ -964,6 +1006,7 @@ function bind(){
   on("bX2","click",strikeNow);
   on("bFix","click",()=>{ const i=$("ans"); i.focus(); i.select(); });
   on("bNext","click",()=>act(nextRound));
+  on("bGo","click",countdown);
   on("bTieNext","click",()=>act(()=>startTie("Ninguno acertó: nueva pregunta de desempate.")));
   on("bFinal","click",()=>act(()=>{ G.phase="final"; }));
   // revelar respuestas que nadie dijo
