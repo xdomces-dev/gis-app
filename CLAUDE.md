@@ -105,3 +105,9 @@ Cuando el request del usuario coincida con un skill disponible, invocarlo vía S
 - Guardar contexto → `/context-save`
 - Restaurar contexto → `/context-restore`
 - Spec/issue → `/spec`
+
+### Biblioteca Pedagógica (proyecto aparte, en Fase 1 — 2026-11-27)
+Biblioteca personal de materiales docentes (nombre provisional). **Al retomar, leer primero `docs/biblioteca/ESTADO.md`** y luego `docs/biblioteca/README.md`.
+- Trabajar una fase a la vez; no avanzar sin indicación de César.
+- No modificar GIS (`public/`) por la biblioteca sin autorización.
+- El repo es **público**: no guardar aquí inventarios, rutas ni nombres de archivo con datos de menores.
