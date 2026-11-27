@@ -19,6 +19,8 @@ Tomadas de sus instrucciones del 2026-11-27.
 | D-09 | No borrar originales, borradores ni versiones. La última versión no es automáticamente la mejor. | Patrimonio y trazabilidad. |
 | D-10 | No importar datos personales de alumnos para inventariar materiales. | Protección de menores. |
 | D-11 | Trabajo por fases; al cerrar cada una, esperar indicación. Sin servicios de pago sin autorización. | — |
+| D-12 | (2026-11-27, antes P-06) El inventario de la Fase 2 se hace con **Claude Code en las computadoras de César** (laptop de la escuela y Leviatan), en modo solo lectura. | Los archivos están ahí; no salen del equipo para inventariarse. |
+| D-13 | (2026-11-27, antes P-05) El inventario se guarda en un **repositorio privado nuevo** de GitHub, no en `gis-app` (público). | Rutas y nombres pueden contener datos de menores; el repo privado se sincroniza entre ambas computadoras. |
 
 ## Propuestas (pendientes de aprobación)
 
@@ -28,7 +30,7 @@ Tomadas de sus instrucciones del 2026-11-27.
 | P-02 | Código en carpeta `biblioteca/` de este repo; HTML + módulos JS/CSS sin bundler. | Mismo estilo de trabajo que GIS, sin romper su deploy. | Pendiente |
 | P-03 | Firebase Auth + Firestore + Storage; segundo sitio de Hosting. Proyecto: mismo `docenteappd` o nuevo (Q3). | Ver `ARQUITECTURA.md`. | Pendiente (Q3) |
 | P-04 | Activar plan Blaze **solo** con alerta de presupuesto y autorización explícita, cuando inicie la Fase 3. | Storage lo exige desde 2026-02-03. | Pendiente |
-| P-05 | El inventario de la Fase 2 **no** se guarda en este repo (es público). Opciones: repo privado aparte, o archivo local en la computadora de César. | Rutas y nombres de archivo pueden contener nombres de menores. | Pendiente (Q4) |
-| P-06 | La Fase 2 se ejecuta con Claude Code **en la computadora de César**, en modo solo lectura, generando un archivo de inventario (CSV/JSON) y un resumen. | Los archivos están en sus equipos; no hace falta subir nada para inventariar. | Pendiente (Q1) |
+| P-05 | → Aprobada como D-13. | | Aprobada |
+| P-06 | → Aprobada como D-12. | | Aprobada |
 | P-07 | Reglas de Firestore y Storage de la biblioteca limitadas al UID de César. | GIS permite registrar cuentas nuevas; sin esto, cualquiera podría subir archivos. | Pendiente |
 | P-08 | HTML importado: almacenar, descargar, vista previa y actividad publicada como cuatro modos distintos; vista previa en `iframe` sandbox desde otro origen. | Que un HTML no se ejecute con los privilegios de la app. | Pendiente |

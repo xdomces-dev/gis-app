@@ -5,7 +5,7 @@ Regla: se trabaja una fase a la vez. Al terminar una fase se muestra el resultad
 | Fase | Nombre | Estado |
 |---|---|---|
 | 1 | Diagnóstico y definición | **En revisión por César** (2026-11-27) |
-| 2 | Inventario del ciclo 2026–2027 | Bloqueada: faltan ubicaciones y forma de acceso |
+| 2 | Inventario del ciclo 2026–2027 | Bloqueada: faltan rutas y crear el repo privado |
 | 3 | Biblioteca básica | No iniciada |
 | 4 | Colección piloto | No iniciada |
 | 5 | Incorporación del ciclo | No iniciada |
@@ -30,7 +30,7 @@ Regla: se trabaja una fase a la vez. Al terminar una fase se muestra el resultad
 - Marcar duplicados candidatos (mismo hash o nombre/tamaño parecido) y archivos incompletos.
 - Separar datos confirmados de inferencias.
 - Proponer una colección piloto abundante y variada (no Decimales por defecto).
-- El inventario **no se guarda en este repositorio público** (ver D-P05).
+- Se ejecuta con Claude Code en cada computadora (D-12). El inventario se guarda en un repo privado aparte, **no** en este repositorio público (D-13).
 
 **Comprobación:** César puede revisar qué se encontró, dónde está y qué sigue pendiente.
 

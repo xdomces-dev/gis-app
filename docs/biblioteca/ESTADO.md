@@ -1,25 +1,29 @@
 # Estado actual
 
-**Fase:** 1 — Diagnóstico y definición (documentación lista; esperando respuestas de César).
+**Fase:** 1 — Diagnóstico y definición (documentación lista; Q1 y Q4 respondidas en parte; faltan rutas y el repo privado).
 **Última actualización:** 2026-11-27.
 
 ## Siguiente paso concreto
 
-César responde Q1, Q2 y Q4. Con eso se prepara la Fase 2 (inventario de solo lectura del ciclo 2026–2027).
-Q3 puede esperar hasta antes de la Fase 3.
+1. César crea en GitHub un **repositorio privado** para el inventario (nombre sugerido: `biblioteca-inventario`). Claude no puede crear repositorios desde la sesión en la nube.
+2. César indica las **rutas** de la carpeta 2026–2027 en cada computadora (laptop de la escuela y Leviatan).
+3. Con la indicación de César de pasar a la Fase 2: en cada computadora, abrir Claude Code dentro de `gis-app` (tras `git pull`), pedir «Fase 2 de la biblioteca» y dar la ruta. El inventario es de solo lectura y se guarda en el repo privado, nunca en `gis-app`.
+
+Q2 (gradualidad) puede responderse durante la Fase 2. Q3 puede esperar hasta antes de la Fase 3.
 
 ## Preguntas abiertas
 
 | ID | Pregunta | Bloquea |
 |---|---|---|
-| Q1 | ¿Dónde está la carpeta 2026–2027 (equipo y ruta) y qué otras ubicaciones esenciales hay (Descargas, carpeta de WhatsApp, repos)? ¿Cómo prefieres dar acceso: Claude Code en tu computadora (recomendado), carpeta compartida por Remote Control desde la app de escritorio, o subir a Drive? | Fase 2 |
+| Q1 | **Respondida en parte (2026-11-27):** los materiales están en las computadoras (laptop de la escuela y Leviatan); el inventario se hará con Claude Code local. **Falta:** rutas exactas y otras ubicaciones esenciales (Descargas, archivos de WhatsApp). | Fase 2 |
 | Q2 | Los «niveles de gradualidad» de Gestión Pedagógica no están en el código de GIS. ¿Dónde viven: otra versión sin subir a GitHub, el libro de planeación Teocalli, papel? | Diseño de la vista temática |
 | Q3 | ¿Biblioteca en el mismo proyecto Firebase de GIS (`docenteappd`) o en uno nuevo? ¿Estás dispuesto a activar Blaze (tarjeta, con alerta de presupuesto) para Storage? | Fase 3 |
-| Q4 | El repo `gis-app` es **público**. ¿Dónde guardamos el inventario: un repo privado nuevo, o solo en tu computadora? (Otra opción: volver privado `gis-app`; afectaría a quien hoy lo consulte.) | Fase 2 |
+| Q4 | **Respondida (2026-11-27):** el inventario va en un **repo privado nuevo**. **Falta:** que César lo cree. | Fase 2 |
 
 ## Bloqueos
 
-- Sin acceso a las computadoras de César desde esta sesión (no hay carpetas compartidas).
+- Sin acceso a las computadoras de César desde la sesión en la nube (no hay carpetas compartidas). Resuelto por método: la Fase 2 corre en Claude Code local.
+- Falta el repo privado del inventario.
 - Sin acceso a la consola de Firebase (región del bucket y plan actual sin verificar).
 
 ## Alcance inicial propuesto
@@ -54,3 +58,5 @@ Q3 puede esperar hasta antes de la Fase 3.
 **Bloquea:** Q1 y Q4 (ubicación, acceso y dónde guardar el inventario).
 
 **Siguiente paso:** con Q1 y Q4 resueltas, diseñar el script de inventario de solo lectura y ejecutarlo donde estén los archivos.
+
+**Actualización (misma sesión):** César respondió: materiales en las computadoras; inventario con Claude Code local; inventario en repo privado nuevo. Se aprobaron P-05 y P-06 (ver `DECISIONES.md`). Faltan rutas y crear el repo privado.
