@@ -1,38 +1,43 @@
 # Estado actual
 
-**Fase:** 1 — Diagnóstico y definición (documentación lista; Q1 y Q4 respondidas en parte; faltan rutas y el repo privado).
+**Fase:** esqueleto y programación hechos por orden de César (2026-11-27). La app funciona en **modo local** (este navegador). **No** se ha activado la nube ni se han buscado archivos.
 **Última actualización:** 2026-11-27.
+
+## Qué existe hoy
+
+- App en `biblioteca/` (ver `biblioteca/README.md`): catálogo, búsqueda y filtros cruzados, ficha mínima, versiones con estados y evidencia, elegir versión sin borrar, correcciones, adaptaciones y propuestas derivadas, usos en clase con fecha prevista/aplicada, vista temporal, temas (con los 140 de GIS), colecciones y proyectos, criterios versionados, respaldo ZIP que se abre sin la app, importación sin duplicados, vista previa aislada de HTML.
+- Herramientas para Claude Code: `inventario.mjs` (Fase 2, solo lectura) y `empaquetar.mjs` (publicación, ver `PUBLICACION.md`).
+- Reglas de Storage probadas en el emulador; propuesta de reglas de Firestore (no aplicada).
+- Pruebas: 27 unitarias, flujo completo en Chromium (escritorio y teléfono), modo nube contra emuladores.
 
 ## Siguiente paso concreto
 
-1. César crea en GitHub un **repositorio privado** para el inventario (nombre sugerido: `biblioteca-inventario`). Claude no puede crear repositorios desde la sesión en la nube.
-2. César indica las **rutas** de la carpeta 2026–2027 en cada computadora (laptop de la escuela y Leviatan).
-3. Con la indicación de César de pasar a la Fase 2: en cada computadora, abrir Claude Code dentro de `gis-app` (tras `git pull`), pedir «Fase 2 de la biblioteca» y dar la ruta. El inventario es de solo lectura y se guarda en el repo privado, nunca en `gis-app`.
-
-Q2 (gradualidad) puede responderse durante la Fase 2. Q3 puede esperar hasta antes de la Fase 3.
+César elige uno:
+1. **Probar la app en modo local**: `cd biblioteca && python3 -m http.server 5180 --directory app`, abrir <http://localhost:5180>.
+2. **Buscar archivos (Fase 2)**: en cada computadora, `git pull` y pedir a Claude Code el inventario con la ruta de la carpeta 2026–2027. Antes, crear el repo privado del inventario.
+3. **Decidir la nube (Q3 + Blaze)** para usarla desde el teléfono y con archivos en Storage.
 
 ## Preguntas abiertas
 
 | ID | Pregunta | Bloquea |
 |---|---|---|
-| Q1 | **Respondida en parte (2026-11-27):** los materiales están en las computadoras (laptop de la escuela y Leviatan); el inventario se hará con Claude Code local. **Falta:** rutas exactas y otras ubicaciones esenciales (Descargas, archivos de WhatsApp). | Fase 2 |
-| Q2 | Los «niveles de gradualidad» de Gestión Pedagógica no están en el código de GIS. ¿Dónde viven: otra versión sin subir a GitHub, el libro de planeación Teocalli, papel? | Diseño de la vista temática |
-| Q3 | ¿Biblioteca en el mismo proyecto Firebase de GIS (`docenteappd`) o en uno nuevo? ¿Estás dispuesto a activar Blaze (tarjeta, con alerta de presupuesto) para Storage? | Fase 3 |
-| Q4 | **Respondida (2026-11-27):** el inventario va en un **repo privado nuevo**. **Falta:** que César lo cree. | Fase 2 |
+| Q1 | **Respondida en parte (2026-11-27):** los materiales están en las computadoras; el inventario se hará con Claude Code local. **Falta:** rutas exactas y otras ubicaciones (Descargas, archivos de WhatsApp). | Fase 2 |
+| Q2 | Los «niveles de gradualidad» no están en el código de GIS. ¿Dónde viven? (La app ya tiene un campo libre «Gradualidad o dificultad».) | Ajustar ese campo |
+| Q3 | ¿Biblioteca en el mismo proyecto Firebase de GIS (`docenteappd`) o en uno nuevo? ¿Activar Blaze (tarjeta, con alerta de presupuesto) para Storage? | Uso en la nube y en el teléfono |
+| Q4 | **Respondida (2026-11-27):** inventario en un **repo privado nuevo**. **Falta:** que César lo cree. | Fase 2 |
 
 ## Bloqueos
 
-- Sin acceso a las computadoras de César desde la sesión en la nube (no hay carpetas compartidas). Resuelto por método: la Fase 2 corre en Claude Code local.
+- Nube: sin decisión Q3 ni autorización de Blaze. Sin acceso a la consola de Firebase (región del bucket y plan sin verificar).
+- Archivos: la sesión en la nube no ve las computadoras de César; la Fase 2 se hace con Claude Code local.
 - Falta el repo privado del inventario.
-- Sin acceso a la consola de Firebase (región del bucket y plan actual sin verificar).
 
-## Alcance inicial propuesto
+## Lo que NO se ha hecho (a propósito)
 
-**Dentro:**
-- Fase 2: inventario de solo lectura del ciclo 2026–2027 en las ubicaciones que indique César; resumen y propuesta de piloto.
-- Fase 3: app mínima — inicio de sesión, subir archivo con ficha mínima, búsqueda y filtros básicos, vista previa de imágenes y PDF, descarga, reglas por UID con pruebas.
-
-**Fuera (por ahora):** ciclos anteriores (VGF), bibliotecario con IA dentro de la app, publicación conectada, cambios en GIS, importación desde Drive.
+- No se desplegó nada ni se activaron servicios de pago.
+- No se modificó GIS (`public/`) ni `firestore.rules`.
+- No se buscaron ni movieron archivos de César.
+- No se eligió colección piloto.
 
 ---
 
@@ -60,3 +65,23 @@ Q2 (gradualidad) puede responderse durante la Fase 2. Q3 puede esperar hasta ant
 **Siguiente paso:** con Q1 y Q4 resueltas, diseñar el script de inventario de solo lectura y ejecutarlo donde estén los archivos.
 
 **Actualización (misma sesión):** César respondió: materiales en las computadoras; inventario con Claude Code local; inventario en repo privado nuevo. Se aprobaron P-05 y P-06 (ver `DECISIONES.md`). Faltan rutas y crear el repo privado.
+
+### Sesión 2 — 2026-11-27 (Claude Code, nube)
+
+César: «Haz todo el esqueleto y planeación; ya luego buscamos los archivos; haz toda la programación».
+
+**Terminado**
+- App completa en `biblioteca/` con almacén local (IndexedDB) y almacén Firebase listo (desactivado).
+- Herramientas `inventario.mjs` y `empaquetar.mjs`. Formato de paquete de publicación (`PUBLICACION.md`).
+- `storage.rules`, propuesta `firestore-biblioteca.rules`, `firebase.json` (sitio pendiente), `cors.json`.
+
+**Comprobado**
+- `npm test`: 27/27 (modelo, catálogo, versiones, derivadas, idempotencia y reanudación, ZIP, respaldo, paquetes, inventario).
+- `tests/e2e.mjs` en Chromium: guardar con 3 archivos, HTML aislado, elegir versión, duplicados, búsqueda, temas de GIS, vista temporal, persistencia, respaldo ZIP, paquete sin duplicar, teléfono 390 px sin desbordes, sin errores de JS.
+- `tests/nube/correr.sh` con emuladores: reglas de Storage 9/9 (incluye no sobrescribir, no borrar, otra cuenta rechazada) y flujo completo en modo nube.
+- Las pruebas encontraron y se corrigieron: reintento que duplicaba, pantalla que no se refrescaba tras una ventana, resultado de importación que se borraba, desborde en teléfono, sobrescritura permitida en Storage, paquete que podía declararse «de César».
+
+**No comprobado**
+- El proyecto real de Firebase (no se desplegó). CORS del bucket real. Rendimiento con miles de archivos reales.
+
+**Siguiente paso:** el que elija César en «Siguiente paso concreto».

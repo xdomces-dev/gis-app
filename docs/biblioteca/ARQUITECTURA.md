@@ -1,6 +1,6 @@
 # Arquitectura — propuesta preliminar
 
-Estado: **propuesta, no aprobada.** Nada de esto está configurado. Se decide al iniciar la Fase 3.
+Estado (2026-11-27): el código está hecho en `biblioteca/` (ver `biblioteca/README.md`) con modo local por defecto. **La nube no está configurada ni desplegada**: falta decidir Q3 y autorizar Blaze.
 
 ## Principio
 

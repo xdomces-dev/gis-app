@@ -8,7 +8,7 @@ en un **patrimonio docente reutilizable** que crezca durante muchos años.
 
 ## Estado
 
-**Fase 1 — Diagnóstico y definición.** Ver [`ESTADO.md`](ESTADO.md) para lo terminado, lo bloqueado y el siguiente paso.
+App programada en modo local; nube y búsqueda de archivos pendientes. Ver [`ESTADO.md`](ESTADO.md) para lo terminado, lo bloqueado y el siguiente paso.
 
 ## Cómo retomar el trabajo (leer al iniciar cada sesión)
 
@@ -31,6 +31,8 @@ en un **patrimonio docente reutilizable** que crezca durante muchos años.
 | [`MODELO-DATOS.md`](MODELO-DATOS.md) | Modelo de información (borrador) |
 | [`BIBLIOTECARIO.md`](BIBLIOTECARIO.md) | Reglas del bibliotecario (persona o IA) |
 | [`CRITERIOS-DISENO.md`](CRITERIOS-DISENO.md) | Criterios pedagógicos y visuales de César, versionados |
+| [`PUBLICACION.md`](PUBLICACION.md) | Paquete común de publicación y evaluación por herramienta |
+| [`../../biblioteca/README.md`](../../biblioteca/README.md) | La aplicación: cómo abrirla, probarla y activar la nube |
 
 ## Reglas de trabajo (resumen)
 

@@ -1,6 +1,6 @@
 # Modelo de información — borrador v0
 
-Estado: **borrador para discutir.** Se ajusta con lo que aparezca en el inventario (Fase 2) y se fija en la Fase 3.
+Estado: **v1 implementada** en `biblioteca/app/js/modelo.js` (2026-11-27). Se ajustará con lo que aparezca en el inventario.
 
 ## Principios
 
@@ -60,14 +60,14 @@ Los campos que pueden ser inferidos (tema, grado, fecha de aplicación, tipo, et
 
 ## Ubicación tentativa en Firestore
 
+Implementado (colecciones planas, una por entidad):
+
 ```
-users/{uid}/biblioteca/...   (o un proyecto Firebase aparte; ver Q3)
-  recursos/{recursoId}
-  recursos/{recursoId}/versiones/{versionId}
-  archivos/{archivoId}
-  temas/{temaId}
-  colecciones/{id}  proyectos/{id}  contextos/{id}  secuencias/{id}
-  criterios/{id}  fuentes/{id}  notas/{id}  importaciones/{id}
+users/{uid}/bib_recursos/{id}      users/{uid}/bib_versiones/{id}    users/{uid}/bib_archivos/{id}
+users/{uid}/bib_temas/{id}         users/{uid}/bib_colecciones/{id}  users/{uid}/bib_contextos/{id}
+users/{uid}/bib_notas/{id}         users/{uid}/bib_importaciones/{id} users/{uid}/bib_criterios/{id}
 ```
+
+Proyectos = colecciones con `tipo: 'proyecto'`. Fuentes = campo `fuentes` del recurso. Secuencias por ciclo: pendiente (Fase 8).
 
 Archivos en Storage: `biblioteca/{uid}/{recursoId}/{versionId}/{archivoId}.{ext}`.

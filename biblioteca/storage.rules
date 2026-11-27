@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// Reglas de Cloud Storage para la Biblioteca Pedagógica.
+// ANTES DE DESPLEGAR: reemplazar UID_DE_CESAR por el UID real de la cuenta de César
+// (Firebase Console › Authentication › Usuarios). El UID no es secreto.
+//
+// - Solo la cuenta de César lee y sube archivos, y solo en su carpeta.
+// - No se sobrescriben archivos (cada archivo tiene ruta única) y no se borran.
+// - Máximo 200 MB por archivo (igual que maxBytesArchivo en app/js/config.js).
+// - Todo lo demás del bucket queda cerrado.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function esCesar(uid) {
+      return request.auth != null && request.auth.uid == uid && uid == 'UID_DE_CESAR';
+    }
+
+    match /biblioteca/{uid}/{ruta=**} {
+      allow read: if esCesar(uid);
+      // resource == null: solo si el archivo aún no existe (sin sobrescribir).
+      allow create: if esCesar(uid) && resource == null && request.resource.size < 200 * 1024 * 1024;
+      allow update, delete: if false;
+    }
+
+    match /{todo=**} {
+      allow read, write: if false;
+    }
+  }
+}

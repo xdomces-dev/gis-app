@@ -1,0 +1,20 @@
+// PROPUESTA — NO está en firestore.rules todavía. Agregarla solo con autorización de César,
+// dentro de `match /databases/{database}/documents { ... }` del archivo firestore.rules de la raíz,
+// ANTES de la regla comodín `match /users/{userId}/{document=**}`.
+//
+// Hoy la regla comodín de GIS ya protege users/{uid}/bib_* (solo el dueño lee y escribe).
+// Esta regla además: limita la biblioteca a la cuenta de César y prohíbe borrar registros.
+//
+// Nota: en Firestore, si cualquier regla permite una operación, se permite. Por eso, para que
+// «no borrar» tenga efecto, la regla comodín de GIS tendría que excluir las colecciones bib_*:
+//   match /users/{userId}/{coleccion}/{doc} { allow read, write: if ... && !coleccion.matches('bib_.*'); }
+// Ese cambio toca GIS y debe probarse con el emulador antes de desplegar.
+
+    match /users/{userId}/{coleccion}/{docId} {
+      allow read: if coleccion.matches('bib_.*')
+        && request.auth != null && request.auth.uid == userId && userId == 'UID_DE_CESAR';
+      allow create, update: if coleccion.matches('bib_.*')
+        && request.auth != null && request.auth.uid == userId && userId == 'UID_DE_CESAR'
+        && request.resource.data.id == docId;
+      allow delete: if false;
+    }

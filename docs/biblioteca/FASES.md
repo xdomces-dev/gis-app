@@ -2,16 +2,18 @@
 
 Regla: se trabaja una fase a la vez. Al terminar una fase se muestra el resultado y se espera la indicación de César.
 
+> 2026-11-27: César pidió adelantar «todo el esqueleto y toda la programación» y dejar la búsqueda de archivos para después. Por eso las fases 3–8 tienen código, pero ninguna está «comprobada» con materiales reales.
+
 | Fase | Nombre | Estado |
 |---|---|---|
-| 1 | Diagnóstico y definición | **En revisión por César** (2026-11-27) |
-| 2 | Inventario del ciclo 2026–2027 | Bloqueada: faltan rutas y crear el repo privado |
-| 3 | Biblioteca básica | No iniciada |
-| 4 | Colección piloto | No iniciada |
-| 5 | Incorporación del ciclo | No iniciada |
-| 6 | Bibliotecario | No iniciada |
-| 7 | Publicación conectada | No iniciada |
-| 8 | Reutilización y evolución | No iniciada |
+| 1 | Diagnóstico y definición | Hecha; quedan Q1–Q3 |
+| 2 | Inventario del ciclo 2026–2027 | Herramienta lista (`inventario.mjs`); falta correrla: rutas y repo privado |
+| 3 | Biblioteca básica | **Programada y probada en modo local** y contra emuladores; falta activar la nube (Q3, Blaze) |
+| 4 | Colección piloto | Funciones listas (relaciones, versiones, procedencia, teléfono); falta elegir e incorporar el piloto |
+| 5 | Incorporación del ciclo | Funciones listas (vistas temporal y temática, progreso, reanudar sin duplicar); falta importar |
+| 6 | Bibliotecario | Reglas, estados y evidencia programados; IA dentro de la app **no** iniciada (requiere servidor y costos) |
+| 7 | Publicación conectada | Paquete común y `empaquetar.mjs` listos; conexión directa de herramientas no iniciada |
+| 8 | Reutilización y evolución | Derivadas, adaptaciones, exportar/restaurar listos; secuencias por ciclo y sitio de actividades no iniciados |
 
 ## Fase 1. Diagnóstico y definición
 - [x] Revisar instrucciones del repositorio y el entorno.
